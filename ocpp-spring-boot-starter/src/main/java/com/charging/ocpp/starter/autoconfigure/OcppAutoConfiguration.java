@@ -89,8 +89,8 @@ public class OcppAutoConfiguration {
     @ConditionalOnMissingBean
     public OcppWebSocketHandler ocppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry,
                                                      OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
-                                                     OcppTemplate ocppTemplate, OcppProperties properties) {
-        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate, properties);
+                                                     OcppTemplate ocppTemplate, OcppProperties properties, ObjectMapper objectMapper) {
+        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate, properties, objectMapper);
     }
 
     @Bean

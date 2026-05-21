@@ -17,6 +17,8 @@ import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.charging.ocpp.starter.service.OcppTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 import org.springframework.lang.NonNull;
@@ -50,15 +52,17 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final OcppSchemaValidator schemaValidator;
     private final OcppTemplate ocppTemplate;
     private final OcppProperties properties;
+    private final ObjectMapper objectMapper;
 
     public OcppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry, OcppSessionRepository sessionRepository,
-                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties) {
+                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties, ObjectMapper objectMapper) {
         this.ocppCodec = ocppCodec;
         this.handlerRegistry = handlerRegistry;
         this.sessionRepository = sessionRepository;
         this.schemaValidator = schemaValidator;
         this.ocppTemplate = ocppTemplate;
         this.properties = properties;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -78,7 +82,8 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         try {
             frame = ocppCodec.decode(message.getPayload());
         } catch (OcppException e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", e.getErrorCode().name(), e.getMessage(), e.getDetails())));
+            String uniqueId = extractUniqueIdSafely(message.getPayload());
+            session.sendMessage(new TextMessage(ocppCodec.encodeCallError(uniqueId, e.getErrorCode().name(), e.getMessage(), e.getDetails())));
             return;
         }
 
@@ -110,7 +115,9 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         } catch (OcppException e) {
             session.sendMessage(new TextMessage(ocppCodec.encodeCallError(call.getUniqueId(), e.getErrorCode().name(), e.getMessage(), e.getDetails())));
         } catch (Exception e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError(call.getUniqueId(), OcppErrorCode.InternalError.name(), e.getMessage(), null)));
+            log.error("处理 OCPP 请求发生未预期异常，chargePointId={}, sessionId={}, action={}, uniqueId={}",
+                    chargePointId, session.getId(), call.getAction(), call.getUniqueId(), e);
+            session.sendMessage(new TextMessage(ocppCodec.encodeCallError(call.getUniqueId(), OcppErrorCode.InternalError.name(), "内部服务异常", null)));
         }
     }
 
@@ -123,5 +130,27 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         Map<String, Object> attributes = session.getAttributes();
         Object value = attributes.get("chargePointId");
         return value == null ? null : String.valueOf(value);
+    }
+
+    /**
+     * 在编解码失败时尽力从原始报文提取 uniqueId。
+     * <p>
+     * 设计目标：
+     * 1. 即使报文格式不完全合法，也尽量把错误响应与桩侧请求关联起来；
+     * 2. 提升生产排障效率，减少“空 uniqueId”导致的日志定位困难；
+     * 3. 若解析失败，则按协议降级为空字符串，保持兼容行为。
+     * </p>
+     */
+    private String extractUniqueIdSafely(String payload) {
+        try {
+            JsonNode root = objectMapper.readTree(payload);
+            if (root != null && root.isArray() && root.size() > 1 && root.get(1) != null) {
+                String uniqueId = root.get(1).asText();
+                return uniqueId == null ? "" : uniqueId;
+            }
+        } catch (Exception ignored) {
+            // 忽略解析异常，按降级路径返回空字符串。
+        }
+        return "";
     }
 }

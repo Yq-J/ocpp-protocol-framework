@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.PreDestroy;
 
 /**
  * OCPP 业务调用模板。
@@ -68,7 +69,7 @@ public class OcppTemplate implements OcppGateway {
 
         String uniqueId = UUID.randomUUID().toString();
         CompletableFuture<R> future = new CompletableFuture<>();
-        long timeoutSeconds = properties.getConnectionTimeoutSeconds() == null ? 60L : properties.getConnectionTimeoutSeconds().longValue();
+        long timeoutSeconds = resolveTimeoutSeconds();
         pendingRequests.put(uniqueId, new PendingRequest<>(responseType, future, System.currentTimeMillis() + timeoutSeconds * 1000L));
 
         try {
@@ -106,5 +107,39 @@ public class OcppTemplate implements OcppGateway {
                 }
             }
         }, 5, 5, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 解析业务请求超时时间。
+     * <p>
+     * 优先级：
+     * 1. requestTimeoutSeconds（推荐新配置）；
+     * 2. connectionTimeoutSeconds（兼容历史配置）；
+     * 3. 默认值 60 秒。
+     * </p>
+     */
+    private long resolveTimeoutSeconds() {
+        Integer requestTimeoutSeconds = properties.getRequestTimeoutSeconds();
+        if (requestTimeoutSeconds != null && requestTimeoutSeconds > 0) {
+            return requestTimeoutSeconds.longValue();
+        }
+        Integer legacyTimeoutSeconds = properties.getConnectionTimeoutSeconds();
+        if (legacyTimeoutSeconds != null && legacyTimeoutSeconds > 0) {
+            return legacyTimeoutSeconds.longValue();
+        }
+        return 60L;
+    }
+
+    /**
+     * 容器关闭时优雅关闭后台清理线程。
+     * <p>
+     * 目的：
+     * 1. 避免应用重启/热部署后遗留非守护线程造成资源泄漏；
+     * 2. 让线程池生命周期与 Spring 容器一致，便于生产环境运维。
+     * </p>
+     */
+    @PreDestroy
+    public void destroy() {
+        scheduler.shutdownNow();
     }
 }

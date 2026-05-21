@@ -33,9 +33,20 @@ public class DefaultOcppCodec implements OcppCodec {
                 throw new OcppException(OcppErrorCode.ProtocolError, "不支持的 OCPP 消息类型：" + root.get(0).asInt());
             }
             String uniqueId = root.get(1).asText();
+            if (uniqueId == null || uniqueId.trim().isEmpty()) {
+                throw new OcppException(OcppErrorCode.ProtocolError, "OCPP uniqueId 不能为空");
+            }
             if (type == OcppMessageType.CALL) {
                 if (root.size() != 4) { throw new OcppException(OcppErrorCode.ProtocolError, "CALL 消息长度必须为 4"); }
-                return new OcppCall(uniqueId, root.get(2).asText(), root.get(3));
+                String action = root.get(2).asText();
+                if (action == null || action.trim().isEmpty()) {
+                    throw new OcppException(OcppErrorCode.ProtocolError, "CALL action 不能为空");
+                }
+                JsonNode payload = root.get(3);
+                if (payload == null || payload.isNull() || !payload.isObject()) {
+                    throw new OcppException(OcppErrorCode.ProtocolError, "CALL payload 必须是 JSON 对象");
+                }
+                return new OcppCall(uniqueId, action, payload);
             }
             if (type == OcppMessageType.CALL_RESULT) {
                 if (root.size() != 3) { throw new OcppException(OcppErrorCode.ProtocolError, "CALLRESULT 消息长度必须为 3"); }
