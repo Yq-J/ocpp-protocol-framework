@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "name": "ocpp",
+      "type": "com.charging.ocpp.starter.autoconfigure.OcppProperties",
+      "sourceType": "com.charging.ocpp.starter.autoconfigure.OcppProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ocpp.path",
+      "type": "java.lang.String",
+      "defaultValue": "/ocpp/{chargePointId}",
+      "description": "OCPP WebSocket 接入路径。"
+    },
+    {
+      "name": "ocpp.connection-timeout-seconds",
+      "type": "java.lang.Integer",
+      "defaultValue": 60,
+      "description": "平台向桩发送 CALL 后等待响应的超时时间。"
+    },
+    {
+      "name": "ocpp.allow-unknown-actions",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "是否允许未知 Action 自动返回空响应。"
+    }
+  ]
+}

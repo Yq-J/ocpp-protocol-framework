@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+ocpp:
+  path: /ocpp/{chargePointId}
+  connection-timeout-seconds: 60
+  allow-unknown-actions: false
+
+logging:
+  level:
+    root: info
+    com.charging.ocpp: DEBUG
