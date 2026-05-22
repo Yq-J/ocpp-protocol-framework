@@ -44,9 +44,22 @@ public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
         if (connection == null) {
             return;
         }
+        /*
+         * 本地索引用于当前节点直接下发：
+         * OcppTemplate.callLocal(...) 会通过 chargePointId 从 localByChargePointId 找到 WebSocket 连接。
+         */
         localByChargePointId.put(connection.getChargePointId(), connection);
         localSessionToChargePointId.put(connection.getSessionId(), connection.getChargePointId());
         try {
+            /*
+             * Redis 全局索引用于其它节点判断路由归属：
+             *   key   = ocpp:session:cp:{chargePointId}
+             *   value = 当前节点 nodeId
+             *
+             * 其它节点本地没有该桩连接时，会读取这个 key 得到 targetNodeId，
+             * 再通过 Redis Pub/Sub 发布到 ocpp:cluster:node:{targetNodeId}。
+             * TTL 用来降低节点异常退出时脏路由长期残留的风险。
+             */
             redisTemplate.opsForValue().set(redisKey(connection.getChargePointId()), nodeId, ttl);
         } catch (Exception ex) {
             log.warn("写入 Redis 会话注册失败，chargePointId={}", connection.getChargePointId(), ex);
@@ -68,6 +81,11 @@ public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
         try {
             String key = redisKey(chargePointId);
             String registeredNode = redisTemplate.opsForValue().get(key);
+            /*
+             * 只删除仍归属于当前节点的 Redis key。
+             * 如果同一 chargePointId 已经重连到其它节点，Redis value 会变成其它 nodeId，
+             * 此时当前节点不能删除，否则会误删新的有效路由。
+             */
             if (nodeId.equals(registeredNode)) {
                 redisTemplate.delete(key);
             }
@@ -83,6 +101,11 @@ public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
 
     /**
      * 查询桩归属节点，供跨节点转发路由使用。
+     * <p>
+     * 该方法只返回 Redis 中记录的 nodeId，不返回连接对象。
+     * WebSocket 连接不能跨 JVM 共享；调用方拿到 nodeId 后，需要通过 RedisOcppClusterForwarder
+     * 把请求发布到目标节点私有 channel，再由目标节点使用本地连接发送。
+     * </p>
      */
     public String lookupNodeId(String chargePointId) {
         try {

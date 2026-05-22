@@ -30,6 +30,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -70,7 +71,7 @@ public class OcppAutoConfiguration {
             return new RedisBackedOcppSessionRepository(
                     redisTemplate,
                     properties.getNodeId(),
-                    java.time.Duration.ofSeconds(properties.getRedisSessionRegistryTtlSeconds())
+                    Duration.ofSeconds(properties.getRedisSessionRegistryTtlSeconds())
             );
         }
         return new InMemoryOcppSessionRepository();

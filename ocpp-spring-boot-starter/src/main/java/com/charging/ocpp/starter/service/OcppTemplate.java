@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 /**
  * OCPP 主动下发模板。
  * <p>
@@ -31,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * 会基于 Redis 会话注册表查询目标节点并通过 Redis Pub/Sub 转发。
  * </p>
  */
+@Slf4j
 public class OcppTemplate implements OcppGateway {
     private final OcppSessionRepository sessionRepository;
     private final OcppCodec ocppCodec;
@@ -67,12 +67,29 @@ public class OcppTemplate implements OcppGateway {
         if (local != null && local.isOpen()) {
             return callLocal(chargePointId, version, action, payload, responseType);
         }
+        /*
+         * 本地没有连接时，才尝试走 Redis 跨节点转发。
+         *
+         * 需要同时满足：
+         * 1. cross-node-forward-enabled=true：允许节点间转发下行命令。
+         * 2. redis-session-registry-enabled=true：Redis 中存在 chargePointId -> nodeId 的归属索引。
+         * 3. clusterForwarder != null：Redis Pub/Sub 转发组件已成功初始化。
+         * 4. sessionRepository 是 RedisBackedOcppSessionRepository：可以查询 Redis 归属节点。
+         *
+         * Redis 归属索引只告诉当前节点“这台桩在哪个 nodeId 上”，真正的 WebSocket 发送仍由目标节点
+         * 收到 Pub/Sub request 后在本地执行 callLocal(...) 完成。
+         */
         if (Boolean.TRUE.equals(properties.getCrossNodeForwardEnabled())
                 && Boolean.TRUE.equals(properties.getRedisSessionRegistryEnabled())
                 && clusterForwarder != null
                 && sessionRepository instanceof RedisBackedOcppSessionRepository) {
             String targetNodeId = ((RedisBackedOcppSessionRepository) sessionRepository).lookupNodeId(chargePointId);
             if (targetNodeId != null && !properties.getNodeId().equals(targetNodeId)) {
+                /*
+                 * 将请求发布到目标节点私有 channel：
+                 *   ocpp:cluster:node:{targetNodeId}
+                 * 目标节点的 RedisOcppClusterForwarder.onMessage(...) 会收到并处理该请求。
+                 */
                 return clusterForwarder.forward(targetNodeId, chargePointId, version, action, payload, responseType);
             }
         }
