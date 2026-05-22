@@ -8,6 +8,7 @@ import com.charging.ocpp.core.schema.NoopOcppSchemaValidator;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.InMemoryOcppSessionRepository;
 import com.charging.ocpp.core.session.OcppSessionRepository;
+import com.charging.ocpp.starter.session.RedisBackedOcppSessionRepository;
 import com.charging.ocpp.starter.handler.DefaultOcpp16Handlers;
 import com.charging.ocpp.starter.handler.DefaultOcpp201Handlers;
 import com.charging.ocpp.starter.registry.OcppAnnotatedHandlerRegistrar;
@@ -47,7 +48,18 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OcppSessionRepository ocppSessionRepository() { return new InMemoryOcppSessionRepository(); }
+    public OcppSessionRepository ocppSessionRepository(OcppProperties properties,
+                                                       org.springframework.beans.factory.ObjectProvider<StringRedisTemplate> redisTemplateProvider) {
+        StringRedisTemplate redisTemplate = redisTemplateProvider.getIfAvailable();
+        if (Boolean.TRUE.equals(properties.getRedisSessionRegistryEnabled()) && redisTemplate != null) {
+            return new RedisBackedOcppSessionRepository(
+                    redisTemplate,
+                    properties.getNodeId(),
+                    java.time.Duration.ofSeconds(properties.getRedisSessionRegistryTtlSeconds())
+            );
+        }
+        return new InMemoryOcppSessionRepository();
+    }
 
     @Bean
     @ConditionalOnMissingBean

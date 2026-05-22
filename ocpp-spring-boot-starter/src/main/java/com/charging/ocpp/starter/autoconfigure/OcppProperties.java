@@ -63,5 +63,23 @@ public class OcppProperties {
      * </p>
      */
     private Boolean redisGlobalGuardEnabled = false;
+    /**
+     * 是否启用 Redis 会话注册。
+     * <p>
+     * 开启后会将 chargePointId 与节点归属写入 Redis，便于集群下实现快速会话归属判断。
+     * </p>
+     */
+    private Boolean redisSessionRegistryEnabled = false;
+    /**
+     * Redis 会话注册过期时间，单位秒。
+     */
+    private Integer redisSessionRegistryTtlSeconds = 120;
+    /**
+     * 当前节点标识。
+     * <p>
+     * 默认使用主机名 + 进程号，若容器弹性伸缩建议显式配置为 podName 或实例 ID。
+     * </p>
+     */
+    private String nodeId = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 
 }
