@@ -14,6 +14,7 @@ import com.charging.ocpp.starter.handler.DefaultOcpp201Handlers;
 import com.charging.ocpp.starter.registry.OcppAnnotatedHandlerRegistrar;
 import com.charging.ocpp.starter.service.OcppTemplate;
 import com.charging.ocpp.starter.service.OcppHighLoadGuard;
+import com.charging.ocpp.starter.service.RedisOcppClusterForwarder;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 /**
@@ -43,6 +45,7 @@ public class OcppAutoConfiguration {
      * 2. @ConditionalOnMissingBean 表示“用户没有自定义时才创建默认实现”，因此业务系统可以很容易覆盖编解码器、校验器或会话仓库。
      * 3. 默认处理器只保证协议链路可跑通，真实业务通常应使用 @OcppActionMapping 或自定义 OcppActionHandler 替换。
      * 4. 这里同时注册 WebSocket 入口、处理器注册表、下行调用模板和高负载保护组件，是 starter 的装配中心。
+     * 5. 当配置开启 cross-node-forward-enabled 且存在 Redis 相关 Bean 时，会自动装配跨节点转发组件。
      */
     @Bean
     @ConditionalOnMissingBean
@@ -98,11 +101,41 @@ public class OcppAutoConfiguration {
         return registry;
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RedisMessageListenerContainer redisMessageListenerContainer(org.springframework.beans.factory.ObjectProvider<org.springframework.data.redis.connection.RedisConnectionFactory> connectionFactoryProvider) {
+        org.springframework.data.redis.connection.RedisConnectionFactory connectionFactory = connectionFactoryProvider.getIfAvailable();
+        if (connectionFactory == null) {
+            return null;
+        }
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        return container;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RedisOcppClusterForwarder redisOcppClusterForwarder(OcppProperties properties,
+                                                               ObjectMapper objectMapper,
+                                                               org.springframework.beans.factory.ObjectProvider<StringRedisTemplate> redisTemplateProvider,
+                                                               org.springframework.beans.factory.ObjectProvider<RedisMessageListenerContainer> containerProvider) {
+        if (!Boolean.TRUE.equals(properties.getCrossNodeForwardEnabled())) {
+            return null;
+        }
+        StringRedisTemplate redisTemplate = redisTemplateProvider.getIfAvailable();
+        RedisMessageListenerContainer container = containerProvider.getIfAvailable();
+        if (redisTemplate == null || container == null) {
+            return null;
+        }
+        return new RedisOcppClusterForwarder(redisTemplate, objectMapper, properties, container);
+    }
     @Bean
     @ConditionalOnMissingBean
     public OcppTemplate ocppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec,
-                                     ObjectMapper objectMapper, OcppProperties properties) {
-        return new OcppTemplate(sessionRepository, ocppCodec, objectMapper, properties);
+                                     ObjectMapper objectMapper, OcppProperties properties,
+                                     org.springframework.beans.factory.ObjectProvider<RedisOcppClusterForwarder> forwarderProvider) {
+        return new OcppTemplate(sessionRepository, ocppCodec, objectMapper, properties, forwarderProvider.getIfAvailable());
     }
 
     @Bean
