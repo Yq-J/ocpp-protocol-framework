@@ -22,31 +22,31 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StatusNotificationRequest {
     /**
-     * connectorId 字段。
+     * 上报状态的连接器编号。
      */
     private Integer connectorId;
     /**
-     * errorCode 字段。
+     * 连接器当前错误码。
      */
     private String errorCode;
     /**
-     * status 字段。
+     * 连接器当前运行状态。
      */
     private String status;
     /**
-     * info 字段。
+     * 状态或错误的补充说明。
      */
     private String info;
     /**
-     * timestamp 字段。
+     * 状态产生时间。
      */
     private String timestamp;
     /**
-     * vendorId 字段。
+     * 厂商标识。
      */
     private String vendorId;
     /**
-     * vendorErrorCode 字段。
+     * 厂商自定义错误码。
      */
     private String vendorErrorCode;
 

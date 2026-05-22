@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthorizeResponse {
     /**
-     * idTokenInfo 字段。
+     * 身份令牌的校验结果和附加信息。
      */
     private IdTokenInfo idTokenInfo;
 

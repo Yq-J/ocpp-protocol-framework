@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class AuthorizeRequest {
-    /** idTag 字段。 */
+    /** 充电用户或介质的授权标识。 */
     private String idTag;
 
 }

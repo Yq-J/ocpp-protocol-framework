@@ -21,11 +21,11 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class IdTagInfo {
-    /** status 字段。 */
+    /** 授权标识状态。 */
     private String status;
-    /** expiryDate 字段。 */
+    /** 授权有效期截止时间。 */
     private String expiryDate;
-    /** parentIdTag 字段。 */
+    /** 父级授权标识。 */
     private String parentIdTag;
 
 }

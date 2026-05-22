@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StopTransactionResponse {
     /**
-     * idTagInfo 字段。
+     * 停止交易后返回的授权标识校验结果和附加信息。
      */
     private IdTagInfo idTagInfo;
 

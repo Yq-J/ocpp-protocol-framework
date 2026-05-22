@@ -23,19 +23,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TransactionEventResponse {
     /**
-     * totalCost 字段。
+     * 当前交易累计费用。
      */
     private Integer totalCost;
     /**
-     * chargingPriority 字段。
+     * 返回给充电站的充电优先级。
      */
     private Integer chargingPriority;
     /**
-     * idTokenInfo 字段。
+     * 身份令牌的校验结果和附加信息。
      */
     private IdTokenInfo idTokenInfo;
     /**
-     * updatedPersonalMessage 字段。
+     * 更新后的个性化提示消息。
      */
     private JsonNode updatedPersonalMessage;
 

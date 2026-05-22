@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RemoteStopTransactionResponse {
     /**
-     * status 字段。
+     * 远程停止请求处理结果。
      */
     private String status;
 

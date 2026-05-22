@@ -23,15 +23,15 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthorizeRequest {
     /**
-     * idToken 字段。
+     * 需要校验的用户身份令牌。
      */
     private JsonNode idToken;
     /**
-     * certificate 字段。
+     * 用于证书授权的证书内容。
      */
     private JsonNode certificate;
     /**
-     * iso15118CertificateHashData 字段。
+     * ISO 15118 证书哈希数据。
      */
     private JsonNode iso15118CertificateHashData;
 

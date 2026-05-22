@@ -24,11 +24,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class MeterValuesRequest {
-    /** connectorId 字段。 */
+    /** 连接器编号。 */
     private Integer connectorId;
-    /** transactionId 字段。 */
+    /** 交易编号。 */
     private Integer transactionId;
-    /** meterValue 字段。 */
+    /** 上报的计量采样值列表。 */
     private List<JsonNode> meterValue;
 
 }

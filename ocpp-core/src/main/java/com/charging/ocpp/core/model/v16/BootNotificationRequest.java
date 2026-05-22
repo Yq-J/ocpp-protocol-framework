@@ -21,23 +21,23 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationRequest {
-    /** chargePointVendor 字段。 */
+    /** 充电桩厂商名称。 */
     private String chargePointVendor;
-    /** chargePointModel 字段。 */
+    /** 充电桩型号。 */
     private String chargePointModel;
-    /** chargePointSerialNumber 字段。 */
+    /** 充电桩序列号。 */
     private String chargePointSerialNumber;
-    /** chargeBoxSerialNumber 字段。 */
+    /** 充电桩控制箱序列号。 */
     private String chargeBoxSerialNumber;
-    /** firmwareVersion 字段。 */
+    /** 固件版本号。 */
     private String firmwareVersion;
-    /** iccid 字段。 */
+    /** SIM 卡 ICCID。 */
     private String iccid;
-    /** imsi 字段。 */
+    /** SIM 卡 IMSI。 */
     private String imsi;
-    /** meterType 字段。 */
+    /** 电表类型。 */
     private String meterType;
-    /** meterSerialNumber 字段。 */
+    /** 电表序列号。 */
     private String meterSerialNumber;
 
 }

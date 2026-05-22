@@ -22,11 +22,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StartTransactionResponse {
     /**
-     * transactionId 字段。
+     * 中央系统分配的交易编号。
      */
     private Integer transactionId;
     /**
-     * idTagInfo 字段。
+     * 本次交易授权标识的校验结果和附加信息。
      */
     private IdTagInfo idTagInfo;
 

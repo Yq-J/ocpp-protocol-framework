@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RemoteStartTransactionRequest {
-    /** connectorId 字段。 */
+    /** 指定启动交易的连接器编号。 */
     private Integer connectorId;
-    /** idTag 字段。 */
+    /** 用于远程启动授权的用户标识。 */
     private String idTag;
-    /** chargingProfile 字段。 */
+    /** 远程启动时下发的充电配置。 */
     private JsonNode chargingProfile;
 
 }

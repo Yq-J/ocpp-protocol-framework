@@ -23,23 +23,23 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RequestStartTransactionRequest {
     /**
-     * evseId 字段。
+     * 指定启动交易的 EVSE 编号。
      */
     private Integer evseId;
     /**
-     * remoteStartId 字段。
+     * 远程启动请求编号。
      */
     private Integer remoteStartId;
     /**
-     * idToken 字段。
+     * 用于远程启动授权的身份令牌。
      */
     private JsonNode idToken;
     /**
-     * chargingProfile 字段。
+     * 远程启动时下发的充电配置。
      */
     private JsonNode chargingProfile;
     /**
-     * groupIdToken 字段。
+     * 关联的组身份令牌。
      */
     private String groupIdToken;
 

@@ -25,27 +25,27 @@ import java.util.List;
 @Accessors(chain = true)
 public class StopTransactionRequest {
     /**
-     * transactionId 字段。
+     * 需要停止的交易编号。
      */
     private Integer transactionId;
     /**
-     * idTag 字段。
+     * 停止交易时使用的用户授权标识。
      */
     private String idTag;
     /**
-     * meterStop 字段。
+     * 交易结束时的电表读数。
      */
     private Integer meterStop;
     /**
-     * timestamp 字段。
+     * 交易结束时间。
      */
     private String timestamp;
     /**
-     * reason 字段。
+     * 交易停止原因。
      */
     private String reason;
     /**
-     * transactionData 字段。
+     * 交易过程中的计量采样数据。
      */
     private List<JsonNode> transactionData;
 

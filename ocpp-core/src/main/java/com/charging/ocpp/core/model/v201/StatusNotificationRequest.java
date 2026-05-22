@@ -22,19 +22,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StatusNotificationRequest {
     /**
-     * timestamp 字段。
+     * 状态产生时间。
      */
     private String timestamp;
     /**
-     * connectorId 字段。
+     * 上报状态的连接器编号。
      */
     private Integer connectorId;
     /**
-     * evseId 字段。
+     * 上报状态的 EVSE 编号。
      */
     private Integer evseId;
     /**
-     * connectorStatus 字段。
+     * 连接器当前状态。
      */
     private String connectorStatus;
 

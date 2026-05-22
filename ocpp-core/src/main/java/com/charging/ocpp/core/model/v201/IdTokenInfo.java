@@ -22,23 +22,23 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class IdTokenInfo {
     /**
-     * status 字段。
+     * 身份令牌授权状态。
      */
     private String status;
     /**
-     * cacheExpiryDateTime 字段。
+     * 授权信息缓存有效期截止时间。
      */
     private String cacheExpiryDateTime;
     /**
-     * chargingPriority 字段。
+     * 充电优先级。
      */
     private Integer chargingPriority;
     /**
-     * language1 字段。
+     * 首选显示语言。
      */
     private String language1;
     /**
-     * language2 字段。
+     * 备选显示语言。
      */
     private String language2;
 

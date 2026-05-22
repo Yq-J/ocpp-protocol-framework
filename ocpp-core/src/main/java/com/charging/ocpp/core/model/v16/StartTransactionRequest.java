@@ -21,15 +21,15 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StartTransactionRequest {
-    /** connectorId 字段。 */
+    /** 发起交易的连接器编号。 */
     private Integer connectorId;
-    /** idTag 字段。 */
+    /** 发起交易的用户授权标识。 */
     private String idTag;
-    /** meterStart 字段。 */
+    /** 交易开始时的电表读数。 */
     private Integer meterStart;
-    /** reservationId 字段。 */
+    /** 关联的预约编号。 */
     private Integer reservationId;
-    /** timestamp 字段。 */
+    /** 交易开始时间。 */
     private String timestamp;
 
     public Integer getConnectorId() { return connectorId; }

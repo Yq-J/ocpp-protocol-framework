@@ -25,11 +25,11 @@ import java.util.List;
 @Accessors(chain = true)
 public class MeterValuesRequest {
     /**
-     * evseId 字段。
+     * 上报计量值的 EVSE 编号。
      */
     private Integer evseId;
     /**
-     * meterValue 字段。
+     * 上报的计量采样值列表。
      */
     private List<JsonNode> meterValue;
 

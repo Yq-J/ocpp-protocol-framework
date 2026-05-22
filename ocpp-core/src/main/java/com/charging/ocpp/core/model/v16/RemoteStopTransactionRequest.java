@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RemoteStopTransactionRequest {
     /**
-     * transactionId 字段。
+     * 需要远程停止的交易编号。
      */
     private Integer transactionId;
 

@@ -25,39 +25,39 @@ import java.util.List;
 @Accessors(chain = true)
 public class TransactionEventRequest {
     /**
-     * eventType 字段。
+     * 交易事件类型。
      */
     private String eventType;
     /**
-     * timestamp 字段。
+     * 交易事件发生时间。
      */
     private String timestamp;
     /**
-     * triggerReason 字段。
+     * 触发交易事件的原因。
      */
     private String triggerReason;
     /**
-     * seqNo 字段。
+     * 交易事件序号。
      */
     private Integer seqNo;
     /**
-     * transactionInfo 字段。
+     * 交易基础信息。
      */
     private JsonNode transactionInfo;
     /**
-     * idToken 字段。
+     * 交易关联的身份令牌。
      */
     private JsonNode idToken;
     /**
-     * cableMaxCurrent 字段。
+     * 充电电缆允许的最大电流。
      */
     private Integer cableMaxCurrent;
     /**
-     * meterValue 字段。
+     * 交易事件携带的计量采样值列表。
      */
     private List<JsonNode> meterValue;
     /**
-     * evse 字段。
+     * 交易关联的 EVSE 信息。
      */
     private JsonNode evse;
 

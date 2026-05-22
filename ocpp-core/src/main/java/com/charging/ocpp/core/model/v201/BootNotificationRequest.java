@@ -23,11 +23,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BootNotificationRequest {
     /**
-     * reason 字段。
+     * 发送启动通知的原因。
      */
     private String reason;
     /**
-     * chargingStation 字段。
+     * 充电站设备信息。
      */
     private JsonNode chargingStation;
 

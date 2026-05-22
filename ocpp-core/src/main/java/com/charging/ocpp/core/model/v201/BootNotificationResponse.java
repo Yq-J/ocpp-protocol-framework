@@ -21,11 +21,11 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationResponse {
-    /** currentTime 字段。 */
+    /** 中央系统当前时间。 */
     private String currentTime;
-    /** interval 字段。 */
+    /** 充电站发送心跳的时间间隔，单位秒。 */
     private Integer interval;
-    /** status 字段。 */
+    /** 启动注册结果状态。 */
     private String status;
 
 }

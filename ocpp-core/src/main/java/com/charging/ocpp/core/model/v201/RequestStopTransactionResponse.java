@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RequestStopTransactionResponse {
     /**
-     * status 字段。
+     * 请求停止交易的处理结果。
      */
     private String status;
 
