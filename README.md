@@ -53,3 +53,10 @@ WebSocket 子协议：
 - DTO、配置类、示例业务类中已使用 Lombok 常用注解，例如 `@Data`、`@Builder`、`@NoArgsConstructor`、`@AllArgsConstructor`、`@Accessors(chain = true)`、`@Slf4j`、`@RequiredArgsConstructor`。
 - WebSocket 传输层显式依赖并使用 `org.springframework:spring-websocket`，核心入口为 `TextWebSocketHandler` 和 `WebSocketConfigurer`。
 - 注释均为中文，关键类包含更详细的设计说明，作者为 `JYq`。
+
+
+## Redis 会话注册与高负载优化
+
+- 启用 `ocpp.redis-session-registry-enabled=true` 后，框架会在 Redis 写入 `chargePointId -> nodeId` 注册关系，结合本地内存连接索引实现“本地超低延迟发送 + 集群全局归属感知”。
+- 推荐同时开启 `ocpp.redis-global-guard-enabled=true` 进行全局秒级限流，避免多实例场景单机限流失效。
+- 建议在生产中设置 `ocpp.node-id` 为稳定实例标识（如 `podName`），并将 `ocpp.redis-session-registry-ttl-seconds` 配置为心跳周期的 2~3 倍。
