@@ -24,6 +24,13 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+/**
+ * OCPP 主动下发模板。
+ * <p>
+ * 下发链路优先本地直发；当本地无连接且开启跨节点转发时，
+ * 会基于 Redis 会话注册表查询目标节点并通过 Redis Pub/Sub 转发。
+ * </p>
+ */
 public class OcppTemplate implements OcppGateway {
     private final OcppSessionRepository sessionRepository;
     private final OcppCodec ocppCodec;
@@ -51,6 +58,9 @@ public class OcppTemplate implements OcppGateway {
         startCleaner();
     }
 
+    /**
+     * 下发命令：本地优先，按配置可回退到跨节点转发。
+     */
     @Override
     public <R> CompletableFuture<R> call(String chargePointId, OcppVersion version, String action, Object payload, Class<R> responseType) {
         OcppConnection local = sessionRepository.get(chargePointId);
@@ -71,6 +81,9 @@ public class OcppTemplate implements OcppGateway {
         return failed;
     }
 
+    /**
+     * 本地节点直连下发。
+     */
     private <R> CompletableFuture<R> callLocal(String chargePointId, OcppVersion version, String action, Object payload, Class<R> responseType) {
         OcppConnection connection = sessionRepository.get(chargePointId);
         if (connection == null || !connection.isOpen()) {

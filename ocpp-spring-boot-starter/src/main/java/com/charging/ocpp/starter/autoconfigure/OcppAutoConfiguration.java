@@ -45,6 +45,7 @@ public class OcppAutoConfiguration {
      * 2. @ConditionalOnMissingBean 表示“用户没有自定义时才创建默认实现”，因此业务系统可以很容易覆盖编解码器、校验器或会话仓库。
      * 3. 默认处理器只保证协议链路可跑通，真实业务通常应使用 @OcppActionMapping 或自定义 OcppActionHandler 替换。
      * 4. 这里同时注册 WebSocket 入口、处理器注册表、下行调用模板和高负载保护组件，是 starter 的装配中心。
+     * 5. 当配置开启 cross-node-forward-enabled 且存在 Redis 相关 Bean 时，会自动装配跨节点转发组件。
      */
     @Bean
     @ConditionalOnMissingBean

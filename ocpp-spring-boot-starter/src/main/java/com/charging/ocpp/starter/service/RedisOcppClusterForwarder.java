@@ -21,6 +21,13 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Slf4j
+/**
+ * Redis 集群转发器。
+ * <p>
+ * 通过节点私有 channel（ocpp:cluster:node:{nodeId}）在实例间转发下行命令，
+ * 并使用 requestId 关联请求与响应。
+ * </p>
+ */
 public class RedisOcppClusterForwarder implements MessageListener {
     private static final String CHANNEL_PREFIX = "ocpp:cluster:node:";
     private final StringRedisTemplate redisTemplate;
@@ -40,6 +47,9 @@ public class RedisOcppClusterForwarder implements MessageListener {
         this.listenerContainer.addMessageListener(this, ChannelTopic.of(channelOf(properties.getNodeId())));
     }
 
+    /**
+     * 向目标节点转发一次 OCPP 下行请求。
+     */
     public <R> CompletableFuture<R> forward(String targetNodeId, String chargePointId, OcppVersion version,
                                             String action, Object payload, Class<R> responseType) {
         String requestId = UUID.randomUUID().toString();

@@ -81,6 +81,9 @@ public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
         return new ArrayList<>(localByChargePointId.values());
     }
 
+    /**
+     * 查询桩归属节点，供跨节点转发路由使用。
+     */
     public String lookupNodeId(String chargePointId) {
         try {
             return redisTemplate.opsForValue().get(redisKey(chargePointId));
