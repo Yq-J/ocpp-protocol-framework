@@ -1,10 +1,23 @@
 server:
   port: 8080
 
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 2000ms
+
 ocpp:
   path: /ocpp/{chargePointId}
   connection-timeout-seconds: 60
   allow-unknown-actions: false
+  inbound-worker-threads: 32
+  inbound-queue-capacity: 300000
+  max-inbound-messages-per-second: 12000
+  redis-global-guard-enabled: true
+  redis-session-registry-enabled: true
+  redis-session-registry-ttl-seconds: 180
+  node-id: demo-node-01
 
 logging:
   level:
