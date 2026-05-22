@@ -87,4 +87,9 @@ public class OcppProperties {
      */
     private String nodeId = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
 
+    /**
+     * 是否启用跨节点命令转发。
+     */
+    private Boolean crossNodeForwardEnabled = false;
+
 }

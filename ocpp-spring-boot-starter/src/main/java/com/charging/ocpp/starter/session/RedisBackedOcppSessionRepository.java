@@ -81,6 +81,15 @@ public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
         return new ArrayList<>(localByChargePointId.values());
     }
 
+    public String lookupNodeId(String chargePointId) {
+        try {
+            return redisTemplate.opsForValue().get(redisKey(chargePointId));
+        } catch (Exception ex) {
+            log.warn("查询 Redis 会话归属失败，chargePointId={}", chargePointId, ex);
+            return null;
+        }
+    }
+
     private String redisKey(String chargePointId) {
         return SESSION_KEY_PREFIX + chargePointId;
     }

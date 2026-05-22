@@ -1,6 +1,5 @@
 package com.charging.ocpp.starter.service;
 
-import lombok.extern.slf4j.Slf4j;
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
@@ -11,6 +10,7 @@ import com.charging.ocpp.core.protocol.OcppCodec;
 import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
+import com.charging.ocpp.starter.session.RedisBackedOcppSessionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Iterator;
@@ -21,54 +21,57 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * OCPP 业务调用模板。
- * <p>
- * 作者：JYq。
- * 业务层向充电桩下发命令时，只需要调用 call 方法并指定 chargePointId、协议版本、Action、请求 DTO 和响应 DTO 类型。
- * 模板会负责以下协议细节：生成 uniqueId、编码 CALL 数组帧、通过连接发送文本消息、保存 PendingRequest、
- * 在收到 CALLRESULT/CALLERROR 时完成 CompletableFuture，以及在超时后清理等待中的请求。
- * </p>
- * <p>
- * 该类实现 OcppGateway，因此业务系统可以依赖接口编程；后续如果需要把传输层替换为集群消息网关，
- * 可以替换 OcppGateway 实现而不改业务服务代码。
- * </p>
- */
 @Slf4j
 public class OcppTemplate implements OcppGateway {
-    /*
-     * 1. 这是平台主动调用充电桩的模板类，封装了生成 uniqueId、发送 CALL、等待响应和超时清理。
-     * 2. pendingRequests 是“未完成请求表”：key 是 uniqueId，value 中保存期望响应类型、Future 和截止时间。
-     * 3. 当 WebSocket 收到 CALLRESULT/CALLERROR 时，会回调 completeResult/completeError，让对应 Future 正常或异常完成。
-     * 4. 这种设计把异步 WebSocket 消息包装成业务层容易使用的 CompletableFuture。
-     */
     private final OcppSessionRepository sessionRepository;
     private final OcppCodec ocppCodec;
     private final ObjectMapper objectMapper;
     private final OcppProperties properties;
+    private final RedisOcppClusterForwarder clusterForwarder;
     private final Map<String, PendingRequest<?>> pendingRequests = new ConcurrentHashMap<>();
-    /**
-     * 使用单线程调度器执行超时清理：
-     * 1) 单线程可避免并发扫描 pendingRequests 带来的额外锁竞争；
-     * 2) 清理逻辑仅做轻量遍历，单线程即可满足十万连接下的定时扫描需求。
-     */
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "ocpp-pending-cleaner");
         thread.setDaemon(true);
         return thread;
     });
 
-    public OcppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec, ObjectMapper objectMapper, OcppProperties properties) {
+    public OcppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec, ObjectMapper objectMapper,
+                        OcppProperties properties, RedisOcppClusterForwarder clusterForwarder) {
         this.sessionRepository = sessionRepository;
         this.ocppCodec = ocppCodec;
         this.objectMapper = objectMapper;
         this.properties = properties;
+        this.clusterForwarder = clusterForwarder;
+        if (this.clusterForwarder != null) {
+            this.clusterForwarder.setLocalDispatcher((chargePointId, version, action, payload)
+                    -> callLocal(chargePointId, version, action, payload, Object.class));
+        }
         startCleaner();
     }
 
     @Override
     public <R> CompletableFuture<R> call(String chargePointId, OcppVersion version, String action, Object payload, Class<R> responseType) {
+        OcppConnection local = sessionRepository.get(chargePointId);
+        if (local != null && local.isOpen()) {
+            return callLocal(chargePointId, version, action, payload, responseType);
+        }
+        if (Boolean.TRUE.equals(properties.getCrossNodeForwardEnabled())
+                && Boolean.TRUE.equals(properties.getRedisSessionRegistryEnabled())
+                && clusterForwarder != null
+                && sessionRepository instanceof RedisBackedOcppSessionRepository) {
+            String targetNodeId = ((RedisBackedOcppSessionRepository) sessionRepository).lookupNodeId(chargePointId);
+            if (targetNodeId != null && !properties.getNodeId().equals(targetNodeId)) {
+                return clusterForwarder.forward(targetNodeId, chargePointId, version, action, payload, responseType);
+            }
+        }
+        CompletableFuture<R> failed = new CompletableFuture<>();
+        failed.completeExceptionally(new OcppException(OcppErrorCode.GenericError, "充电桩不在线：" + chargePointId));
+        return failed;
+    }
+
+    private <R> CompletableFuture<R> callLocal(String chargePointId, OcppVersion version, String action, Object payload, Class<R> responseType) {
         OcppConnection connection = sessionRepository.get(chargePointId);
         if (connection == null || !connection.isOpen()) {
             CompletableFuture<R> failed = new CompletableFuture<>();

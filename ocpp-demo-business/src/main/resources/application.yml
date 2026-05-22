@@ -24,6 +24,8 @@ ocpp:
   redis-global-guard-enabled: true
   # 是否启用基于 Redis 的会话注册表。
   redis-session-registry-enabled: true
+  # 是否启用跨节点命令转发。
+  cross-node-forward-enabled: true
   # Redis 会话注册信息的过期时间，单位秒。
   redis-session-registry-ttl-seconds: 180
   # 当前服务节点标识，用于集群场景区分不同实例。
