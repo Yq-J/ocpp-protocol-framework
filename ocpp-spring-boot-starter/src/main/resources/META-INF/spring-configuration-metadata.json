@@ -24,6 +24,42 @@
       "type": "java.lang.Boolean",
       "defaultValue": false,
       "description": "是否允许未知 Action 自动返回空响应。"
+    },
+    {
+      "name": "ocpp.inbound-worker-threads",
+      "type": "java.lang.Integer",
+      "defaultValue": 16,
+      "description": "入站消息处理线程数。"
+    },
+    {
+      "name": "ocpp.inbound-queue-capacity",
+      "type": "java.lang.Integer",
+      "defaultValue": 200000,
+      "description": "入站消息队列容量。"
+    },
+    {
+      "name": "ocpp.pending-cleanup-interval-millis",
+      "type": "java.lang.Integer",
+      "defaultValue": 1000,
+      "description": "等待请求清理周期（毫秒）。"
+    },
+    {
+      "name": "ocpp.high-load-log-sampling-enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否启用高负荷日志降采样。"
+    },
+    {
+      "name": "ocpp.max-inbound-messages-per-second",
+      "type": "java.lang.Integer",
+      "defaultValue": 0,
+      "description": "入站消息每秒阈值，<=0 表示不限制。"
+    },
+    {
+      "name": "ocpp.redis-global-guard-enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "是否启用 Redis 全局限流保护。"
     }
   ]
 }

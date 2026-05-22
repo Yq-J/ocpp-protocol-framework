@@ -16,8 +16,12 @@ import com.charging.ocpp.core.protocol.OcppFrame;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
+import com.charging.ocpp.starter.service.OcppHighLoadGuard;
 import com.charging.ocpp.starter.service.OcppTemplate;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.CloseStatus;
@@ -50,15 +54,41 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final OcppSchemaValidator schemaValidator;
     private final OcppTemplate ocppTemplate;
     private final OcppProperties properties;
+    private final OcppHighLoadGuard highLoadGuard;
+    /**
+     * 入站消息处理线程池。
+     * <p>
+     * 设计目标：把“编解码+校验+业务处理+响应发送”从 WebSocket I/O 线程解耦，
+     * 在高并发场景下降低 I/O 线程阻塞风险，提升整体吞吐。
+     * </p>
+     */
+    private final ThreadPoolExecutor inboundExecutor;
 
     public OcppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry, OcppSessionRepository sessionRepository,
-                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties) {
+                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties,
+                                OcppHighLoadGuard highLoadGuard) {
         this.ocppCodec = ocppCodec;
         this.handlerRegistry = handlerRegistry;
         this.sessionRepository = sessionRepository;
         this.schemaValidator = schemaValidator;
         this.ocppTemplate = ocppTemplate;
         this.properties = properties;
+        this.highLoadGuard = highLoadGuard;
+        int threads = properties.getInboundWorkerThreads() == null ? Math.max(8, Runtime.getRuntime().availableProcessors() * 2) : properties.getInboundWorkerThreads();
+        int queueCapacity = properties.getInboundQueueCapacity() == null ? 200000 : properties.getInboundQueueCapacity();
+        this.inboundExecutor = new ThreadPoolExecutor(
+                threads,
+                threads,
+                60L,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(Math.max(1000, queueCapacity)),
+                r -> {
+                    Thread thread = new Thread(r, "ocpp-inbound-worker");
+                    thread.setDaemon(true);
+                    return thread;
+                },
+                new ThreadPoolExecutor.AbortPolicy()
+        );
     }
 
     @Override
@@ -74,16 +104,42 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
+        if (!highLoadGuard.allow()) {
+            sendSafe(session, ocppCodec.encodeCallError("", OcppErrorCode.InternalError.name(), "系统限流保护已触发，请稍后重试", null));
+            return;
+        }
+        try {
+            inboundExecutor.execute(() -> handleTextMessageAsync(session, message));
+        } catch (Exception rejected) {
+            if (!Boolean.TRUE.equals(properties.getHighLoadLogSamplingEnabled())) {
+                log.warn("OCPP 入站队列已满，sessionId={}, queueSize={}", session.getId(), inboundExecutor.getQueue().size());
+            }
+            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", OcppErrorCode.InternalError.name(), "系统繁忙，请稍后重试", null)));
+        }
+    }
+
+    /**
+     * 异步处理单条文本消息：
+     * - 在工作线程中完成解码与业务调用，减少 I/O 线程压力；
+     * - 所有异常统一转 OCPP CALLERROR，保证桩端可感知失败原因。
+     */
+    private void handleTextMessageAsync(WebSocketSession session, TextMessage message) {
         OcppFrame frame;
         try {
             frame = ocppCodec.decode(message.getPayload());
         } catch (OcppException e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", e.getErrorCode().name(), e.getMessage(), e.getDetails())));
+            sendSafe(session, ocppCodec.encodeCallError("", e.getErrorCode().name(), e.getMessage(), e.getDetails()));
+            return;
+        } catch (Exception e) {
+            sendSafe(session, ocppCodec.encodeCallError("", OcppErrorCode.InternalError.name(), "消息解码失败", null));
             return;
         }
-
         if (frame instanceof OcppCall) {
-            handleCall(session, (OcppCall) frame);
+            try {
+                handleCall(session, (OcppCall) frame);
+            } catch (Exception e) {
+                sendSafe(session, ocppCodec.encodeCallError(((OcppCall) frame).getUniqueId(), OcppErrorCode.InternalError.name(), e.getMessage(), null));
+            }
         } else if (frame instanceof OcppCallResult) {
             ocppTemplate.completeResult((OcppCallResult) frame);
         } else if (frame instanceof OcppCallError) {
@@ -117,6 +173,14 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) {
         sessionRepository.remove(session.getId());
+    }
+
+    private void sendSafe(WebSocketSession session, String payload) {
+        try {
+            session.sendMessage(new TextMessage(payload));
+        } catch (Exception ex) {
+            log.debug("发送响应失败，sessionId={}", session.getId(), ex);
+        }
     }
 
     private String readChargePointId(WebSocketSession session) {

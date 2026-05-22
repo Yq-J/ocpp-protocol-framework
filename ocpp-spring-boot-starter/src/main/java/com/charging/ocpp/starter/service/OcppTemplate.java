@@ -42,7 +42,16 @@ public class OcppTemplate implements OcppGateway {
     private final ObjectMapper objectMapper;
     private final OcppProperties properties;
     private final Map<String, PendingRequest<?>> pendingRequests = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    /**
+     * 使用单线程调度器执行超时清理：
+     * 1) 单线程可避免并发扫描 pendingRequests 带来的额外锁竞争；
+     * 2) 清理逻辑仅做轻量遍历，单线程即可满足十万连接下的定时扫描需求。
+     */
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread thread = new Thread(r, "ocpp-pending-cleaner");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     public OcppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec, ObjectMapper objectMapper, OcppProperties properties) {
         this.sessionRepository = sessionRepository;
@@ -95,6 +104,7 @@ public class OcppTemplate implements OcppGateway {
     }
 
     private void startCleaner() {
+        long interval = properties.getPendingCleanupIntervalMillis() == null ? 1000L : Math.max(200L, properties.getPendingCleanupIntervalMillis());
         scheduler.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
             Iterator<Map.Entry<String, PendingRequest<?>>> iterator = pendingRequests.entrySet().iterator();
@@ -105,6 +115,6 @@ public class OcppTemplate implements OcppGateway {
                     entry.getValue().getFuture().completeExceptionally(new OcppException(OcppErrorCode.GenericError, "等待 OCPP 响应超时"));
                 }
             }
-        }, 5, 5, TimeUnit.SECONDS);
+        }, interval, interval, TimeUnit.MILLISECONDS);
     }
 }
