@@ -6,21 +6,23 @@ import com.charging.ocpp.core.exception.OcppException;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.lang.NonNull;
+
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
-@Slf4j
 /**
  * Redis 集群转发器。
  * <p>
@@ -28,12 +30,12 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * 并使用 requestId 关联请求与响应。
  * </p>
  */
+@Slf4j
 public class RedisOcppClusterForwarder implements MessageListener {
     private static final String CHANNEL_PREFIX = "ocpp:cluster:node:";
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
     private final OcppProperties properties;
-    private final RedisMessageListenerContainer listenerContainer;
     private final ConcurrentMap<String, CompletableFuture<Object>> responseWaiters = new ConcurrentHashMap<>();
     @Setter
     private LocalCommandDispatcher localDispatcher;
@@ -43,8 +45,7 @@ public class RedisOcppClusterForwarder implements MessageListener {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
         this.properties = properties;
-        this.listenerContainer = listenerContainer;
-        this.listenerContainer.addMessageListener(this, ChannelTopic.of(channelOf(properties.getNodeId())));
+        listenerContainer.addMessageListener(this, ChannelTopic.of(channelOf(properties.getNodeId())));
     }
 
     /**
@@ -56,7 +57,7 @@ public class RedisOcppClusterForwarder implements MessageListener {
         CompletableFuture<Object> waiter = new CompletableFuture<>();
         responseWaiters.put(requestId, waiter);
         try {
-            Map<String, Object> command = new java.util.HashMap<String, Object>();
+            Map<String, Object> command = new HashMap<>();
             command.put("kind", "request");
             command.put("requestId", requestId);
             command.put("sourceNodeId", properties.getNodeId());
@@ -67,7 +68,7 @@ public class RedisOcppClusterForwarder implements MessageListener {
             redisTemplate.convertAndSend(channelOf(targetNodeId), objectMapper.writeValueAsString(command));
         } catch (Exception ex) {
             responseWaiters.remove(requestId);
-            CompletableFuture<R> failed = new CompletableFuture<R>();
+            CompletableFuture<R> failed = new CompletableFuture<>();
             failed.completeExceptionally(new OcppException(OcppErrorCode.InternalError, "跨节点转发发送失败", null, ex));
             return failed;
         }
@@ -75,10 +76,11 @@ public class RedisOcppClusterForwarder implements MessageListener {
     }
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void onMessage(@NonNull Message message, byte[] pattern) {
         try {
             String body = new String(message.getBody(), StandardCharsets.UTF_8);
-            Map<String, Object> data = objectMapper.readValue(body, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> data = objectMapper.readValue(body, new TypeReference<Map<String, Object>>() {
+            });
             String kind = String.valueOf(data.get("kind"));
             if ("request".equals(kind)) {
                 handleRequest(data);
@@ -93,7 +95,9 @@ public class RedisOcppClusterForwarder implements MessageListener {
     }
 
     private void handleRequest(Map<String, Object> data) {
-        if (localDispatcher == null) { return; }
+        if (localDispatcher == null) {
+            return;
+        }
         String sourceNodeId = String.valueOf(data.get("sourceNodeId"));
         String requestId = String.valueOf(data.get("requestId"));
         String chargePointId = String.valueOf(data.get("chargePointId"));
@@ -106,7 +110,7 @@ public class RedisOcppClusterForwarder implements MessageListener {
 
     private void publishResponse(String sourceNodeId, String requestId, Object value, Throwable throwable) {
         try {
-            Map<String, Object> response = new java.util.HashMap<String, Object>();
+            Map<String, Object> response = new HashMap<>();
             response.put("kind", "response");
             response.put("requestId", requestId);
             response.put("ok", throwable == null);
@@ -125,8 +129,10 @@ public class RedisOcppClusterForwarder implements MessageListener {
     private void handleResponse(Map<String, Object> data) {
         String requestId = String.valueOf(data.get("requestId"));
         CompletableFuture<Object> waiter = responseWaiters.remove(requestId);
-        if (waiter == null) { return; }
-        Boolean ok = Boolean.valueOf(String.valueOf(data.get("ok")));
+        if (waiter == null) {
+            return;
+        }
+        boolean ok = Boolean.parseBoolean(String.valueOf(data.get("ok")));
         if (ok) {
             waiter.complete(data.get("payload"));
             return;
@@ -134,7 +140,9 @@ public class RedisOcppClusterForwarder implements MessageListener {
         waiter.completeExceptionally(new OcppException(OcppErrorCode.GenericError, String.valueOf(data.get("error"))));
     }
 
-    private String channelOf(String nodeId) { return CHANNEL_PREFIX + nodeId; }
+    private String channelOf(String nodeId) {
+        return CHANNEL_PREFIX + nodeId;
+    }
 
     public interface LocalCommandDispatcher {
         CompletableFuture<Object> dispatch(String chargePointId, OcppVersion version, String action, Object payload);
