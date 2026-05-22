@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RequestStopTransactionResponse {
+
     /**
      * 请求停止交易的处理结果。
      */

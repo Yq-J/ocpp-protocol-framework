@@ -12,6 +12,11 @@ import lombok.Getter;
  */
 @Getter
 public enum OcppVersion {
+    /*
+     * 1. WebSocket 握手时会协商子协议，充电桩常传 ocpp1.6 或 ocpp2.0.1。
+     * 2. 框架内部用枚举代替裸字符串，能减少拼写错误，也方便在注册处理器时按版本隔离。
+     * 3. 后续扩展新协议版本时，需要在这里增加枚举值，并补齐子协议字符串和默认处理器。
+     */
     /** OCPP 1.6 JSON over WebSocket。 */
     OCPP_16("1.6", "ocpp1.6"),
     /** OCPP 2.0.1 JSON over WebSocket。 */

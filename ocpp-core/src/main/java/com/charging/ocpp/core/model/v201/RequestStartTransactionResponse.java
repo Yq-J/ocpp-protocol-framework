@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RequestStartTransactionResponse {
+
     /**
      * 请求启动交易的处理结果。
      */

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationResponse {
+
     /** 中央系统当前时间。 */
     private String currentTime;
     /** 充电站发送心跳的时间间隔，单位秒。 */

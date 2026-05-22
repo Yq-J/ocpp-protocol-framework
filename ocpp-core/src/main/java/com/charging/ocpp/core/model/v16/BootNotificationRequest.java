@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationRequest {
+
     /** 充电桩厂商名称。 */
     private String chargePointVendor;
     /** 充电桩型号。 */

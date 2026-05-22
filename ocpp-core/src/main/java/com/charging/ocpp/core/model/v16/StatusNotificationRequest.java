@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StatusNotificationRequest {
+
     /**
      * 上报状态的连接器编号。
      */

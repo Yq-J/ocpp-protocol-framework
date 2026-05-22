@@ -8,6 +8,11 @@ package com.charging.ocpp.core.protocol;
  * </p>
  */
 public interface OcppCodec {
+    /*
+     * 1. 编解码器把协议数组格式隔离在 core 层，业务代码不需要手写 [2,"id","Action",{}] 这类数组。
+     * 2. decode 用于入站消息，encodeCall、encodeCallResult、encodeCallError 分别用于三类出站消息。
+     * 3. 如果未来要支持更严格的日志脱敏、追踪字段或不同 JSON 库，可以替换该接口实现。
+     */
     OcppFrame decode(String text);
     String encodeCall(String uniqueId, String action, Object payload);
     String encodeCallResult(String uniqueId, Object payload);

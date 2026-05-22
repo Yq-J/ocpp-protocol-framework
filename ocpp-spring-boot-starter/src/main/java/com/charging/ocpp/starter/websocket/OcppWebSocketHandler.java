@@ -48,6 +48,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
  */
 @Slf4j
 public class OcppWebSocketHandler extends TextWebSocketHandler {
+    /*
+     * 1. 这是入站协议主入口：连接建立、文本消息接收、连接关闭都会先到这里。
+     * 2. 收到文本后先做限流，再交给线程池异步处理，避免 WebSocket I/O 线程被 JSON 解析或业务逻辑长时间占用。
+     * 3. CALL 会路由到业务处理器并返回 CALLRESULT；CALLRESULT/CALLERROR 会交给 OcppTemplate 完成平台主动下发命令的 Future。
+     * 4. 所有协议异常都会尽量转换成 CALLERROR 发回对端，这样桩端能明确知道失败原因。
+     */
     private final OcppCodec ocppCodec;
     private final OcppHandlerRegistry handlerRegistry;
     private final OcppSessionRepository sessionRepository;

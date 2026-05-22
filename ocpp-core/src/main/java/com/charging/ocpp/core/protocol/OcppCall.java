@@ -10,6 +10,10 @@ import lombok.Getter;
  */
 @Getter
 public class OcppCall extends OcppFrame {
+    /*
+     * 1. CALL 表示“请求帧”，既可能是充电桩发给平台，也可能是平台发给充电桩。
+     * 2. action 决定要执行哪类协议动作，payload 保存该动作携带的业务字段。
+     */
     private final String action;
     private final JsonNode payload;
 

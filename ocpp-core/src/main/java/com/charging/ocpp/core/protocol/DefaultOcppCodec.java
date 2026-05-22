@@ -15,6 +15,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
  * </p>
  */
 public class DefaultOcppCodec implements OcppCodec {
+    /*
+     * 1. OCPP-J 不使用普通 JSON 对象作为外层帧，而使用数组：CALL=[2, uniqueId, action, payload]。
+     * 2. 本类只负责“数组帧”和 Java 帧对象之间的转换，不判断业务字段是否正确。
+     * 3. decode 先识别消息类型，再按类型检查数组长度；长度不对会抛 OcppException，最终发给对端 CALLERROR。
+     * 4. encode 方法会把 null payload 统一转成空 JSON 对象 {}，避免产生协议上不好处理的 null payload。
+     * 5. ObjectMapper 是 Jackson 的 JSON 工具，readTree 解析原始文本，valueToTree 把 Java 对象变成 JsonNode。
+     */
     private final ObjectMapper objectMapper;
 
     public DefaultOcppCodec(ObjectMapper objectMapper) {

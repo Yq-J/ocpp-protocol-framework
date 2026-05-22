@@ -24,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StopTransactionRequest {
+
     /**
      * 需要停止的交易编号。
      */

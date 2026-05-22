@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class AuthorizeRequest {
+
     /**
      * 需要校验的用户身份令牌。
      */

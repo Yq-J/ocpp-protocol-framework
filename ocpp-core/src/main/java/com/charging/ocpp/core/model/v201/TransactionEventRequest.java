@@ -24,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class TransactionEventRequest {
+
     /**
      * 交易事件类型。
      */

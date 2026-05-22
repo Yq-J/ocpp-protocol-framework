@@ -15,6 +15,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 @Slf4j
 public class RedisBackedOcppSessionRepository implements OcppSessionRepository {
+    /*
+     * 1. 该实现同时维护本地连接表和 Redis 全局索引：真正的 WebSocket 连接仍在当前 JVM，本地发送最快。
+     * 2. Redis 中只记录某台桩归属哪个节点，便于集群中其它节点判断请求该转发到哪里。
+     * 3. TTL 用于避免节点异常退出后 Redis 残留脏数据；正常断开时 remove 会主动删除当前节点写入的 key。
+     */
     /** Redis 键前缀。 */
     private static final String SESSION_KEY_PREFIX = "ocpp:session:cp:";
     /** 本地 chargePointId 到连接对象的索引，用于低延迟下发。 */

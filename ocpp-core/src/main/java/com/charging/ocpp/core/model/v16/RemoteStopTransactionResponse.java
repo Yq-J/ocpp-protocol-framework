@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RemoteStopTransactionResponse {
+
     /**
      * 远程停止请求处理结果。
      */

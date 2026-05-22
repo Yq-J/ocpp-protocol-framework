@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StartTransactionResponse {
+
     /**
      * 中央系统分配的交易编号。
      */

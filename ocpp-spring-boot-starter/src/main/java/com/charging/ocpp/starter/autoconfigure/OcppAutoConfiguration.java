@@ -38,6 +38,12 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 @EnableWebSocket
 @EnableConfigurationProperties(OcppProperties.class)
 public class OcppAutoConfiguration {
+    /*
+     * 1. Spring Boot 会自动加载该配置类，为业务系统装配 OCPP 所需的默认 Bean。
+     * 2. @ConditionalOnMissingBean 表示“用户没有自定义时才创建默认实现”，因此业务系统可以很容易覆盖编解码器、校验器或会话仓库。
+     * 3. 默认处理器只保证协议链路可跑通，真实业务通常应使用 @OcppActionMapping 或自定义 OcppActionHandler 替换。
+     * 4. 这里同时注册 WebSocket 入口、处理器注册表、下行调用模板和高负载保护组件，是 starter 的装配中心。
+     */
     @Bean
     @ConditionalOnMissingBean
     public OcppCodec ocppCodec(ObjectMapper objectMapper) { return new DefaultOcppCodec(objectMapper); }

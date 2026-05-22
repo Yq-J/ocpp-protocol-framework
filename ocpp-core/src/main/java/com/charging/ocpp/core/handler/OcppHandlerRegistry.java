@@ -16,6 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * </p>
  */
 public class OcppHandlerRegistry {
+    /*
+     * 1. 这是 OCPP Action 的路由表，内部用 ConcurrentHashMap 支持并发读写。
+     * 2. Spring 启动时会把默认处理器和注解扫描到的处理器都注册进来，运行时按 version + action 查找。
+     * 3. 后注册的同 key 处理器会覆盖先注册的处理器，这使业务自定义实现可以替换 starter 的默认实现。
+     */
     private final Map<HandlerKey, OcppActionHandler> handlers = new ConcurrentHashMap<>();
 
     public void register(OcppActionHandler handler) {

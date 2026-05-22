@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationRequest {
+
     /**
      * 发送启动通知的原因。
      */

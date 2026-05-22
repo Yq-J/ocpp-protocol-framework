@@ -37,6 +37,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class OcppTemplate implements OcppGateway {
+    /*
+     * 1. 这是平台主动调用充电桩的模板类，封装了生成 uniqueId、发送 CALL、等待响应和超时清理。
+     * 2. pendingRequests 是“未完成请求表”：key 是 uniqueId，value 中保存期望响应类型、Future 和截止时间。
+     * 3. 当 WebSocket 收到 CALLRESULT/CALLERROR 时，会回调 completeResult/completeError，让对应 Future 正常或异常完成。
+     * 4. 这种设计把异步 WebSocket 消息包装成业务层容易使用的 CompletableFuture。
+     */
     private final OcppSessionRepository sessionRepository;
     private final OcppCodec ocppCodec;
     private final ObjectMapper objectMapper;

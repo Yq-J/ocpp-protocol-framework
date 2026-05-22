@@ -15,6 +15,11 @@ import java.util.Map;
  */
 @Getter
 public class OcppRequestContext {
+    /*
+     * 1. 业务处理器除了 payload，通常还需要知道是哪台桩、哪个会话、哪个协议版本发来的请求。
+     * 2. 本对象把这些元数据集中传入，避免每个业务方法都接触底层 WebSocketSession。
+     * 3. attributes 是一个轻量扩展区，业务处理器可以在同一次处理链路中临时放置派生信息。
+     */
     private final String chargePointId;
     private final String sessionId;
     private final OcppVersion version;

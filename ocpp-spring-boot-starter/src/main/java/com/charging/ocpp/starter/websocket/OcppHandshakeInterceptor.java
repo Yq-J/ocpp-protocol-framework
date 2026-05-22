@@ -13,6 +13,11 @@ import org.springframework.web.util.UriTemplate;
  * 作者：JYq
  */
 public class OcppHandshakeInterceptor implements HandshakeInterceptor {
+    /*
+     * 1. WebSocket 握手阶段还没有进入 OcppWebSocketHandler，本拦截器先从 URL 路径中提取 chargePointId。
+     * 2. 提取到的值放进 session attributes，连接建立后 handler 就能知道是哪台桩。
+     * 3. 这里不做强校验，真正校验放在 afterConnectionEstablished，便于统一关闭不合法连接。
+     */
     private final String path;
 
     public OcppHandshakeInterceptor(String path) { this.path = path; }

@@ -16,6 +16,11 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  */
 @RequiredArgsConstructor
 public class OcppWebSocketConfigurer implements WebSocketConfigurer {
+    /*
+     * 1. 这是 Spring WebSocket 的端点注册类，把 OcppWebSocketHandler 绑定到 ocpp.path 配置的路径上。
+     * 2. addInterceptors 用于握手前提取路径变量，setHandshakeHandler 用于选择 ocpp1.6/ocpp2.0.1 子协议。
+     * 3. OCPP-J 使用原生 WebSocket 文本帧，不使用 STOMP 或 SockJS。
+     */
     private final OcppWebSocketHandler handler;
     private final OcppProperties properties;
 

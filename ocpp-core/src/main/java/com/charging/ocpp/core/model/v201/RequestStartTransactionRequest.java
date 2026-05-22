@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RequestStartTransactionRequest {
+
     /**
      * 指定启动交易的 EVSE 编号。
      */

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StopTransactionResponse {
+
     /**
      * 停止交易后返回的授权标识校验结果和附加信息。
      */

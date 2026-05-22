@@ -10,6 +10,10 @@ import lombok.Getter;
  */
 @Getter
 public class OcppCallError extends OcppFrame {
+    /*
+     * 1. CALLERROR 表示某个 CALL 的异常响应，包含错误码、错误描述和可选详情。
+     * 2. 平台收到充电桩的 CALLERROR 后，会让对应 CompletableFuture 以异常方式完成。
+     */
     private final String errorCode;
     private final String errorDescription;
     private final JsonNode errorDetails;

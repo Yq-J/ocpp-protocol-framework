@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class AuthorizeResponse {
+
     /** 授权标识的校验结果和附加信息。 */
     private IdTagInfo idTagInfo;
 

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StartTransactionRequest {
+
     /** 发起交易的连接器编号。 */
     private Integer connectorId;
     /** 发起交易的用户授权标识。 */
@@ -32,14 +33,4 @@ public class StartTransactionRequest {
     /** 交易开始时间。 */
     private String timestamp;
 
-    public Integer getConnectorId() { return connectorId; }
-    public void setConnectorId(Integer connectorId) { this.connectorId = connectorId; }
-    public String getIdTag() { return idTag; }
-    public void setIdTag(String idTag) { this.idTag = idTag; }
-    public Integer getMeterStart() { return meterStart; }
-    public void setMeterStart(Integer meterStart) { this.meterStart = meterStart; }
-    public Integer getReservationId() { return reservationId; }
-    public void setReservationId(Integer reservationId) { this.reservationId = reservationId; }
-    public String getTimestamp() { return timestamp; }
-    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 }

@@ -21,6 +21,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OcppActionMapping {
+    /*
+     * 1. 这是一个方法级注解，业务方法标上它之后，starter 会在启动时扫描并注册成 OCPP Action 处理器。
+     * 2. version 表示该方法处理哪个协议版本，例如 OCPP_16 或 OCPP_201；action 表示协议动作名，例如 BootNotification。
+     * 3. 运行时收到 CALL 帧后，框架会用 version + action 作为路由键找到目标方法，因此同名 action 在不同协议版本下可以分别处理。
+     * 4. 该注解让业务代码不用直接依赖 WebSocketSession、JSON 数组帧和注册表细节，只需要接收 DTO 或 JsonNode。
+     */
     OcppVersion version();
     String action();
 }

@@ -13,6 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * </p>
  */
 public class InMemoryOcppSessionRepository implements OcppSessionRepository {
+    /*
+     * 1. 这是单 JVM 内存实现，适合本地开发、单实例部署或测试。
+     * 2. byChargePointId 用于按桩编号查连接；sessionToChargePointId 用于连接断开时从 sessionId 反查桩编号并清理。
+     * 3. ConcurrentHashMap 保证 WebSocket 多线程读写时不需要额外加锁。
+     */
     private final Map<String, OcppConnection> byChargePointId = new ConcurrentHashMap<>();
     private final Map<String, String> sessionToChargePointId = new ConcurrentHashMap<>();
 

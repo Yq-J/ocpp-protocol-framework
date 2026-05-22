@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class TransactionEventResponse {
+
     /**
      * 当前交易累计费用。
      */

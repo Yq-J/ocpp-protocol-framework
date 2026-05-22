@@ -12,6 +12,10 @@ import java.io.IOException;
  * 作者：JYq
  */
 public class SpringOcppConnection implements OcppConnection {
+    /*
+     * 1. 这是适配器模式：把 Spring 的 WebSocketSession 包装成 core 层认识的 OcppConnection。
+     * 2. send 方法加 synchronized，是为了避免多个线程同时向同一条 WebSocket 连接写消息导致发送顺序或底层状态异常。
+     */
     private final WebSocketSession session;
     private final String chargePointId;
     private final OcppVersion version;

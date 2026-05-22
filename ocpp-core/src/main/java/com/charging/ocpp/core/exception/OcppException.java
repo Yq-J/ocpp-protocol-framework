@@ -11,6 +11,11 @@ import lombok.Getter;
  */
 @Getter
 public class OcppException extends RuntimeException {
+    /*
+     * 1. 这是框架专用异常，除了普通异常消息，还携带 OCPP 错误码和 details 详情对象。
+     * 2. details 会进入 CALLERROR 的第 4 个数组元素，通常用于放结构化错误信息；没有详情时传 null 即可。
+     * 3. 构造方法会把空 errorCode 兜底为 InternalError，避免发出不合法的错误帧。
+     */
     private final OcppErrorCode errorCode;
     private final Object details;
 

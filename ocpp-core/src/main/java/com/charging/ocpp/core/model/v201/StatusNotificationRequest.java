@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StatusNotificationRequest {
+
     /**
      * 状态产生时间。
      */

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class IdTokenInfo {
+
     /**
      * 身份令牌授权状态。
      */

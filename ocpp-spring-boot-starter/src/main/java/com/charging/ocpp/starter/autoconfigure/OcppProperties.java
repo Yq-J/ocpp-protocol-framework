@@ -12,6 +12,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @ConfigurationProperties(prefix = "ocpp")
 public class OcppProperties {
+    /*
+     * 1. 这些字段会绑定 application.yml 中 ocpp.* 配置项，例如 ocpp.path、ocpp.connection-timeout-seconds。
+     * 2. 属性命名使用 Java 驼峰，Spring Boot 会自动兼容短横线格式。
+     * 3. 默认值偏向“能直接运行”，生产环境应结合连接规模、机器配置和压测结果调整线程数、队列容量、限流和 Redis 开关。
+     */
     /**
      * OCPP WebSocket 接入路径。
      */

@@ -12,6 +12,11 @@ import lombok.Getter;
  */
 @Getter
 public enum OcppMessageType {
+    /*
+     * 1. OCPP-J 的每条 WebSocket 文本消息都是 JSON 数组，数组第 0 位就是消息类型编号。
+     * 2. CALL=2 表示请求，CALL_RESULT=3 表示正常响应，CALL_ERROR=4 表示异常响应。
+     * 3. uniqueId 会把一次 CALL 与后续 CALL_RESULT 或 CALL_ERROR 关联起来，类似一次异步请求的流水号。
+     */
     CALL(2), CALL_RESULT(3), CALL_ERROR(4);
 
     private final int code;

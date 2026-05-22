@@ -14,6 +14,11 @@ import org.springframework.util.ReflectionUtils;
  * 作者：JYq
  */
 public class OcppAnnotatedHandlerRegistrar implements SmartInitializingSingleton {
+    /*
+     * 1. 该注册器在 Spring Bean 初始化完成后扫描所有 Bean 的方法，找到 @OcppActionMapping。
+     * 2. 每个注解方法都会被包装成 MethodInvokingOcppActionHandler，再注册到 OcppHandlerRegistry。
+     * 3. 它让业务系统通过注解声明路由，而不必手动创建和注册 OcppActionHandler 实例。
+     */
     private final ApplicationContext applicationContext;
     private final OcppHandlerRegistry registry;
     private final ObjectMapper objectMapper;

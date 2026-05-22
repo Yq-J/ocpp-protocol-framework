@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RequestStopTransactionRequest {
+
     /**
      * 需要停止的交易编号。
      */

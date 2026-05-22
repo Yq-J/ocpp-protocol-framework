@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RemoteStartTransactionResponse {
+
     /** 远程启动请求处理结果。 */
     private String status;
 

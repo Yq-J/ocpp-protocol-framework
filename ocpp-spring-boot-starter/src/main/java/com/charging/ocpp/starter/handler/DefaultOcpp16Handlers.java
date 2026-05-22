@@ -22,6 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * </p>
  */
 public class DefaultOcpp16Handlers {
+    /*
+     * 1. 这些是 OCPP 1.6 的兜底处理器，用于没有业务实现时返回基本 Accepted 或空响应。
+     * 2. 它们不做订单创建、鉴权、计费、库存或设备状态落库，只保证桩端常见动作不会因为无人处理而失败。
+     * 3. 真实项目应注册自己的处理器覆盖这些默认行为，例如根据用户账户判断 Authorize 是否 Accepted。
+     */
     @Getter
     private final ObjectMapper objectMapper;
     private final AtomicInteger transactionIdGenerator = new AtomicInteger(100000);

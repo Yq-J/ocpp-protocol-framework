@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class IdTagInfo {
+
     /** 授权标识状态。 */
     private String status;
     /** 授权有效期截止时间。 */

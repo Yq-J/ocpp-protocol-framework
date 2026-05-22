@@ -24,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class MeterValuesRequest {
+
     /**
      * 上报计量值的 EVSE 编号。
      */

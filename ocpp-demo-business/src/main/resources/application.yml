@@ -8,15 +8,25 @@ spring:
     timeout: 2000ms
 
 ocpp:
+  # OCPP WebSocket 连接路径，chargePointId 用于标识接入的充电桩。
   path: /ocpp/{chargePointId}
+  # WebSocket 连接超时时间，单位秒。
   connection-timeout-seconds: 60
+  # 是否允许未定义的 OCPP Action 请求。
   allow-unknown-actions: false
+  # 入站消息处理线程数。
   inbound-worker-threads: 32
+  # 入站消息队列容量。
   inbound-queue-capacity: 300000
+  # 单节点每秒允许处理的最大入站消息数。
   max-inbound-messages-per-second: 12000
+  # 是否启用基于 Redis 的全局限流保护。
   redis-global-guard-enabled: true
+  # 是否启用基于 Redis 的会话注册表。
   redis-session-registry-enabled: true
+  # Redis 会话注册信息的过期时间，单位秒。
   redis-session-registry-ttl-seconds: 180
+  # 当前服务节点标识，用于集群场景区分不同实例。
   node-id: demo-node-01
 
 logging:

@@ -16,6 +16,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * </p>
  */
 public class OcppHighLoadGuard {
+    /*
+     * 1. 高负载保护用于限制入站消息速率，防止瞬时流量把线程池、队列或 JVM 内存打满。
+     * 2. 本地计数适合单实例；启用 Redis 后可以做多实例全局计数，更适合集群削峰。
+     * 3. allow 返回 false 时，WebSocket 层会快速返回错误响应，避免继续占用业务线程。
+     */
     private final OcppProperties properties;
     private final StringRedisTemplate redisTemplate;
     private final AtomicLong secondWindow = new AtomicLong(0L);

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class HeartbeatResponse {
+
     /** 中央系统当前时间。 */
     private String currentTime;
 

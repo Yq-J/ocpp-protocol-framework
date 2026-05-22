@@ -19,6 +19,10 @@ import java.util.TimeZone;
  */
 @Getter
 public class DefaultOcpp201Handlers {
+    /*
+     * 1. 这些是 OCPP 2.0.1 的兜底处理器，角色和 1.6 默认处理器相同。
+     * 2. 2.0.1 的交易模型和身份令牌结构更复杂，默认实现只返回最小可用响应，业务系统需要按场景补充。
+     */
     private final ObjectMapper objectMapper;
 
     public DefaultOcpp201Handlers(ObjectMapper objectMapper) {
