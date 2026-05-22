@@ -48,6 +48,23 @@ WebSocket 子协议：
 详细说明见 `docs/开发使用手册.md`。
 
 
+## 开发与测试
+
+常用命令：
+
+```bash
+# 全量编译与测试
+mvn clean test
+
+# 跳过测试进行本地打包
+mvn clean package -DskipTests
+```
+
+查看 API 与协议处理细节时，建议优先阅读：
+
+- `docs/开发使用手册.md`
+- `docs/架构说明.md`
+
 ## Lombok 与 spring-websocket
 
 - DTO、配置类、示例业务类中已使用 Lombok 常用注解，例如 `@Data`、`@Builder`、`@NoArgsConstructor`、`@AllArgsConstructor`、`@Accessors(chain = true)`、`@Slf4j`、`@RequiredArgsConstructor`。
