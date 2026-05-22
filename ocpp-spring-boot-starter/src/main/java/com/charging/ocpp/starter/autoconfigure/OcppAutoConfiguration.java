@@ -12,6 +12,7 @@ import com.charging.ocpp.starter.handler.DefaultOcpp16Handlers;
 import com.charging.ocpp.starter.handler.DefaultOcpp201Handlers;
 import com.charging.ocpp.starter.registry.OcppAnnotatedHandlerRegistrar;
 import com.charging.ocpp.starter.service.OcppTemplate;
+import com.charging.ocpp.starter.service.OcppHighLoadGuard;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +23,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 /**
@@ -87,10 +89,16 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public OcppHighLoadGuard ocppHighLoadGuard(OcppProperties properties, org.springframework.beans.factory.ObjectProvider<StringRedisTemplate> redisTemplateProvider) {
+        return new OcppHighLoadGuard(properties, redisTemplateProvider.getIfAvailable());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public OcppWebSocketHandler ocppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry,
                                                      OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
-                                                     OcppTemplate ocppTemplate, OcppProperties properties) {
-        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate, properties);
+                                                     OcppTemplate ocppTemplate, OcppProperties properties, OcppHighLoadGuard highLoadGuard) {
+        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate, properties, highLoadGuard);
     }
 
     @Bean
