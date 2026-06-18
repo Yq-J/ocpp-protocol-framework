@@ -1,6 +1,7 @@
 package com.charging.ocpp.core.metadata;
 
 import com.charging.ocpp.core.enums.OcppVersion;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +32,8 @@ class OcppActionMetadataTest {
             OcppActionMetadata.descriptors(version).forEach(descriptor -> {
                 assertNotNull(descriptor.getRequestType());
                 assertNotNull(descriptor.getResponseType());
+                assertFalse(JsonNode.class.equals(descriptor.getRequestType()));
+                assertFalse(JsonNode.class.equals(descriptor.getResponseType()));
                 assertTrue(descriptor.getRequestSchemaPath().endsWith(descriptor.getAction() + "Request.json"));
                 assertTrue(descriptor.getResponseSchemaPath().endsWith(descriptor.getAction() + "Response.json"));
             });

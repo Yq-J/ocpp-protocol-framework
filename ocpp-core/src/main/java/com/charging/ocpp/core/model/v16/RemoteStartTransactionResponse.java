@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RemoteStartTransactionResponse {
-    /** status 字段。 */
+    /** OCPP payload 的 status 字段。 */
     private String status;
 
 }

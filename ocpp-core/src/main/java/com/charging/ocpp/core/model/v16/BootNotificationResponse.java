@@ -21,11 +21,11 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationResponse {
-    /** currentTime 字段。 */
+    /** OCPP payload 的 currentTime 字段。 */
     private String currentTime;
-    /** interval 字段。 */
+    /** OCPP payload 的 interval 字段。 */
     private Integer interval;
-    /** status 字段。 */
+    /** OCPP payload 的 status 字段。 */
     private String status;
 
 }

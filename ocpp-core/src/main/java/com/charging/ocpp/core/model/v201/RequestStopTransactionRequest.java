@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RequestStopTransactionRequest {
     /**
-     * transactionId 字段。
+     * OCPP payload 的 transactionId 字段。
      */
     private String transactionId;
 

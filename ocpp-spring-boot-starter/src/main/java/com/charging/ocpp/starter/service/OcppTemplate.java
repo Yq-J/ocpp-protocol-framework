@@ -8,9 +8,11 @@ import com.charging.ocpp.core.gateway.OcppGateway;
 import com.charging.ocpp.core.protocol.OcppCallError;
 import com.charging.ocpp.core.protocol.OcppCallResult;
 import com.charging.ocpp.core.protocol.OcppCodec;
+import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Iterator;
@@ -21,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.DisposableBean;
 
 /**
  * OCPP 业务调用模板。
@@ -36,19 +39,26 @@ import java.util.concurrent.TimeUnit;
  * </p>
  */
 @Slf4j
-public class OcppTemplate implements OcppGateway {
+public class OcppTemplate implements OcppGateway, DisposableBean {
     private final OcppSessionRepository sessionRepository;
     private final OcppCodec ocppCodec;
     private final ObjectMapper objectMapper;
     private final OcppProperties properties;
+    private final OcppSchemaValidator schemaValidator;
     private final Map<String, PendingRequest<?>> pendingRequests = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread thread = new Thread(r, "ocpp-pending-request-cleaner");
+        thread.setDaemon(true);
+        return thread;
+    });
 
-    public OcppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec, ObjectMapper objectMapper, OcppProperties properties) {
+    public OcppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec, ObjectMapper objectMapper,
+                        OcppProperties properties, OcppSchemaValidator schemaValidator) {
         this.sessionRepository = sessionRepository;
         this.ocppCodec = ocppCodec;
         this.objectMapper = objectMapper;
         this.properties = properties;
+        this.schemaValidator = schemaValidator;
         startCleaner();
     }
 
@@ -66,13 +76,23 @@ public class OcppTemplate implements OcppGateway {
             return failed;
         }
 
+        OcppVersion actualVersion = version == null ? connection.getVersion() : version;
+        JsonNode requestPayload = objectMapper.valueToTree(payload == null ? objectMapper.createObjectNode() : payload);
+        try {
+            schemaValidator.validate(actualVersion, action, true, requestPayload);
+        } catch (OcppException e) {
+            CompletableFuture<R> failed = new CompletableFuture<>();
+            failed.completeExceptionally(e);
+            return failed;
+        }
+
         String uniqueId = UUID.randomUUID().toString();
         CompletableFuture<R> future = new CompletableFuture<>();
         long timeoutSeconds = properties.getConnectionTimeoutSeconds() == null ? 60L : properties.getConnectionTimeoutSeconds().longValue();
         pendingRequests.put(uniqueId, new PendingRequest<>(responseType, future, System.currentTimeMillis() + timeoutSeconds * 1000L));
 
         try {
-            connection.send(ocppCodec.encodeCall(uniqueId, action, payload));
+            connection.send(ocppCodec.encodeCall(uniqueId, action, requestPayload));
         } catch (IOException e) {
             pendingRequests.remove(uniqueId);
             future.completeExceptionally(new OcppException(OcppErrorCode.InternalError, "发送 OCPP 命令失败", null, e));
@@ -92,6 +112,19 @@ public class OcppTemplate implements OcppGateway {
         PendingRequest<?> pending = pendingRequests.remove(error.getUniqueId());
         if (pending == null) { return; }
         pending.getFuture().completeExceptionally(new OcppException(OcppErrorCode.GenericError, error.getErrorDescription(), error.getErrorDetails()));
+    }
+
+    @Override
+    public void destroy() {
+        shutdown();
+    }
+
+    public void shutdown() {
+        scheduler.shutdownNow();
+        for (PendingRequest<?> pending : pendingRequests.values()) {
+            pending.getFuture().completeExceptionally(new OcppException(OcppErrorCode.GenericError, "OCPP 模板关闭，等待中的请求已取消"));
+        }
+        pendingRequests.clear();
     }
 
     private void startCleaner() {

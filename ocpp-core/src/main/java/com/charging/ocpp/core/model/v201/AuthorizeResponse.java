@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthorizeResponse {
     /**
-     * idTokenInfo 字段。
+     * OCPP payload 的 idTokenInfo 字段。
      */
     private IdTokenInfo idTokenInfo;
 

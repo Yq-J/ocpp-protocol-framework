@@ -40,11 +40,43 @@
     {
       "name": "ocpp.supported-sub-protocols",
       "type": "java.util.List<java.lang.String>",
-      "defaultValue": [
-        "ocpp1.6",
-        "ocpp2.0.1"
-      ],
+      "defaultValue": ["ocpp1.6", "ocpp2.0.1"],
       "description": "WebSocket 握手允许协商的 OCPP 子协议。"
+    },
+    {
+      "name": "ocpp.allowed-origins",
+      "type": "java.util.List<java.lang.String>",
+      "defaultValue": ["*"],
+      "description": "允许跨域访问 WebSocket 的 Origin 列表，生产环境应配置为可信域名。"
+    },
+    {
+      "name": "ocpp.max-text-message-bytes",
+      "type": "java.lang.Integer",
+      "defaultValue": 262144,
+      "description": "单条 WebSocket 文本消息最大字节数。"
+    },
+    {
+      "name": "ocpp.require-auth-token",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "是否启用握手 Token 校验。"
+    },
+    {
+      "name": "ocpp.auth-token-query-parameter",
+      "type": "java.lang.String",
+      "defaultValue": "token",
+      "description": "握手 Token 的查询参数名。"
+    },
+    {
+      "name": "ocpp.auth-token-header",
+      "type": "java.lang.String",
+      "defaultValue": "X-OCPP-Token",
+      "description": "握手 Token 的 HTTP Header 名。"
+    },
+    {
+      "name": "ocpp.charge-point-tokens",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "充电桩 ID 到握手 Token 的映射，仅 require-auth-token=true 时生效。"
     }
   ]
 }

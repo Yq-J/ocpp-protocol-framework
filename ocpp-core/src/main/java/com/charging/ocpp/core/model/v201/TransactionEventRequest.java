@@ -25,39 +25,39 @@ import java.util.List;
 @Accessors(chain = true)
 public class TransactionEventRequest {
     /**
-     * eventType 字段。
+     * OCPP payload 的 eventType 字段。
      */
     private String eventType;
     /**
-     * timestamp 字段。
+     * OCPP payload 的 timestamp 字段。
      */
     private String timestamp;
     /**
-     * triggerReason 字段。
+     * OCPP payload 的 triggerReason 字段。
      */
     private String triggerReason;
     /**
-     * seqNo 字段。
+     * OCPP payload 的 seqNo 字段。
      */
     private Integer seqNo;
     /**
-     * transactionInfo 字段。
+     * OCPP payload 的 transactionInfo 字段。
      */
     private JsonNode transactionInfo;
     /**
-     * idToken 字段。
+     * OCPP payload 的 idToken 字段。
      */
     private JsonNode idToken;
     /**
-     * cableMaxCurrent 字段。
+     * OCPP payload 的 cableMaxCurrent 字段。
      */
     private Integer cableMaxCurrent;
     /**
-     * meterValue 字段。
+     * OCPP payload 的 meterValue 字段。
      */
     private List<JsonNode> meterValue;
     /**
-     * evse 字段。
+     * OCPP payload 的 evse 字段。
      */
     private JsonNode evse;
 

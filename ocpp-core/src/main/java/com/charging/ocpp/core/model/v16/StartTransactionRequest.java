@@ -21,15 +21,15 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class StartTransactionRequest {
-    /** connectorId 字段。 */
+    /** OCPP payload 的 connectorId 字段。 */
     private Integer connectorId;
-    /** idTag 字段。 */
+    /** OCPP payload 的 idTag 字段。 */
     private String idTag;
-    /** meterStart 字段。 */
+    /** OCPP payload 的 meterStart 字段。 */
     private Integer meterStart;
-    /** reservationId 字段。 */
+    /** OCPP payload 的 reservationId 字段。 */
     private Integer reservationId;
-    /** timestamp 字段。 */
+    /** OCPP payload 的 timestamp 字段。 */
     private String timestamp;
 
     public Integer getConnectorId() { return connectorId; }

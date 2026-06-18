@@ -25,27 +25,27 @@ import java.util.List;
 @Accessors(chain = true)
 public class StopTransactionRequest {
     /**
-     * transactionId 字段。
+     * OCPP payload 的 transactionId 字段。
      */
     private Integer transactionId;
     /**
-     * idTag 字段。
+     * OCPP payload 的 idTag 字段。
      */
     private String idTag;
     /**
-     * meterStop 字段。
+     * OCPP payload 的 meterStop 字段。
      */
     private Integer meterStop;
     /**
-     * timestamp 字段。
+     * OCPP payload 的 timestamp 字段。
      */
     private String timestamp;
     /**
-     * reason 字段。
+     * OCPP payload 的 reason 字段。
      */
     private String reason;
     /**
-     * transactionData 字段。
+     * OCPP payload 的 transactionData 字段。
      */
     private List<JsonNode> transactionData;
 

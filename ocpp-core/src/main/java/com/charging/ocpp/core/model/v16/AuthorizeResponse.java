@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class AuthorizeResponse {
-    /** idTagInfo 字段。 */
+    /** OCPP payload 的 idTagInfo 字段。 */
     private IdTagInfo idTagInfo;
 
 }

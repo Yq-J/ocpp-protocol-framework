@@ -5,6 +5,13 @@ ocpp:
   path: /ocpp/{chargePointId}
   connection-timeout-seconds: 60
   allow-unknown-actions: false
+  max-text-message-bytes: 262144
+  allowed-origins:
+    - "http://localhost:8080"
+  # 生产环境建议开启 Token 校验，并为每个 chargePointId 配置独立 Token。
+  # require-auth-token: true
+  # charge-point-tokens:
+  #   CP001: "replace-with-strong-random-token"
 
 logging:
   level:

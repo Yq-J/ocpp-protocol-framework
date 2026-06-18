@@ -74,6 +74,13 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
+        if (properties.getMaxTextMessageBytes() != null
+                && message.getPayloadLength() > properties.getMaxTextMessageBytes()) {
+            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", OcppErrorCode.FormationViolation.name(),
+                    "OCPP 消息超过最大长度限制", null)));
+            return;
+        }
+
         OcppFrame frame;
         try {
             frame = ocppCodec.decode(message.getPayload());
