@@ -11,7 +11,6 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
@@ -52,15 +51,12 @@ public class OfficialOcppSchemaValidator implements OcppSchemaValidator {
         if (schema != null) {
             return schema;
         }
-        try (InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
-            if (input == null) {
-                throw new OcppException(OcppErrorCode.InternalError, "缺少官方 JSON Schema 资源：" + path);
-            }
-            JsonSchema loaded = schemaFactory.getSchema(input);
-            schemas.put(path, loaded);
-            return loaded;
-        } catch (IOException e) {
-            throw new OcppException(OcppErrorCode.InternalError, "读取官方 JSON Schema 失败：" + path, e.getMessage());
+        InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+        if (input == null) {
+            throw new OcppException(OcppErrorCode.InternalError, "缺少官方 JSON Schema 资源：" + path);
         }
+        JsonSchema loaded = schemaFactory.getSchema(input);
+        schemas.put(path, loaded);
+        return loaded;
     }
 }
