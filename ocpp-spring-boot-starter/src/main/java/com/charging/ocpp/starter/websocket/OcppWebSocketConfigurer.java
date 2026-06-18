@@ -24,6 +24,6 @@ public class OcppWebSocketConfigurer implements WebSocketConfigurer {
         registry.addHandler(handler, properties.getPath())
                 .setAllowedOrigins("*")
                 .addInterceptors(new OcppHandshakeInterceptor(properties.getPath()))
-                .setHandshakeHandler(new OcppWebSocketHandshakeHandler());
+                .setHandshakeHandler(new OcppWebSocketHandshakeHandler(properties));
     }
 }

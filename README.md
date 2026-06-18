@@ -53,3 +53,11 @@ WebSocket 子协议：
 - DTO、配置类、示例业务类中已使用 Lombok 常用注解，例如 `@Data`、`@Builder`、`@NoArgsConstructor`、`@AllArgsConstructor`、`@Accessors(chain = true)`、`@Slf4j`、`@RequiredArgsConstructor`。
 - WebSocket 传输层显式依赖并使用 `org.springframework:spring-websocket`，核心入口为 `TextWebSocketHandler` 和 `WebSocketConfigurer`。
 - 注释均为中文，关键类包含更详细的设计说明，作者为 `JYq`。
+
+
+## 生产化协议覆盖
+
+- `ocpp-core` 提供 `OcppActionMetadata`，覆盖 OCPP 1.6J 的 28 个 Action 与 OCPP 2.0.1 的 64 个 Action 名称。
+- starter 默认启用 `MetadataOcppSchemaValidator`，校验版本、Action 合法性和 Payload 对象形态。
+- 字段级校验可通过自定义 `OcppSchemaValidator` 接入官方 JSON Schema。
+- 默认处理器仅用于框架可运行和示例场景，生产项目应按业务规则覆盖对应 Action。

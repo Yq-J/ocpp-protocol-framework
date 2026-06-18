@@ -24,6 +24,21 @@
       "type": "java.lang.Boolean",
       "defaultValue": false,
       "description": "是否允许未知 Action 自动返回空响应。"
+    },
+    {
+      "name": "ocpp.validate-known-actions",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否校验 Action 必须属于对应 OCPP 版本的官方动作集合。"
+    },
+    {
+      "name": "ocpp.supported-sub-protocols",
+      "type": "java.util.List<java.lang.String>",
+      "defaultValue": [
+        "ocpp1.6",
+        "ocpp2.0.1"
+      ],
+      "description": "WebSocket 握手允许协商的 OCPP 子协议。"
     }
   ]
 }

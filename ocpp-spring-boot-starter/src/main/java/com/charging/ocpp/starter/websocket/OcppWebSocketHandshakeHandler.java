@@ -1,6 +1,6 @@
 package com.charging.ocpp.starter.websocket;
 
-import java.util.Arrays;
+import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import java.util.List;
 
 import org.springframework.lang.NonNull;
@@ -12,11 +12,22 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
  * 作者：JYq
  */
 public class OcppWebSocketHandshakeHandler extends DefaultHandshakeHandler {
+    private final OcppProperties properties;
+
+    public OcppWebSocketHandshakeHandler(OcppProperties properties) {
+        this.properties = properties;
+    }
+
     @Override
     protected String selectProtocol(List<String> requestedProtocols, @NonNull WebSocketHandler webSocketHandler) {
-        List<String> supported = Arrays.asList("ocpp1.6", "ocpp2.0.1");
+        List<String> supported = properties.getSupportedSubProtocols();
+        if (supported == null || supported.isEmpty()) {
+            return super.selectProtocol(requestedProtocols, webSocketHandler);
+        }
         for (String item : requestedProtocols) {
-            if (supported.contains(item)) { return item; }
+            for (String candidate : supported) {
+                if (candidate != null && candidate.equalsIgnoreCase(item)) { return candidate; }
+            }
         }
         return super.selectProtocol(requestedProtocols, webSocketHandler);
     }
