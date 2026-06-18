@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ReportChargingProfilesResponse",
+  "type": "object",
+  "additionalProperties": true
+}
