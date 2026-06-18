@@ -4,13 +4,13 @@ import com.charging.ocpp.core.handler.OcppActionHandler;
 import com.charging.ocpp.core.handler.OcppHandlerRegistry;
 import com.charging.ocpp.core.protocol.DefaultOcppCodec;
 import com.charging.ocpp.core.protocol.OcppCodec;
-import com.charging.ocpp.core.schema.NoopOcppSchemaValidator;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.InMemoryOcppSessionRepository;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.handler.DefaultOcpp16Handlers;
 import com.charging.ocpp.starter.handler.DefaultOcpp201Handlers;
 import com.charging.ocpp.starter.registry.OcppAnnotatedHandlerRegistrar;
+import com.charging.ocpp.starter.schema.MetadataOcppSchemaValidator;
 import com.charging.ocpp.starter.service.OcppTemplate;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
@@ -41,7 +41,7 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OcppSchemaValidator ocppSchemaValidator() { return new NoopOcppSchemaValidator(); }
+    public OcppSchemaValidator ocppSchemaValidator(OcppProperties properties) { return new MetadataOcppSchemaValidator(properties); }
 
     @Bean
     @ConditionalOnMissingBean

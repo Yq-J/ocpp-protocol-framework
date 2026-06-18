@@ -2,6 +2,8 @@ package com.charging.ocpp.starter.autoconfigure;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -24,5 +26,13 @@ public class OcppProperties {
      * 未知 Action 是否自动返回空对象。
      */
     private Boolean allowUnknownActions = false;
+    /**
+     * 是否校验 Action 必须属于对应 OCPP 版本的官方动作集合。
+     */
+    private Boolean validateKnownActions = true;
+    /**
+     * WebSocket 握手允许协商的 OCPP 子协议。
+     */
+    private List<String> supportedSubProtocols = Arrays.asList("ocpp1.6", "ocpp2.0.1");
 
 }
