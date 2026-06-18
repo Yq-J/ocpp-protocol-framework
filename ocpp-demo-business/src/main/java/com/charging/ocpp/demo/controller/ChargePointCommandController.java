@@ -1,13 +1,12 @@
 package com.charging.ocpp.demo.controller;
 
-import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.model.v16.RemoteStartTransactionRequest;
 import com.charging.ocpp.core.model.v16.RemoteStartTransactionResponse;
 import com.charging.ocpp.core.model.v16.RemoteStopTransactionRequest;
 import com.charging.ocpp.core.model.v16.RemoteStopTransactionResponse;
 import com.charging.ocpp.core.model.v201.RequestStartTransactionRequest;
 import com.charging.ocpp.core.model.v201.RequestStartTransactionResponse;
-import com.charging.ocpp.starter.service.OcppTemplate;
+import com.charging.ocpp.core.gateway.OcppGateway;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,28 +23,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/charge-points")
 public class ChargePointCommandController {
-    private final OcppTemplate ocppTemplate;
+    private final OcppGateway ocppGateway;
 
-    public ChargePointCommandController(OcppTemplate ocppTemplate) {
-        this.ocppTemplate = ocppTemplate;
+    public ChargePointCommandController(OcppGateway ocppGateway) {
+        this.ocppGateway = ocppGateway;
     }
 
     @PostMapping("/{chargePointId}/ocpp16/remote-start")
     public CompletableFuture<RemoteStartTransactionResponse> remoteStart16(@PathVariable String chargePointId,
                                                                             @RequestBody RemoteStartTransactionRequest request) {
-        return ocppTemplate.call(chargePointId, OcppVersion.OCPP_16, "RemoteStartTransaction", request, RemoteStartTransactionResponse.class);
+        return ocppGateway.remoteStartTransaction16(chargePointId, request);
     }
 
     @PostMapping("/{chargePointId}/ocpp16/remote-stop")
     public CompletableFuture<RemoteStopTransactionResponse> remoteStop16(@PathVariable String chargePointId,
                                                                           @RequestBody RemoteStopTransactionRequest request) {
-        return ocppTemplate.call(chargePointId, OcppVersion.OCPP_16, "RemoteStopTransaction", request, RemoteStopTransactionResponse.class);
+        return ocppGateway.remoteStopTransaction16(chargePointId, request);
     }
 
     @PostMapping("/{chargePointId}/ocpp201/request-start")
     public CompletableFuture<RequestStartTransactionResponse> requestStart201(@PathVariable String chargePointId,
                                                                               @RequestBody RequestStartTransactionRequest request) {
-        return ocppTemplate.call(chargePointId, OcppVersion.OCPP_201, "RequestStartTransaction", request, RequestStartTransactionResponse.class);
+        return ocppGateway.requestStartTransaction201(chargePointId, request);
     }
 
     @PostMapping("/{chargePointId}/ping")

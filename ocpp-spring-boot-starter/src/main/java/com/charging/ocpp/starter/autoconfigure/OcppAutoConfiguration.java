@@ -110,8 +110,9 @@ public class OcppAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OcppTemplate ocppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec,
-                                     ObjectMapper objectMapper, OcppProperties properties) {
-        return new OcppTemplate(sessionRepository, ocppCodec, objectMapper, properties);
+                                     ObjectMapper objectMapper, OcppProperties properties,
+                                     OcppSchemaValidator schemaValidator) {
+        return new OcppTemplate(sessionRepository, ocppCodec, objectMapper, properties, schemaValidator);
     }
 
     @Bean
