@@ -19,7 +19,10 @@ public class InMemoryOcppSessionRepository implements OcppSessionRepository {
     @Override
     public void save(OcppConnection connection) {
         if (connection == null) { return; }
-        byChargePointId.put(connection.getChargePointId(), connection);
+        OcppConnection previous = byChargePointId.put(connection.getChargePointId(), connection);
+        if (previous != null && !previous.getSessionId().equals(connection.getSessionId())) {
+            sessionToChargePointId.remove(previous.getSessionId());
+        }
         sessionToChargePointId.put(connection.getSessionId(), connection.getChargePointId());
     }
 
@@ -30,7 +33,8 @@ public class InMemoryOcppSessionRepository implements OcppSessionRepository {
     public void remove(String sessionId) {
         String chargePointId = sessionToChargePointId.remove(sessionId);
         if (chargePointId != null) {
-            byChargePointId.remove(chargePointId);
+            byChargePointId.computeIfPresent(chargePointId, (key, connection) ->
+                    sessionId.equals(connection.getSessionId()) ? null : connection);
         }
     }
 
