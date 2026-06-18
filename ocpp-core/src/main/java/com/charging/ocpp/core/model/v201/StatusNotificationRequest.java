@@ -22,19 +22,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StatusNotificationRequest {
     /**
-     * timestamp 字段。
+     * OCPP payload 的 timestamp 字段。
      */
     private String timestamp;
     /**
-     * connectorId 字段。
+     * OCPP payload 的 connectorId 字段。
      */
     private Integer connectorId;
     /**
-     * evseId 字段。
+     * OCPP payload 的 evseId 字段。
      */
     private Integer evseId;
     /**
-     * connectorStatus 字段。
+     * OCPP payload 的 connectorStatus 字段。
      */
     private String connectorStatus;
 

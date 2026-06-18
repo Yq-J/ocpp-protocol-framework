@@ -23,19 +23,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TransactionEventResponse {
     /**
-     * totalCost 字段。
+     * OCPP payload 的 totalCost 字段。
      */
     private Integer totalCost;
     /**
-     * chargingPriority 字段。
+     * OCPP payload 的 chargingPriority 字段。
      */
     private Integer chargingPriority;
     /**
-     * idTokenInfo 字段。
+     * OCPP payload 的 idTokenInfo 字段。
      */
     private IdTokenInfo idTokenInfo;
     /**
-     * updatedPersonalMessage 字段。
+     * OCPP payload 的 updatedPersonalMessage 字段。
      */
     private JsonNode updatedPersonalMessage;
 

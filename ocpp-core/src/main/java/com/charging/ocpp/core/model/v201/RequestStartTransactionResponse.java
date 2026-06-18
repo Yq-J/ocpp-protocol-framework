@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RequestStartTransactionResponse {
     /**
-     * status 字段。
+     * OCPP payload 的 status 字段。
      */
     private String status;
 

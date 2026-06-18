@@ -22,31 +22,31 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StatusNotificationRequest {
     /**
-     * connectorId 字段。
+     * OCPP payload 的 connectorId 字段。
      */
     private Integer connectorId;
     /**
-     * errorCode 字段。
+     * OCPP payload 的 errorCode 字段。
      */
     private String errorCode;
     /**
-     * status 字段。
+     * OCPP payload 的 status 字段。
      */
     private String status;
     /**
-     * info 字段。
+     * OCPP payload 的 info 字段。
      */
     private String info;
     /**
-     * timestamp 字段。
+     * OCPP payload 的 timestamp 字段。
      */
     private String timestamp;
     /**
-     * vendorId 字段。
+     * OCPP payload 的 vendorId 字段。
      */
     private String vendorId;
     /**
-     * vendorErrorCode 字段。
+     * OCPP payload 的 vendorErrorCode 字段。
      */
     private String vendorErrorCode;
 

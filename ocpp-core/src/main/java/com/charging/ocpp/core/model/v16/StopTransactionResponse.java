@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StopTransactionResponse {
     /**
-     * idTagInfo 字段。
+     * OCPP payload 的 idTagInfo 字段。
      */
     private IdTagInfo idTagInfo;
 

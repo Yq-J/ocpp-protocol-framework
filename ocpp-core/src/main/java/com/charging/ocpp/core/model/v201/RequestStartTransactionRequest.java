@@ -23,23 +23,23 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RequestStartTransactionRequest {
     /**
-     * evseId 字段。
+     * OCPP payload 的 evseId 字段。
      */
     private Integer evseId;
     /**
-     * remoteStartId 字段。
+     * OCPP payload 的 remoteStartId 字段。
      */
     private Integer remoteStartId;
     /**
-     * idToken 字段。
+     * OCPP payload 的 idToken 字段。
      */
     private JsonNode idToken;
     /**
-     * chargingProfile 字段。
+     * OCPP payload 的 chargingProfile 字段。
      */
     private JsonNode chargingProfile;
     /**
-     * groupIdToken 字段。
+     * OCPP payload 的 groupIdToken 字段。
      */
     private String groupIdToken;
 

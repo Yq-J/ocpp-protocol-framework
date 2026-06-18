@@ -21,23 +21,23 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationRequest {
-    /** chargePointVendor 字段。 */
+    /** OCPP payload 的 chargePointVendor 字段。 */
     private String chargePointVendor;
-    /** chargePointModel 字段。 */
+    /** OCPP payload 的 chargePointModel 字段。 */
     private String chargePointModel;
-    /** chargePointSerialNumber 字段。 */
+    /** OCPP payload 的 chargePointSerialNumber 字段。 */
     private String chargePointSerialNumber;
-    /** chargeBoxSerialNumber 字段。 */
+    /** OCPP payload 的 chargeBoxSerialNumber 字段。 */
     private String chargeBoxSerialNumber;
-    /** firmwareVersion 字段。 */
+    /** OCPP payload 的 firmwareVersion 字段。 */
     private String firmwareVersion;
-    /** iccid 字段。 */
+    /** OCPP payload 的 iccid 字段。 */
     private String iccid;
-    /** imsi 字段。 */
+    /** OCPP payload 的 imsi 字段。 */
     private String imsi;
-    /** meterType 字段。 */
+    /** OCPP payload 的 meterType 字段。 */
     private String meterType;
-    /** meterSerialNumber 字段。 */
+    /** OCPP payload 的 meterSerialNumber 字段。 */
     private String meterSerialNumber;
 
 }

@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class HeartbeatResponse {
-    /** currentTime 字段。 */
+    /** OCPP payload 的 currentTime 字段。 */
     private String currentTime;
 
 }

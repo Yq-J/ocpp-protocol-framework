@@ -21,11 +21,11 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class IdTagInfo {
-    /** status 字段。 */
+    /** OCPP payload 的 status 字段。 */
     private String status;
-    /** expiryDate 字段。 */
+    /** OCPP payload 的 expiryDate 字段。 */
     private String expiryDate;
-    /** parentIdTag 字段。 */
+    /** OCPP payload 的 parentIdTag 字段。 */
     private String parentIdTag;
 
 }

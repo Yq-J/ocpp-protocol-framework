@@ -23,15 +23,15 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthorizeRequest {
     /**
-     * idToken 字段。
+     * OCPP payload 的 idToken 字段。
      */
     private JsonNode idToken;
     /**
-     * certificate 字段。
+     * OCPP payload 的 certificate 字段。
      */
     private JsonNode certificate;
     /**
-     * iso15118CertificateHashData 字段。
+     * OCPP payload 的 iso15118CertificateHashData 字段。
      */
     private JsonNode iso15118CertificateHashData;
 

@@ -22,23 +22,23 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class IdTokenInfo {
     /**
-     * status 字段。
+     * OCPP payload 的 status 字段。
      */
     private String status;
     /**
-     * cacheExpiryDateTime 字段。
+     * OCPP payload 的 cacheExpiryDateTime 字段。
      */
     private String cacheExpiryDateTime;
     /**
-     * chargingPriority 字段。
+     * OCPP payload 的 chargingPriority 字段。
      */
     private Integer chargingPriority;
     /**
-     * language1 字段。
+     * OCPP payload 的 language1 字段。
      */
     private String language1;
     /**
-     * language2 字段。
+     * OCPP payload 的 language2 字段。
      */
     private String language2;
 

@@ -22,11 +22,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class StartTransactionResponse {
     /**
-     * transactionId 字段。
+     * OCPP payload 的 transactionId 字段。
      */
     private Integer transactionId;
     /**
-     * idTagInfo 字段。
+     * OCPP payload 的 idTagInfo 字段。
      */
     private IdTagInfo idTagInfo;
 

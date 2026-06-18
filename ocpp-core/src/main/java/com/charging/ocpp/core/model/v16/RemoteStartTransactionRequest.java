@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RemoteStartTransactionRequest {
-    /** connectorId 字段。 */
+    /** OCPP payload 的 connectorId 字段。 */
     private Integer connectorId;
-    /** idTag 字段。 */
+    /** OCPP payload 的 idTag 字段。 */
     private String idTag;
-    /** chargingProfile 字段。 */
+    /** OCPP payload 的 chargingProfile 字段。 */
     private JsonNode chargingProfile;
 
 }

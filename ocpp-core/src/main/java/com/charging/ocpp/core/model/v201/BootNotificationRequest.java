@@ -23,11 +23,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BootNotificationRequest {
     /**
-     * reason 字段。
+     * OCPP payload 的 reason 字段。
      */
     private String reason;
     /**
-     * chargingStation 字段。
+     * OCPP payload 的 chargingStation 字段。
      */
     private JsonNode chargingStation;
 

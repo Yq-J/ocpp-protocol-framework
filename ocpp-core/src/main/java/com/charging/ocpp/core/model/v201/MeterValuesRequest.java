@@ -25,11 +25,11 @@ import java.util.List;
 @Accessors(chain = true)
 public class MeterValuesRequest {
     /**
-     * evseId 字段。
+     * OCPP payload 的 evseId 字段。
      */
     private Integer evseId;
     /**
-     * meterValue 字段。
+     * OCPP payload 的 meterValue 字段。
      */
     private List<JsonNode> meterValue;
 
