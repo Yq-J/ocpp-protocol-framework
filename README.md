@@ -7,7 +7,7 @@
 | 模块 | 说明 |
 | --- | --- |
 | `ocpp-core` | 不依赖 Spring 的协议核心，包括帧模型、编解码器、处理器注册表、会话仓储接口、典型 DTO。 |
-| `ocpp-spring-boot-starter` | Spring Boot Starter，提供自动配置、WebSocket 接入、注解扫描、默认处理器和 `OcppTemplate`。 |
+| `ocpp-spring-boot-starter` | Spring Boot Starter，提供自动配置、WebSocket 接入、注解扫描、官方 JSON Schema 校验、可选默认处理器和 `OcppTemplate`。 |
 | `ocpp-demo-business` | 业务接入示例，可直接运行。 |
 | `docs` | 中文开发使用手册和架构说明。 |
 
@@ -57,7 +57,7 @@ WebSocket 子协议：
 
 ## 生产化协议覆盖
 
-- `ocpp-core` 提供 `OcppActionMetadata`，覆盖 OCPP 1.6J 的 28 个 Action 与 OCPP 2.0.1 的 64 个 Action 名称。
-- starter 默认启用 `MetadataOcppSchemaValidator`，校验版本、Action 合法性和 Payload 对象形态。
-- 字段级校验可通过自定义 `OcppSchemaValidator` 接入官方 JSON Schema。
-- 默认处理器仅用于框架可运行和示例场景，生产项目应按业务规则覆盖对应 Action。
+- `ocpp-core` 提供 `OcppActionMetadata` 和 `OcppActionDescriptor`，覆盖 OCPP 1.6J 的 28 个 Action 与 OCPP 2.0.1 的 64 个 Action，并维护 Action 到请求 DTO、响应 DTO、请求 Schema、响应 Schema 的结构化映射。
+- starter 默认启用 `OfficialOcppSchemaValidator`，在业务 Handler 执行前校验协议版本、Action 合法性、Payload 对象形态以及对应 JSON Schema 约束。
+- Schema 资源位于 `ocpp-spring-boot-starter/src/main/resources/schemas/{ocpp1.6|ocpp2.0.1}`，按 `{Action}{Request|Response}.json` 命名；如需替换为企业内审版本，可自定义 `OcppSchemaValidator` Bean 覆盖默认实现。
+- starter 内置默认处理器默认不注册，只有显式配置 `ocpp.enable-default-handlers=true` 时才会启用；生产项目应使用 `@OcppActionMapping` 或自定义 `OcppActionHandler` 实现真实业务动作。

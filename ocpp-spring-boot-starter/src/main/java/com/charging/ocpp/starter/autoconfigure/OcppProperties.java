@@ -31,6 +31,10 @@ public class OcppProperties {
      */
     private Boolean validateKnownActions = true;
     /**
+     * 是否注册 starter 内置示例处理器。默认关闭，生产环境应显式提供业务 Handler。
+     */
+    private Boolean enableDefaultHandlers = false;
+    /**
      * WebSocket 握手允许协商的 OCPP 子协议。
      */
     private List<String> supportedSubProtocols = Arrays.asList("ocpp1.6", "ocpp2.0.1");

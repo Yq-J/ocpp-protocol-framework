@@ -10,7 +10,7 @@ import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.handler.DefaultOcpp16Handlers;
 import com.charging.ocpp.starter.handler.DefaultOcpp201Handlers;
 import com.charging.ocpp.starter.registry.OcppAnnotatedHandlerRegistrar;
-import com.charging.ocpp.starter.schema.MetadataOcppSchemaValidator;
+import com.charging.ocpp.starter.schema.OfficialOcppSchemaValidator;
 import com.charging.ocpp.starter.service.OcppTemplate;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +42,7 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OcppSchemaValidator ocppSchemaValidator(OcppProperties properties) { return new MetadataOcppSchemaValidator(properties); }
+    public OcppSchemaValidator ocppSchemaValidator() { return new OfficialOcppSchemaValidator(); }
 
     @Bean
     @ConditionalOnMissingBean
@@ -49,26 +50,54 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
     public DefaultOcpp16Handlers defaultOcpp16Handlers(ObjectMapper objectMapper) { return new DefaultOcpp16Handlers(objectMapper); }
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
     public DefaultOcpp201Handlers defaultOcpp201Handlers(ObjectMapper objectMapper) { return new DefaultOcpp201Handlers(objectMapper); }
 
-    @Bean public OcppActionHandler ocpp16Boot(DefaultOcpp16Handlers h) { return h.boot(); }
-    @Bean public OcppActionHandler ocpp16Heartbeat(DefaultOcpp16Handlers h) { return h.heartbeat(); }
-    @Bean public OcppActionHandler ocpp16Authorize(DefaultOcpp16Handlers h) { return h.authorize(); }
-    @Bean public OcppActionHandler ocpp16Status(DefaultOcpp16Handlers h) { return h.status(); }
-    @Bean public OcppActionHandler ocpp16MeterValues(DefaultOcpp16Handlers h) { return h.meterValues(); }
-    @Bean public OcppActionHandler ocpp16StartTransaction(DefaultOcpp16Handlers h) { return h.startTransaction(); }
-    @Bean public OcppActionHandler ocpp16StopTransaction(DefaultOcpp16Handlers h) { return h.stopTransaction(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16Boot(DefaultOcpp16Handlers h) { return h.boot(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16Heartbeat(DefaultOcpp16Handlers h) { return h.heartbeat(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16Authorize(DefaultOcpp16Handlers h) { return h.authorize(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16Status(DefaultOcpp16Handlers h) { return h.status(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16MeterValues(DefaultOcpp16Handlers h) { return h.meterValues(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16StartTransaction(DefaultOcpp16Handlers h) { return h.startTransaction(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp16StopTransaction(DefaultOcpp16Handlers h) { return h.stopTransaction(); }
 
-    @Bean public OcppActionHandler ocpp201Boot(DefaultOcpp201Handlers h) { return h.boot(); }
-    @Bean public OcppActionHandler ocpp201Heartbeat(DefaultOcpp201Handlers h) { return h.heartbeat(); }
-    @Bean public OcppActionHandler ocpp201Authorize(DefaultOcpp201Handlers h) { return h.authorize(); }
-    @Bean public OcppActionHandler ocpp201Status(DefaultOcpp201Handlers h) { return h.status(); }
-    @Bean public OcppActionHandler ocpp201MeterValues(DefaultOcpp201Handlers h) { return h.meterValues(); }
-    @Bean public OcppActionHandler ocpp201TransactionEvent(DefaultOcpp201Handlers h) { return h.transactionEvent(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201Boot(DefaultOcpp201Handlers h) { return h.boot(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201Heartbeat(DefaultOcpp201Handlers h) { return h.heartbeat(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201Authorize(DefaultOcpp201Handlers h) { return h.authorize(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201Status(DefaultOcpp201Handlers h) { return h.status(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201MeterValues(DefaultOcpp201Handlers h) { return h.meterValues(); }
+    @Bean
+    @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
+    public OcppActionHandler ocpp201TransactionEvent(DefaultOcpp201Handlers h) { return h.transactionEvent(); }
 
     @Bean
     @ConditionalOnMissingBean
