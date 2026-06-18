@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HeartbeatRequest",
+  "type": "object",
+  "additionalProperties": true,
+  "maxProperties": 0
+}

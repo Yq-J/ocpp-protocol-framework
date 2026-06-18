@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RemoteStopTransactionRequest",
+  "type": "object",
+  "additionalProperties": true
+}

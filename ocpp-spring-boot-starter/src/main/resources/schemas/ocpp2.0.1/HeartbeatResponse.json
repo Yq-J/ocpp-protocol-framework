@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "HeartbeatResponse",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "currentTime"
+  ],
+  "properties": {
+    "currentTime": {
+      "type": "string"
+    }
+  }
+}

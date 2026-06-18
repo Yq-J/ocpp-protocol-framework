@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "BootNotificationRequest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "chargePointVendor",
+    "chargePointModel"
+  ],
+  "properties": {
+    "chargePointVendor": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "chargePointModel": {
+      "type": "string",
+      "maxLength": 20
+    }
+  }
+}
