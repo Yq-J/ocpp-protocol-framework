@@ -22,7 +22,11 @@ public class OcppHandlerRegistry {
         if (handler == null || handler.version() == null || handler.action() == null) {
             return;
         }
-        handlers.put(new HandlerKey(handler.version(), handler.action()), handler);
+        HandlerKey key = new HandlerKey(handler.version(), handler.action());
+        OcppActionHandler previous = handlers.putIfAbsent(key, handler);
+        if (previous != null && previous != handler) {
+            throw new IllegalStateException("重复注册 OCPP 处理器：" + handler.version() + "/" + handler.action());
+        }
     }
 
     public void registerAll(List<OcppActionHandler> actionHandlers) {

@@ -28,21 +28,22 @@ public class DefaultOcppCodec implements OcppCodec {
             if (root == null || !root.isArray() || root.size() < 3) {
                 throw new OcppException(OcppErrorCode.ProtocolError, "OCPP 消息必须是长度合法的 JSON 数组");
             }
-            OcppMessageType type = OcppMessageType.fromCode(root.get(0).asInt());
+            OcppMessageType type = OcppMessageType.fromCode(readMessageType(root.get(0)));
             if (type == null) {
                 throw new OcppException(OcppErrorCode.ProtocolError, "不支持的 OCPP 消息类型：" + root.get(0).asInt());
             }
-            String uniqueId = root.get(1).asText();
+            String uniqueId = readRequiredText(root.get(1), "uniqueId", false);
             if (type == OcppMessageType.CALL) {
                 if (root.size() != 4) { throw new OcppException(OcppErrorCode.ProtocolError, "CALL 消息长度必须为 4"); }
-                return new OcppCall(uniqueId, root.get(2).asText(), root.get(3));
+                return new OcppCall(uniqueId, readRequiredText(root.get(2), "action", false), readPayload(root.get(3)));
             }
             if (type == OcppMessageType.CALL_RESULT) {
                 if (root.size() != 3) { throw new OcppException(OcppErrorCode.ProtocolError, "CALLRESULT 消息长度必须为 3"); }
-                return new OcppCallResult(uniqueId, root.get(2));
+                return new OcppCallResult(uniqueId, readPayload(root.get(2)));
             }
             if (root.size() != 5) { throw new OcppException(OcppErrorCode.ProtocolError, "CALLERROR 消息长度必须为 5"); }
-            return new OcppCallError(uniqueId, root.get(2).asText(), root.get(3).asText(), root.get(4));
+            return new OcppCallError(uniqueId, readRequiredText(root.get(2), "errorCode", false),
+                    readRequiredText(root.get(3), "errorDescription", true), readPayload(root.get(4)));
         } catch (OcppException e) {
             throw e;
         } catch (Exception e) {
@@ -86,5 +87,30 @@ public class DefaultOcppCodec implements OcppCodec {
         } catch (Exception e) {
             throw new OcppException(OcppErrorCode.InternalError, "编码 OCPP 消息失败", null, e);
         }
+    }
+
+    private int readMessageType(JsonNode node) {
+        if (node == null || !node.isIntegralNumber()) {
+            throw new OcppException(OcppErrorCode.ProtocolError, "OCPP 消息类型必须是整数");
+        }
+        return node.asInt();
+    }
+
+    private String readRequiredText(JsonNode node, String fieldName, boolean allowEmpty) {
+        if (node == null || !node.isTextual()) {
+            throw new OcppException(OcppErrorCode.ProtocolError, "OCPP " + fieldName + " 必须是字符串");
+        }
+        String value = node.asText();
+        if (!allowEmpty && value.trim().isEmpty()) {
+            throw new OcppException(OcppErrorCode.ProtocolError, "OCPP " + fieldName + " 不能为空");
+        }
+        return value;
+    }
+
+    private JsonNode readPayload(JsonNode node) {
+        if (node == null || !node.isObject()) {
+            throw new OcppException(OcppErrorCode.FormationViolation, "OCPP Payload 必须是 JSON 对象");
+        }
+        return node;
     }
 }

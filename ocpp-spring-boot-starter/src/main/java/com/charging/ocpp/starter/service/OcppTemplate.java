@@ -1,6 +1,5 @@
 package com.charging.ocpp.starter.service;
 
-import lombok.extern.slf4j.Slf4j;
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
@@ -14,16 +13,14 @@ import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.DisposableBean;
+import java.util.concurrent.*;
 
 /**
  * OCPP 业务调用模板。
@@ -90,7 +87,8 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
         CompletableFuture<R> future = new CompletableFuture<>();
         long timeoutSeconds = properties.getConnectionTimeoutSeconds() == null ? 60L : properties.getConnectionTimeoutSeconds().longValue();
         pendingRequests.put(uniqueId, new PendingRequest<>(responseType, future,
-                System.currentTimeMillis() + timeoutSeconds * 1000L, actualVersion, action));
+                System.currentTimeMillis() + timeoutSeconds * 1000L, actualVersion, action,
+                connection.getChargePointId(), connection.getSessionId()));
 
         try {
             connection.send(ocppCodec.encodeCall(uniqueId, action, requestPayload));
@@ -103,8 +101,19 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
 
     @SuppressWarnings("unchecked")
     public void completeResult(OcppCallResult result) {
-        PendingRequest<?> pending = pendingRequests.remove(result.getUniqueId());
+        completeResult(null, result);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void completeResult(String sessionId, OcppCallResult result) {
+        PendingRequest<?> pending = pendingRequests.get(result.getUniqueId());
         if (pending == null) { return; }
+        if (!isExpectedSession(sessionId, pending)) {
+            log.warn("忽略来源会话不匹配的 OCPP CALLRESULT：uniqueId={}, expectedSessionId={}, actualSessionId={}",
+                    result.getUniqueId(), pending.getSessionId(), sessionId);
+            return;
+        }
+        if (!pendingRequests.remove(result.getUniqueId(), pending)) { return; }
         try {
             schemaValidator.validate(pending.getVersion(), pending.getAction(), false, result.getPayload());
             Object value = objectMapper.convertValue(result.getPayload(), pending.getResponseType());
@@ -115,9 +124,20 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
     }
 
     public void completeError(OcppCallError error) {
-        PendingRequest<?> pending = pendingRequests.remove(error.getUniqueId());
+        completeError(null, error);
+    }
+
+    public void completeError(String sessionId, OcppCallError error) {
+        PendingRequest<?> pending = pendingRequests.get(error.getUniqueId());
         if (pending == null) { return; }
-        pending.getFuture().completeExceptionally(new OcppException(OcppErrorCode.GenericError, error.getErrorDescription(), error.getErrorDetails()));
+        if (!isExpectedSession(sessionId, pending)) {
+            log.warn("忽略来源会话不匹配的 OCPP CALLERROR：uniqueId={}, expectedSessionId={}, actualSessionId={}",
+                    error.getUniqueId(), pending.getSessionId(), sessionId);
+            return;
+        }
+        if (!pendingRequests.remove(error.getUniqueId(), pending)) { return; }
+        pending.getFuture().completeExceptionally(new OcppException(resolveErrorCode(error.getErrorCode()),
+                error.getErrorDescription(), error.getErrorDetails()));
     }
 
     @Override
@@ -145,5 +165,20 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
                 }
             }
         }, 5, 5, TimeUnit.SECONDS);
+    }
+
+    private boolean isExpectedSession(String actualSessionId, PendingRequest<?> pending) {
+        return actualSessionId == null || actualSessionId.equals(pending.getSessionId());
+    }
+
+    private OcppErrorCode resolveErrorCode(String errorCode) {
+        if (errorCode == null) {
+            return OcppErrorCode.GenericError;
+        }
+        try {
+            return OcppErrorCode.valueOf(errorCode);
+        } catch (IllegalArgumentException e) {
+            return OcppErrorCode.GenericError;
+        }
     }
 }

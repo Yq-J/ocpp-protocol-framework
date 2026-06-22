@@ -12,6 +12,8 @@ import java.io.IOException;
  * 作者：JYq
  */
 public class SpringOcppConnection implements OcppConnection {
+    static final String SEND_LOCK_ATTRIBUTE = SpringOcppConnection.class.getName() + ".SEND_LOCK";
+
     private final WebSocketSession session;
     private final String chargePointId;
     private final OcppVersion version;
@@ -42,15 +44,34 @@ public class SpringOcppConnection implements OcppConnection {
         return session.isOpen();
     }
 
-    @Override
-    public synchronized void send(String text) throws IOException {
-        session.sendMessage(new TextMessage(text));
+    static Object sendLock(WebSocketSession session) {
+        Object lock = session.getAttributes().get(SEND_LOCK_ATTRIBUTE);
+        if (lock != null) {
+            return lock;
+        }
+        synchronized (session.getAttributes()) {
+            lock = session.getAttributes().get(SEND_LOCK_ATTRIBUTE);
+            if (lock == null) {
+                lock = new Object();
+                session.getAttributes().put(SEND_LOCK_ATTRIBUTE, lock);
+            }
+            return lock;
+        }
     }
 
     @Override
-    public synchronized void close() throws IOException {
-        if (session.isOpen()) {
-            session.close();
+    public void send(String text) throws IOException {
+        synchronized (sendLock(session)) {
+            session.sendMessage(new TextMessage(text));
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        synchronized (sendLock(session)) {
+            if (session.isOpen()) {
+                session.close();
+            }
         }
     }
 }

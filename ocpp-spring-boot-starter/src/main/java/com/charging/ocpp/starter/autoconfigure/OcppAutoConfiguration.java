@@ -15,7 +15,6 @@ import com.charging.ocpp.starter.service.OcppTemplate;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,6 +23,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
+
+import java.util.List;
 
 /**
  * OCPP Spring Boot 自动配置。
@@ -118,9 +119,10 @@ public class OcppAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OcppWebSocketHandler ocppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry,
-                                                     OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
-                                                     OcppTemplate ocppTemplate, OcppProperties properties) {
-        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate, properties);
+                                                      OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
+                                                      OcppTemplate ocppTemplate, OcppProperties properties, ObjectMapper objectMapper) {
+        return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate,
+                properties, objectMapper);
     }
 
     @Bean

@@ -1,7 +1,10 @@
 package com.charging.ocpp.starter.service;
 
 import com.charging.ocpp.core.enums.OcppVersion;
+import com.charging.ocpp.core.exception.OcppErrorCode;
+import com.charging.ocpp.core.exception.OcppException;
 import com.charging.ocpp.core.protocol.DefaultOcppCodec;
+import com.charging.ocpp.core.protocol.OcppCallError;
 import com.charging.ocpp.core.protocol.OcppCallResult;
 import com.charging.ocpp.core.schema.NoopOcppSchemaValidator;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
@@ -16,8 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OcppTemplateLifecycleTest {
     @Test
@@ -58,6 +60,48 @@ class OcppTemplateLifecycleTest {
 
         future.get();
         assertTrue(responseValidated.get());
+        template.shutdown();
+    }
+
+    @Test
+    void responseFromUnexpectedSessionDoesNotCompletePendingRequest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();
+        TestOcppConnection connection = openConnection();
+        repository.save(connection);
+        OcppTemplate template = new OcppTemplate(repository, new DefaultOcppCodec(mapper), mapper,
+                new OcppProperties(), new NoopOcppSchemaValidator());
+
+        CompletableFuture<Object> future = template.call("CP001", OcppVersion.OCPP_16, "Heartbeat",
+                mapper.createObjectNode(), Object.class);
+        String uniqueId = mapper.readTree(connection.getLastText()).get(1).asText();
+
+        template.completeResult("other-session", new OcppCallResult(uniqueId, mapper.createObjectNode()));
+
+        assertFalse(future.isDone());
+        template.completeResult(connection.getSessionId(), new OcppCallResult(uniqueId, mapper.createObjectNode()));
+        future.get();
+        template.shutdown();
+    }
+
+    @Test
+    void callErrorPreservesOfficialErrorCode() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();
+        TestOcppConnection connection = openConnection();
+        repository.save(connection);
+        OcppTemplate template = new OcppTemplate(repository, new DefaultOcppCodec(mapper), mapper,
+                new OcppProperties(), new NoopOcppSchemaValidator());
+
+        CompletableFuture<Object> future = template.call("CP001", OcppVersion.OCPP_16, "Heartbeat",
+                mapper.createObjectNode(), Object.class);
+        String uniqueId = mapper.readTree(connection.getLastText()).get(1).asText();
+        template.completeError(connection.getSessionId(), new OcppCallError(uniqueId,
+                OcppErrorCode.NotImplemented.name(), "not supported", mapper.createObjectNode()));
+
+        ExecutionException exception = assertThrows(ExecutionException.class, future::get);
+        OcppException cause = (OcppException) exception.getCause();
+        assertEquals(OcppErrorCode.NotImplemented, cause.getErrorCode());
         template.shutdown();
     }
 

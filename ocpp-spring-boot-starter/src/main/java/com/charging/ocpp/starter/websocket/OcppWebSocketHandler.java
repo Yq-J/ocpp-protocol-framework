@@ -1,6 +1,5 @@
 package com.charging.ocpp.starter.websocket;
 
-import lombok.extern.slf4j.Slf4j;
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
@@ -8,23 +7,22 @@ import com.charging.ocpp.core.handler.OcppActionHandler;
 import com.charging.ocpp.core.handler.OcppHandlerRegistry;
 import com.charging.ocpp.core.handler.OcppRequestContext;
 import com.charging.ocpp.core.model.EmptyResponse;
-import com.charging.ocpp.core.protocol.OcppCall;
-import com.charging.ocpp.core.protocol.OcppCallError;
-import com.charging.ocpp.core.protocol.OcppCallResult;
-import com.charging.ocpp.core.protocol.OcppCodec;
-import com.charging.ocpp.core.protocol.OcppFrame;
+import com.charging.ocpp.core.protocol.*;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.charging.ocpp.starter.service.OcppTemplate;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.util.Map;
 
 /**
  * OCPP WebSocket 协议入口，基于 Spring Framework 的 spring-websocket 实现。
@@ -51,15 +49,18 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     private final OcppSchemaValidator schemaValidator;
     private final OcppTemplate ocppTemplate;
     private final OcppProperties properties;
+    private final ObjectMapper objectMapper;
 
     public OcppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry, OcppSessionRepository sessionRepository,
-                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties) {
+                                OcppSchemaValidator schemaValidator, OcppTemplate ocppTemplate, OcppProperties properties,
+                                ObjectMapper objectMapper) {
         this.ocppCodec = ocppCodec;
         this.handlerRegistry = handlerRegistry;
         this.sessionRepository = sessionRepository;
         this.schemaValidator = schemaValidator;
         this.ocppTemplate = ocppTemplate;
         this.properties = properties;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -92,8 +93,8 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         if (properties.getMaxTextMessageBytes() != null
                 && message.getPayloadLength() > properties.getMaxTextMessageBytes()) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", OcppErrorCode.FormationViolation.name(),
-                    "OCPP 消息超过最大长度限制", null)));
+            sendText(session, ocppCodec.encodeCallError("", OcppErrorCode.FormationViolation.name(),
+                    "OCPP 消息超过最大长度限制", null));
             return;
         }
 
@@ -101,16 +102,16 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         try {
             frame = ocppCodec.decode(message.getPayload());
         } catch (OcppException e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError("", e.getErrorCode().name(), e.getMessage(), e.getDetails())));
+            sendText(session, ocppCodec.encodeCallError("", e.getErrorCode().name(), e.getMessage(), e.getDetails()));
             return;
         }
 
         if (frame instanceof OcppCall) {
             handleCall(session, (OcppCall) frame);
         } else if (frame instanceof OcppCallResult) {
-            ocppTemplate.completeResult((OcppCallResult) frame);
+            ocppTemplate.completeResult(session.getId(), (OcppCallResult) frame);
         } else if (frame instanceof OcppCallError) {
-            ocppTemplate.completeError((OcppCallError) frame);
+            ocppTemplate.completeError(session.getId(), (OcppCallError) frame);
         }
     }
 
@@ -123,17 +124,19 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
             OcppActionHandler handler = handlerRegistry.get(version, call.getAction());
             if (handler == null) {
                 if (Boolean.TRUE.equals(properties.getAllowUnknownActions())) {
-                    session.sendMessage(new TextMessage(ocppCodec.encodeCallResult(call.getUniqueId(), new EmptyResponse())));
+                    sendText(session, ocppCodec.encodeCallResult(call.getUniqueId(), new EmptyResponse()));
                     return;
                 }
                 throw new OcppException(OcppErrorCode.NotImplemented, "未找到 OCPP 处理器：" + version + "/" + call.getAction());
             }
             Object response = handler.handle(context, call.getPayload());
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallResult(call.getUniqueId(), response)));
+            JsonNode responsePayload = objectMapper.valueToTree(response == null ? objectMapper.createObjectNode() : response);
+            schemaValidator.validate(version, call.getAction(), false, responsePayload);
+            sendText(session, ocppCodec.encodeCallResult(call.getUniqueId(), responsePayload));
         } catch (OcppException e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError(call.getUniqueId(), e.getErrorCode().name(), e.getMessage(), e.getDetails())));
+            sendText(session, ocppCodec.encodeCallError(call.getUniqueId(), e.getErrorCode().name(), e.getMessage(), e.getDetails()));
         } catch (Exception e) {
-            session.sendMessage(new TextMessage(ocppCodec.encodeCallError(call.getUniqueId(), OcppErrorCode.InternalError.name(), e.getMessage(), null)));
+            sendText(session, ocppCodec.encodeCallError(call.getUniqueId(), OcppErrorCode.InternalError.name(), e.getMessage(), null));
         }
     }
 
@@ -146,5 +149,11 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         Map<String, Object> attributes = session.getAttributes();
         Object value = attributes.get("chargePointId");
         return value == null ? null : String.valueOf(value);
+    }
+
+    private void sendText(WebSocketSession session, String text) throws Exception {
+        synchronized (SpringOcppConnection.sendLock(session)) {
+            session.sendMessage(new TextMessage(text));
+        }
     }
 }
