@@ -9,7 +9,7 @@
 | `ocpp-core` | 不依赖 Spring 的协议核心，包括帧模型、编解码器、处理器注册表、会话仓储接口、典型 DTO、下发命令网关接口。 |
 | `ocpp-spring-boot-starter` | Spring Boot Starter，提供自动配置、WebSocket 接入、注解扫描、官方 JSON Schema 校验、握手安全、报文大小限制、可选默认处理器和 `OcppTemplate`。 |
 | `ocpp-demo-business` | 业务接入示例，可直接运行。 |
-| `docs` | 中文开发使用手册、架构说明和生产化使用指南。 |
+| `docs` | 中文开发使用手册、示例与联调指南、架构说明和生产化使用指南。 |
 
 ## 构建
 
@@ -45,7 +45,7 @@ WebSocket 子协议：
 </dependency>
 ```
 
-详细说明见 `docs/开发使用手册.md` 和 `docs/生产化使用指南.md`。
+详细说明见 `docs/开发使用手册.md`、`docs/示例与联调指南.md` 和 `docs/生产化使用指南.md`。
 
 ## 生产化能力
 
