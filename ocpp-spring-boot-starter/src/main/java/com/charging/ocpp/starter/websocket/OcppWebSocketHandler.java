@@ -22,6 +22,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -94,7 +95,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         if (properties.getMaxTextMessageBytes() != null
-                && message.getPayloadLength() > properties.getMaxTextMessageBytes()) {
+                && payloadLengthBytes(message) > properties.getMaxTextMessageBytes()) {
             sendText(session, ocppCodec.encodeCallError("", OcppErrorCode.FormationViolation.name(),
                     "OCPP 消息超过最大长度限制", null));
             return;
@@ -159,6 +160,10 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
             return objectMapper.createObjectNode();
         }
         return objectMapper.valueToTree(response);
+    }
+
+    static int payloadLengthBytes(TextMessage message) {
+        return message.getPayload().getBytes(StandardCharsets.UTF_8).length;
     }
 
     private void sendText(WebSocketSession session, String text) throws Exception {
