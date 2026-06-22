@@ -140,6 +140,22 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
                 error.getErrorDescription(), error.getErrorDetails()));
     }
 
+    public int cancelPendingRequestsForSession(String sessionId, String reason) {
+        if (sessionId == null || sessionId.trim().isEmpty()) {
+            return 0;
+        }
+        String message = reason == null || reason.trim().isEmpty() ? "OCPP 会话已关闭，等待中的请求已取消" : reason;
+        int canceled = 0;
+        for (Map.Entry<String, PendingRequest<?>> entry : pendingRequests.entrySet()) {
+            PendingRequest<?> pending = entry.getValue();
+            if (sessionId.equals(pending.getSessionId()) && pendingRequests.remove(entry.getKey(), pending)) {
+                pending.getFuture().completeExceptionally(new OcppException(OcppErrorCode.GenericError, message));
+                canceled++;
+            }
+        }
+        return canceled;
+    }
+
     @Override
     public void destroy() {
         shutdown();

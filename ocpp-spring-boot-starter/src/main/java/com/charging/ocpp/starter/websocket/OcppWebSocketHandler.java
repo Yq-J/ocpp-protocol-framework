@@ -80,6 +80,8 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
             if (properties.getDuplicateConnectionPolicy() == OcppProperties.DuplicateConnectionPolicy.CLOSE_OLD) {
                 try {
                     previous.close();
+                    ocppTemplate.cancelPendingRequestsForSession(previous.getSessionId(),
+                            "chargePointId 重复连接，旧会话等待中的请求已取消");
                 } catch (Exception e) {
                     log.warn("关闭重复 chargePointId 旧连接失败：chargePointId={}, sessionId={}",
                             chargePointId, previous.getSessionId(), e);
@@ -130,7 +132,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
                 throw new OcppException(OcppErrorCode.NotImplemented, "未找到 OCPP 处理器：" + version + "/" + call.getAction());
             }
             Object response = handler.handle(context, call.getPayload());
-            JsonNode responsePayload = objectMapper.valueToTree(response == null ? objectMapper.createObjectNode() : response);
+            JsonNode responsePayload = toResponsePayload(response);
             schemaValidator.validate(version, call.getAction(), false, responsePayload);
             sendText(session, ocppCodec.encodeCallResult(call.getUniqueId(), responsePayload));
         } catch (OcppException e) {
@@ -143,12 +145,20 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) {
         sessionRepository.remove(session.getId());
+        ocppTemplate.cancelPendingRequestsForSession(session.getId(), "OCPP 会话已关闭，等待中的请求已取消");
     }
 
     private String readChargePointId(WebSocketSession session) {
         Map<String, Object> attributes = session.getAttributes();
         Object value = attributes.get("chargePointId");
         return value == null ? null : String.valueOf(value);
+    }
+
+    private JsonNode toResponsePayload(Object response) {
+        if (response == null || response instanceof EmptyResponse) {
+            return objectMapper.createObjectNode();
+        }
+        return objectMapper.valueToTree(response);
     }
 
     private void sendText(WebSocketSession session, String text) throws Exception {

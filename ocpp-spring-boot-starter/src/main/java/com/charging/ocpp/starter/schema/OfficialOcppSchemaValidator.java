@@ -6,6 +6,7 @@ import com.charging.ocpp.core.exception.OcppException;
 import com.charging.ocpp.core.metadata.OcppActionDescriptor;
 import com.charging.ocpp.core.metadata.OcppActionMetadata;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
+import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -22,6 +23,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OfficialOcppSchemaValidator implements OcppSchemaValidator {
     private final JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
     private final Map<String, JsonSchema> schemas = new ConcurrentHashMap<>();
+    private final OcppProperties properties;
+
+    public OfficialOcppSchemaValidator() {
+        this(new OcppProperties());
+    }
+
+    public OfficialOcppSchemaValidator(OcppProperties properties) {
+        this.properties = properties == null ? new OcppProperties() : properties;
+    }
 
     @Override
     public void validate(OcppVersion version, String action, boolean request, JsonNode payload) {
@@ -36,6 +46,10 @@ public class OfficialOcppSchemaValidator implements OcppSchemaValidator {
         }
         OcppActionDescriptor descriptor = OcppActionMetadata.descriptor(version, action);
         if (descriptor == null) {
+            if (Boolean.TRUE.equals(properties.getAllowUnknownActions())
+                    || !Boolean.TRUE.equals(properties.getValidateKnownActions())) {
+                return;
+            }
             throw new OcppException(OcppErrorCode.NotImplemented, "当前协议版本不支持 Action：" + version + "/" + action);
         }
         JsonSchema schema = schema(descriptor.schemaPath(request));

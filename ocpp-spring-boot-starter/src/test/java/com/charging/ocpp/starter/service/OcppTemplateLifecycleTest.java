@@ -39,6 +39,24 @@ class OcppTemplateLifecycleTest {
     }
 
     @Test
+    void cancelPendingRequestsForSessionFailsMatchingRequests() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();
+        TestOcppConnection connection = openConnection();
+        repository.save(connection);
+        OcppTemplate template = new OcppTemplate(repository, new DefaultOcppCodec(mapper), mapper,
+                new OcppProperties(), new NoopOcppSchemaValidator());
+
+        CompletableFuture<Object> future = template.call("CP001", OcppVersion.OCPP_16, "Heartbeat",
+                mapper.createObjectNode(), Object.class);
+
+        assertEquals(1, template.cancelPendingRequestsForSession(connection.getSessionId(), "session closed"));
+        ExecutionException exception = assertThrows(ExecutionException.class, future::get);
+        assertTrue(exception.getCause() instanceof OcppException);
+        template.shutdown();
+    }
+
+    @Test
     void completeResultValidatesResponsePayload() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();

@@ -43,7 +43,7 @@ public class OcppAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OcppSchemaValidator ocppSchemaValidator() { return new OfficialOcppSchemaValidator(); }
+    public OcppSchemaValidator ocppSchemaValidator(OcppProperties properties) { return new OfficialOcppSchemaValidator(properties); }
 
     @Bean
     @ConditionalOnMissingBean

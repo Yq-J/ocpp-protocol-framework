@@ -1,6 +1,6 @@
 # OCPP Protocol Framework
 
-基于 Spring Boot + JDK8 + Maven + Lombok + spring-websocket 的 OCPP 协议框架。框架把 WebSocket、OCPP-J 帧解析、请求应答关联、版本路由、会话管理和异常转换封装起来，业务系统只需要处理业务回调和主动下发命令。
+基于 Spring Boot + JDK8 + Maven + Lombok + spring-boot-starter-websocket 的 OCPP 协议框架。框架把 WebSocket、OCPP-J 帧解析、请求应答关联、版本路由、会话管理和异常转换封装起来，业务系统只需要处理业务回调和主动下发命令。
 
 ## 模块
 
@@ -45,13 +45,27 @@ WebSocket 子协议：
 </dependency>
 ```
 
+`ocpp-spring-boot-starter` 已包含 Spring Boot WebSocket 运行依赖，业务服务通常只需要引入该 starter 并提供自己的 `@OcppActionMapping` 业务处理器。
+
+生产环境至少应显式收敛以下配置：
+
+```yaml
+ocpp:
+  allowed-origins:
+    - "https://your-domain.example"
+  require-auth-token: true
+  charge-point-tokens:
+    CP001: "replace-with-strong-random-token"
+  fail-on-unsafe-production-config: true
+```
+
 详细说明见 `docs/开发使用手册.md`、`docs/示例与联调指南.md` 和 `docs/生产化使用指南.md`。
 
 ## 生产化能力
 
 - `ocpp-core` 提供 `OcppActionMetadata` 和 `OcppActionDescriptor`，覆盖 OCPP 1.6J 的 28 个 Action 与 OCPP 2.0.1 的 64 个 Action，并维护 Action 到请求 DTO、响应 DTO、请求 Schema、响应 Schema 的结构化映射。每个 Action 的 Request/Response 都有独立模型类，复杂字段按 `docs/plugin-redoc-106.yaml` 与 `docs/plugin-redoc-201.yaml` 生成共享 DTO；OCPP 2.0.1 厂商扩展通过规范内的 `CustomData` 承载。
 - starter 默认启用 `OfficialOcppSchemaValidator`，在业务 Handler 执行前校验协议版本、Action 合法性、Payload 对象形态以及对应 JSON Schema 约束。
-- 平台主动下发命令时，`OcppTemplate` 会在发送前执行官方 Schema 校验，并在 Spring 容器关闭时取消等待中的 pending request，避免资源悬挂。
+- 平台主动下发命令时，`OcppTemplate` 会在发送前执行官方 Schema 校验，并在连接关闭、重复连接替换旧会话、Spring 容器关闭时取消等待中的 pending request，避免资源悬挂。
 - WebSocket 握手支持 `allowed-origins`、`require-auth-token`、`auth-token-header`、`auth-token-query-parameter` 和 `charge-point-tokens`，可作为基础接入鉴权能力。
 - WebSocket 文本帧支持 `max-text-message-bytes` 限制，防止异常大报文冲击内存。
 - 同一 `chargePointId` 重复建立连接时支持 `duplicate-connection-policy`，可选择拒绝新连接、关闭旧连接或仅替换会话引用，降低主动下发路由不确定性。

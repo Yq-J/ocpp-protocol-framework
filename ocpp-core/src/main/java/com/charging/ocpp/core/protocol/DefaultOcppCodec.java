@@ -3,6 +3,7 @@ package com.charging.ocpp.core.protocol;
 import com.charging.ocpp.core.enums.OcppMessageType;
 import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
+import com.charging.ocpp.core.model.EmptyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -57,7 +58,7 @@ public class DefaultOcppCodec implements OcppCodec {
         array.add(OcppMessageType.CALL.getCode());
         array.add(uniqueId);
         array.add(action);
-        array.add(objectMapper.valueToTree(payload == null ? objectMapper.createObjectNode() : payload));
+        array.add(toPayloadNode(payload));
         return write(array);
     }
 
@@ -66,7 +67,7 @@ public class DefaultOcppCodec implements OcppCodec {
         ArrayNode array = objectMapper.createArrayNode();
         array.add(OcppMessageType.CALL_RESULT.getCode());
         array.add(uniqueId);
-        array.add(objectMapper.valueToTree(payload == null ? objectMapper.createObjectNode() : payload));
+        array.add(toPayloadNode(payload));
         return write(array);
     }
 
@@ -79,6 +80,13 @@ public class DefaultOcppCodec implements OcppCodec {
         array.add(errorDescription == null ? "" : errorDescription);
         array.add(objectMapper.valueToTree(details == null ? objectMapper.createObjectNode() : details));
         return write(array);
+    }
+
+    private JsonNode toPayloadNode(Object payload) {
+        if (payload == null || payload instanceof EmptyResponse) {
+            return objectMapper.createObjectNode();
+        }
+        return objectMapper.valueToTree(payload);
     }
 
     private String write(ArrayNode array) {
