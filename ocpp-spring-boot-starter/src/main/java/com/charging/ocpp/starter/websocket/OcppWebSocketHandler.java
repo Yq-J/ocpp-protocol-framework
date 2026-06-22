@@ -14,6 +14,7 @@ import com.charging.ocpp.core.protocol.OcppCallResult;
 import com.charging.ocpp.core.protocol.OcppCodec;
 import com.charging.ocpp.core.protocol.OcppFrame;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
+import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.core.session.OcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import com.charging.ocpp.starter.service.OcppTemplate;
@@ -68,6 +69,21 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         if (chargePointId == null || version == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE.withReason("缺少 chargePointId 或不支持的 OCPP 子协议"));
             return;
+        }
+        OcppConnection previous = sessionRepository.get(chargePointId);
+        if (previous != null && previous.isOpen() && !session.getId().equals(previous.getSessionId())) {
+            if (properties.getDuplicateConnectionPolicy() == OcppProperties.DuplicateConnectionPolicy.REJECT_NEW) {
+                session.close(CloseStatus.POLICY_VIOLATION.withReason("chargePointId 已在线"));
+                return;
+            }
+            if (properties.getDuplicateConnectionPolicy() == OcppProperties.DuplicateConnectionPolicy.CLOSE_OLD) {
+                try {
+                    previous.close();
+                } catch (Exception e) {
+                    log.warn("关闭重复 chargePointId 旧连接失败：chargePointId={}, sessionId={}",
+                            chargePointId, previous.getSessionId(), e);
+                }
+            }
         }
         sessionRepository.save(new SpringOcppConnection(session, chargePointId, version));
     }

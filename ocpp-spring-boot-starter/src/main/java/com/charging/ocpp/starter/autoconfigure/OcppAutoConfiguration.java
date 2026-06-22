@@ -130,6 +130,12 @@ public class OcppAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public OcppProductionReadinessChecker ocppProductionReadinessChecker(OcppProperties properties) {
+        return new OcppProductionReadinessChecker(properties);
+    }
+
+    @Bean
     public SmartInitializingSingleton ocppAnnotatedHandlerRegistrar(ApplicationContext applicationContext, OcppHandlerRegistry registry,
                                                                     ObjectMapper objectMapper) {
         return new OcppAnnotatedHandlerRegistrar(applicationContext, registry, objectMapper);

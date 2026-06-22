@@ -56,6 +56,12 @@
       "description": "单条 WebSocket 文本消息最大字节数。"
     },
     {
+      "name": "ocpp.duplicate-connection-policy",
+      "type": "com.charging.ocpp.starter.autoconfigure.OcppProperties$DuplicateConnectionPolicy",
+      "defaultValue": "CLOSE_OLD",
+      "description": "同一 chargePointId 重复建立连接时的处理策略：REJECT_NEW 拒绝新连接，CLOSE_OLD 关闭旧连接，REPLACE 仅替换会话引用。"
+    },
+    {
       "name": "ocpp.require-auth-token",
       "type": "java.lang.Boolean",
       "defaultValue": false,
@@ -77,6 +83,18 @@
       "name": "ocpp.charge-point-tokens",
       "type": "java.util.Map<java.lang.String,java.lang.String>",
       "description": "充电桩 ID 到握手 Token 的映射，仅 require-auth-token=true 时生效。"
+    },
+    {
+      "name": "ocpp.production-readiness-check",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "启动时是否执行生产安全配置检查。"
+    },
+    {
+      "name": "ocpp.fail-on-unsafe-production-config",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "生产安全配置检查发现高风险配置时是否阻止应用启动。"
     }
   ]
 }
