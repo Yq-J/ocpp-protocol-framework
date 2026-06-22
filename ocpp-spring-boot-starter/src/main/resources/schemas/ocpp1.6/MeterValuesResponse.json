@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "MeterValuesResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/MeterValuesResponsePayload",
+  "definitions": {
+    "MeterValuesResponsePayload": {
+      "type": "object",
+      "properties": {}
+    }
+  }
 }

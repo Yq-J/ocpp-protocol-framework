@@ -1,6 +1,29 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "TriggerMessageRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/TriggerMessageRequestPayload",
+  "definitions": {
+    "TriggerMessageRequestPayload": {
+      "type": "object",
+      "properties": {
+        "requestedMessage": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "BootNotification",
+            "DiagnosticsStatusNotification",
+            "FirmwareStatusNotification",
+            "Heartbeat",
+            "MeterValues",
+            "StatusNotification"
+          ]
+        },
+        "connectorId": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "requestedMessage"
+      ]
+    }
+  }
 }

@@ -1,6 +1,230 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "SetVariablesResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/SetVariablesResponsePayload",
+  "definitions": {
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "SetVariableResultType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "customData": {
+          "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+          "type": "object",
+          "properties": {
+            "vendorId": {
+              "type": "string",
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "vendorId"
+          ],
+          "x-javaType": "CustomData"
+        },
+        "attributeType": {
+          "description": "Type of attribute: Actual, Target, MinSet, MaxSet. Default is Actual when omitted.\r\n",
+          "type": "string",
+          "default": "Actual",
+          "additionalProperties": false,
+          "enum": [
+            "Actual",
+            "Target",
+            "MinSet",
+            "MaxSet"
+          ],
+          "x-javaType": "AttributeEnum"
+        },
+        "attributeStatus": {
+          "description": "Result status of setting the variable.\r\n",
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected",
+            "UnknownComponent",
+            "UnknownVariable",
+            "NotSupportedAttributeType",
+            "RebootRequired"
+          ],
+          "x-javaType": "SetVariableStatusEnum"
+        },
+        "attributeStatusInfo": {
+          "description": "Element providing more information about the status.\r\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customData": {
+              "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+              "type": "object",
+              "properties": {
+                "vendorId": {
+                  "type": "string",
+                  "maxLength": 255
+                }
+              },
+              "required": [
+                "vendorId"
+              ],
+              "x-javaType": "CustomData"
+            },
+            "reasonCode": {
+              "description": "A predefined code for the reason why the status is returned in this response. The string is case-insensitive.\r\n",
+              "type": "string",
+              "maxLength": 20
+            },
+            "additionalInfo": {
+              "description": "Additional text to provide detailed information.\r\n",
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          "required": [
+            "reasonCode"
+          ],
+          "x-javaType": "StatusInfo"
+        },
+        "component": {
+          "description": "A physical or logical component\r\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customData": {
+              "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+              "type": "object",
+              "properties": {
+                "vendorId": {
+                  "type": "string",
+                  "maxLength": 255
+                }
+              },
+              "required": [
+                "vendorId"
+              ],
+              "x-javaType": "CustomData"
+            },
+            "evse": {
+              "description": "EVSE\r\nurn:x-oca:ocpp:uid:2:233123\r\nElectric Vehicle Supply Equipment\r\n",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "customData": {
+                  "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+                  "type": "object",
+                  "properties": {
+                    "vendorId": {
+                      "type": "string",
+                      "maxLength": 255
+                    }
+                  },
+                  "required": [
+                    "vendorId"
+                  ],
+                  "x-javaType": "CustomData"
+                },
+                "id": {
+                  "description": "Identified_ Object. MRID. Numeric_ Identifier\r\nurn:x-enexis:ecdm:uid:1:569198\r\nEVSE Identifier. This contains a number (&gt; 0) designating an EVSE of the Charging Station.\r\n",
+                  "type": "integer"
+                },
+                "connectorId": {
+                  "description": "An id to designate a specific connector (on an EVSE) by connector index number.\r\n",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "x-javaType": "EVSE"
+            },
+            "name": {
+              "description": "Name of the component. Name should be taken from the list of standardized component names whenever possible. Case Insensitive. strongly advised to use Camel Case.\r\n",
+              "type": "string",
+              "maxLength": 50
+            },
+            "instance": {
+              "description": "Name of instance in case the component exists as multiple instances. Case Insensitive. strongly advised to use Camel Case.\r\n",
+              "type": "string",
+              "maxLength": 50
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "x-javaType": "Component"
+        },
+        "variable": {
+          "description": "Reference key to a component-variable.\r\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customData": {
+              "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+              "type": "object",
+              "properties": {
+                "vendorId": {
+                  "type": "string",
+                  "maxLength": 255
+                }
+              },
+              "required": [
+                "vendorId"
+              ],
+              "x-javaType": "CustomData"
+            },
+            "name": {
+              "description": "Name of the variable. Name should be taken from the list of standardized variable names whenever possible. Case Insensitive. strongly advised to use Camel Case.\r\n",
+              "type": "string",
+              "maxLength": 50
+            },
+            "instance": {
+              "description": "Name of instance in case the variable exists as multiple instances. Case Insensitive. strongly advised to use Camel Case.\r\n",
+              "type": "string",
+              "maxLength": 50
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "x-javaType": "Variable"
+        }
+      },
+      "required": [
+        "attributeStatus",
+        "component",
+        "variable"
+      ],
+      "x-javaType": "SetVariableResult"
+    },
+    "SetVariablesResponsePayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "setVariableResult": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SetVariableResultType"
+          },
+          "minItems": 1,
+          "x-additionalItems": false
+        }
+      },
+      "required": [
+        "setVariableResult"
+      ]
+    }
+  }
 }

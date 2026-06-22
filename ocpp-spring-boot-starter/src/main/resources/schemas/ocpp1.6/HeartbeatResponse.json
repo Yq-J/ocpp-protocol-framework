@@ -1,14 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "HeartbeatResponse",
-  "type": "object",
-  "additionalProperties": true,
-  "required": [
-    "currentTime"
-  ],
-  "properties": {
-    "currentTime": {
-      "type": "string"
+  "$ref": "#/definitions/HeartbeatResponsePayload",
+  "definitions": {
+    "HeartbeatResponsePayload": {
+      "type": "object",
+      "properties": {
+        "currentTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "currentTime"
+      ]
     }
   }
 }

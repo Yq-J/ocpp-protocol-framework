@@ -1,6 +1,26 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ChangeAvailabilityRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ChangeAvailabilityRequestPayload",
+  "definitions": {
+    "ChangeAvailabilityRequestPayload": {
+      "type": "object",
+      "properties": {
+        "connectorId": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Inoperative",
+            "Operative"
+          ]
+        }
+      },
+      "required": [
+        "connectorId",
+        "type"
+      ]
+    }
+  }
 }

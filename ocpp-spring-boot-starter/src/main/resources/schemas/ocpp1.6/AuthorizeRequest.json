@@ -1,6 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "AuthorizeRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/AuthorizeRequestPayload",
+  "definitions": {
+    "AuthorizeRequestPayload": {
+      "type": "object",
+      "properties": {
+        "idTag": {
+          "type": "string",
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "idTag"
+      ]
+    }
+  }
 }

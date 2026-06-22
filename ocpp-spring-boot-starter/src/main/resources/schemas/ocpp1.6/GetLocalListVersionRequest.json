@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetLocalListVersionRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetLocalListVersionRequestPayload",
+  "definitions": {
+    "GetLocalListVersionRequestPayload": {
+      "type": "object",
+      "properties": {}
+    }
+  }
 }

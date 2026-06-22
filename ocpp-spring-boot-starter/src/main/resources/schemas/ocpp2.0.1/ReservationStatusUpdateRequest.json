@@ -1,6 +1,49 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ReservationStatusUpdateRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ReservationStatusUpdateRequestPayload",
+  "definitions": {
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "ReservationStatusUpdateRequestPayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "reservationId": {
+          "description": "The ID of the reservation.\r\n",
+          "type": "integer"
+        },
+        "reservationUpdateStatus": {
+          "$ref": "#/definitions/ReservationUpdateStatusEnumType"
+        }
+      },
+      "required": [
+        "reservationId",
+        "reservationUpdateStatus"
+      ]
+    },
+    "ReservationUpdateStatusEnumType": {
+      "description": "The updated reservation status.\r\n",
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "Expired",
+        "Removed"
+      ],
+      "x-javaType": "ReservationUpdateStatusEnum"
+    }
+  }
 }

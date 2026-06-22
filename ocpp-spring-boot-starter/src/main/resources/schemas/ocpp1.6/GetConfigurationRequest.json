@@ -1,6 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetConfigurationRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetConfigurationRequestPayload",
+  "definitions": {
+    "GetConfigurationRequestPayload": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      }
+    }
+  }
 }

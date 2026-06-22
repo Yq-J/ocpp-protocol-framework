@@ -1,6 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ClearChargingProfileResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ClearChargingProfileResponsePayload",
+  "definitions": {
+    "ClearChargingProfileResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Unknown"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

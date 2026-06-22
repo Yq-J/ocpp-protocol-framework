@@ -1,6 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "CancelReservationRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/CancelReservationRequestPayload",
+  "definitions": {
+    "CancelReservationRequestPayload": {
+      "type": "object",
+      "properties": {
+        "reservationId": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "reservationId"
+      ]
+    }
+  }
 }

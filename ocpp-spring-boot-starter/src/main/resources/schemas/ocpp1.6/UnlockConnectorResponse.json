@@ -1,6 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "UnlockConnectorResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/UnlockConnectorResponsePayload",
+  "definitions": {
+    "UnlockConnectorResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Unlocked",
+            "UnlockFailed",
+            "NotSupported"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

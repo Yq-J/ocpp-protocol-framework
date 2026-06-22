@@ -1,6 +1,50 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetBaseReportRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetBaseReportRequestPayload",
+  "definitions": {
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "GetBaseReportRequestPayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "requestId": {
+          "description": "The Id of the request.\r\n",
+          "type": "integer"
+        },
+        "reportBase": {
+          "$ref": "#/definitions/ReportBaseEnumType"
+        }
+      },
+      "required": [
+        "requestId",
+        "reportBase"
+      ]
+    },
+    "ReportBaseEnumType": {
+      "description": "This field specifies the report base.\r\n",
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "ConfigurationInventory",
+        "FullInventory",
+        "SummaryInventory"
+      ],
+      "x-javaType": "ReportBaseEnum"
+    }
+  }
 }

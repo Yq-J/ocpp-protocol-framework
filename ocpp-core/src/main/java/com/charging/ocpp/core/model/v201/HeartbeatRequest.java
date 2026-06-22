@@ -1,19 +1,31 @@
 package com.charging.ocpp.core.model.v201;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
- * OCPP 2.0.1 Heartbeat 请求。
- * 作者：JYq
-  * <p>
- * 作者：JYq。该 DTO 只描述协议 payload 字段，不包含数据库实体、订单逻辑或计费逻辑。
- * 业务层可以直接在 @OcppActionMapping 方法中声明该类型，框架会自动完成 JSON 与 Java 对象之间的转换。
- * 如厂商存在私有扩展字段，建议新增扩展 DTO、继承当前 DTO，或在业务处理器中改用 JsonNode 接收原始 payload。
+ * OCPP 2.0.1 的 Heartbeat 请求 payload 协议实体类。
+ * <p>
+ * 用途：承载 Heartbeat 操作的请求字段，用于维持在线心跳并同步时间场景下的 OCPP CALL/CALLRESULT payload 序列化与反序列化。
+ * 该类只表达 OCPP 协议 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 字段含义、必填性、枚举、长度和嵌套结构以随包官方 JSON Schema 为准。
  * </p>
  */
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 public class HeartbeatRequest {
-
+    /**
+     * 厂商自定义扩展数据。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code customData}，在 OCPP 2.0.1 HeartbeatRequest 协议对象中传递厂商自定义扩展数据。
+     * 字段类型为 {@code CustomData}，用于承载厂商自定义扩展数据。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
+     */
+    private CustomData customData;
 }

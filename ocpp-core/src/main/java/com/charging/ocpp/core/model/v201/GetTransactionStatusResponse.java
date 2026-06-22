@@ -1,23 +1,17 @@
 package com.charging.ocpp.core.model.v201;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
- * OCPP 2.0.1 GetTransactionStatus 响应模型。
+ * OCPP 2.0.1 的 GetTransactionStatus 响应 payload 协议实体类。
  * <p>
- * 该 DTO 用于承载协议 payload，不包含订单、计费、设备台账等业务语义。
- * 当前随包 Schema 允许厂商扩展字段，因此模型提供 additionalProperties 保存未显式建模的字段。
- * 后续如果补充官方字段，可在本类中增加强类型字段，并保留 additionalProperties 兼容厂商私有扩展。
+ * 用途：承载 GetTransactionStatus 操作的响应字段，用于查询交易状态场景下的 OCPP CALL/CALLRESULT payload 序列化与反序列化。
+ * 该类只表达 OCPP 协议 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 字段含义、必填性、枚举、长度和嵌套结构以随包官方 JSON Schema 为准。
  * </p>
  */
 @Data
@@ -27,19 +21,27 @@ import java.util.Map;
 @Accessors(chain = true)
 public class GetTransactionStatusResponse {
     /**
-     * 厂商或协议扩展字段集合。键为 JSON 字段名，值为字段原始内容。
+     * 厂商自定义扩展数据。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code customData}，在 OCPP 2.0.1 GetTransactionStatusResponse 协议对象中传递厂商自定义扩展数据。
+     * 字段类型为 {@code CustomData}，用于承载厂商自定义扩展数据。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
      */
-    @JsonIgnore
-    @Builder.Default
-    private Map<String, Object> additionalProperties = new LinkedHashMap<>();
-
-    @JsonAnyGetter
-    public Map<String, Object> any() {
-        return additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        additionalProperties.put(name, value);
-    }
+    private CustomData customData;
+    /**
+     * ongoingIndicator。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code ongoingIndicator}，在 OCPP 2.0.1 GetTransactionStatusResponse 协议对象中传递ongoingIndicator。
+     * 字段类型为 {@code Boolean}，用于承载ongoingIndicator。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
+     */
+    private Boolean ongoingIndicator;
+    /**
+     * messagesInQueue。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code messagesInQueue}，在 OCPP 2.0.1 GetTransactionStatusResponse 协议对象中传递messagesInQueue。
+     * 字段类型为 {@code Boolean}，用于承载messagesInQueue。该字段在官方规范中为必填字段。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
+     */
+    private Boolean messagesInQueue;
 }

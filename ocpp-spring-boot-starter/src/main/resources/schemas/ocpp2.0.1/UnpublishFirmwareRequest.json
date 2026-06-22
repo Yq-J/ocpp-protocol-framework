@@ -1,6 +1,36 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "UnpublishFirmwareRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/UnpublishFirmwareRequestPayload",
+  "definitions": {
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "UnpublishFirmwareRequestPayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "checksum": {
+          "description": "The MD5 checksum over the entire firmware file as a hexadecimal string of length 32. \r\n",
+          "type": "string",
+          "maxLength": 32
+        }
+      },
+      "required": [
+        "checksum"
+      ]
+    }
+  }
 }

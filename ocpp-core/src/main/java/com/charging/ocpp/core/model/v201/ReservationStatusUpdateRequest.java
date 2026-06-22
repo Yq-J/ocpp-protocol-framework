@@ -1,23 +1,17 @@
 package com.charging.ocpp.core.model.v201;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
- * OCPP 2.0.1 ReservationStatusUpdate 请求模型。
+ * OCPP 2.0.1 的 ReservationStatusUpdate 请求 payload 协议实体类。
  * <p>
- * 该 DTO 用于承载协议 payload，不包含订单、计费、设备台账等业务语义。
- * 当前随包 Schema 允许厂商扩展字段，因此模型提供 additionalProperties 保存未显式建模的字段。
- * 后续如果补充官方字段，可在本类中增加强类型字段，并保留 additionalProperties 兼容厂商私有扩展。
+ * 用途：承载 ReservationStatusUpdate 操作的请求字段，用于上报预约状态变化场景下的 OCPP CALL/CALLRESULT payload 序列化与反序列化。
+ * 该类只表达 OCPP 协议 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 字段含义、必填性、枚举、长度和嵌套结构以随包官方 JSON Schema 为准。
  * </p>
  */
 @Data
@@ -27,19 +21,27 @@ import java.util.Map;
 @Accessors(chain = true)
 public class ReservationStatusUpdateRequest {
     /**
-     * 厂商或协议扩展字段集合。键为 JSON 字段名，值为字段原始内容。
+     * 厂商自定义扩展数据。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code customData}，在 OCPP 2.0.1 ReservationStatusUpdateRequest 协议对象中传递厂商自定义扩展数据。
+     * 字段类型为 {@code CustomData}，用于承载厂商自定义扩展数据。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
      */
-    @JsonIgnore
-    @Builder.Default
-    private Map<String, Object> additionalProperties = new LinkedHashMap<>();
-
-    @JsonAnyGetter
-    public Map<String, Object> any() {
-        return additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        additionalProperties.put(name, value);
-    }
+    private CustomData customData;
+    /**
+     * 预约标识。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code reservationId}，在 OCPP 2.0.1 ReservationStatusUpdateRequest 协议对象中传递预约标识。
+     * 字段类型为 {@code Integer}，用于承载预约标识。该字段在官方规范中为必填字段。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
+     */
+    private Integer reservationId;
+    /**
+     * 预约更新状态。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code reservationUpdateStatus}，在 OCPP 2.0.1 ReservationStatusUpdateRequest 协议对象中传递预约更新状态。
+     * 字段类型为 {@code String}，用于承载预约更新状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * </p>
+     */
+    private String reservationUpdateStatus;
 }

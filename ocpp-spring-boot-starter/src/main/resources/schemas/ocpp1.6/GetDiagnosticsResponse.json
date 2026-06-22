@@ -1,6 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetDiagnosticsResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetDiagnosticsResponsePayload",
+  "definitions": {
+    "GetDiagnosticsResponsePayload": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string",
+          "maxLength": 255
+        }
+      }
+    }
+  }
 }

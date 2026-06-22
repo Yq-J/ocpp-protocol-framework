@@ -1,10 +1,12 @@
 package com.charging.ocpp.core.metadata;
 
 import com.charging.ocpp.core.enums.OcppVersion;
+import lombok.Getter;
 
 /**
  * Structured metadata for one OCPP Action, including DTO and JSON Schema bindings.
  */
+@Getter
 public final class OcppActionDescriptor {
     private final OcppVersion version;
     private final String action;
@@ -22,13 +24,6 @@ public final class OcppActionDescriptor {
         this.requestSchemaPath = requestSchemaPath;
         this.responseSchemaPath = responseSchemaPath;
     }
-
-    public OcppVersion getVersion() { return version; }
-    public String getAction() { return action; }
-    public Class<?> getRequestType() { return requestType; }
-    public Class<?> getResponseType() { return responseType; }
-    public String getRequestSchemaPath() { return requestSchemaPath; }
-    public String getResponseSchemaPath() { return responseSchemaPath; }
 
     public String schemaPath(boolean request) { return request ? requestSchemaPath : responseSchemaPath; }
     public Class<?> payloadType(boolean request) { return request ? requestType : responseType; }

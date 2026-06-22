@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "FirmwareStatusNotificationResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/FirmwareStatusNotificationResponsePayload",
+  "definitions": {
+    "FirmwareStatusNotificationResponsePayload": {
+      "type": "object",
+      "properties": {}
+    }
+  }
 }

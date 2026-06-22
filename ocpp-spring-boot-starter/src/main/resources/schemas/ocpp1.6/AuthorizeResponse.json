@@ -1,6 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "AuthorizeResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/AuthorizeResponsePayload",
+  "definitions": {
+    "AuthorizeResponsePayload": {
+      "type": "object",
+      "properties": {
+        "idTagInfo": {
+          "type": "object",
+          "properties": {
+            "expiryDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "parentIdTag": {
+              "type": "string",
+              "maxLength": 20
+            },
+            "status": {
+              "type": "string",
+              "additionalProperties": false,
+              "enum": [
+                "Accepted",
+                "Blocked",
+                "Expired",
+                "Invalid",
+                "ConcurrentTx"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ]
+        }
+      },
+      "required": [
+        "idTagInfo"
+      ]
+    }
+  }
 }

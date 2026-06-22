@@ -1,6 +1,39 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "StopTransactionResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/StopTransactionResponsePayload",
+  "definitions": {
+    "StopTransactionResponsePayload": {
+      "type": "object",
+      "properties": {
+        "idTagInfo": {
+          "type": "object",
+          "properties": {
+            "expiryDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "parentIdTag": {
+              "type": "string",
+              "maxLength": 20
+            },
+            "status": {
+              "type": "string",
+              "additionalProperties": false,
+              "enum": [
+                "Accepted",
+                "Blocked",
+                "Expired",
+                "Invalid",
+                "ConcurrentTx"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ]
+        }
+      }
+    }
+  }
 }

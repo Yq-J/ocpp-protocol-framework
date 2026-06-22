@@ -1,6 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "RemoteStopTransactionResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/RemoteStopTransactionResponsePayload",
+  "definitions": {
+    "RemoteStopTransactionResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

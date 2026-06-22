@@ -1,6 +1,29 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "UpdateFirmwareRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/UpdateFirmwareRequestPayload",
+  "definitions": {
+    "UpdateFirmwareRequestPayload": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "format": "uri"
+        },
+        "retries": {
+          "type": "integer"
+        },
+        "retrieveDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "retryInterval": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "location",
+        "retrieveDate"
+      ]
+    }
+  }
 }

@@ -40,9 +40,10 @@ public class DemoOcppBusinessHandler {
 
     @OcppActionMapping(version = OcppVersion.OCPP_16, action = "DataTransfer")
     public DataTransferResponse onDataTransfer16(OcppRequestContext context, DataTransferRequest request) {
-        log.info("收到 1.6 DataTransfer，桩号={}，扩展字段={}", context.getChargePointId(), request.getAdditionalProperties().keySet());
+        log.info("收到 1.6 DataTransfer，桩号={}，vendorId={}，messageId={}",
+                context.getChargePointId(), request.getVendorId(), request.getMessageId());
         DataTransferResponse r = new DataTransferResponse();
-        r.setAdditionalProperty("status", "Accepted");
+        r.setStatus("Accepted");
         return r;
     }
 

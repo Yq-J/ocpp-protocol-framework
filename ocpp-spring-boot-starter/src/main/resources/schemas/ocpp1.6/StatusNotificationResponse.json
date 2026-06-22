@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "StatusNotificationResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/StatusNotificationResponsePayload",
+  "definitions": {
+    "StatusNotificationResponsePayload": {
+      "type": "object",
+      "properties": {}
+    }
+  }
 }

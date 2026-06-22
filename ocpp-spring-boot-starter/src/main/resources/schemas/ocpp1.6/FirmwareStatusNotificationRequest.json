@@ -1,6 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "FirmwareStatusNotificationRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/FirmwareStatusNotificationRequestPayload",
+  "definitions": {
+    "FirmwareStatusNotificationRequestPayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Downloaded",
+            "DownloadFailed",
+            "Downloading",
+            "Idle",
+            "InstallationFailed",
+            "Installing",
+            "Installed"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

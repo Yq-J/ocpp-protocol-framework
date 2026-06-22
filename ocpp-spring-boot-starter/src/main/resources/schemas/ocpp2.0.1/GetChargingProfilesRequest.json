@@ -1,6 +1,108 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetChargingProfilesRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetChargingProfilesRequestPayload",
+  "definitions": {
+    "ChargingProfileCriterionType": {
+      "description": "Charging_ Profile\r\nurn:x-oca:ocpp:uid:2:233255\r\nA ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.\r\n",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "customData": {
+          "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+          "type": "object",
+          "properties": {
+            "vendorId": {
+              "type": "string",
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "vendorId"
+          ],
+          "x-javaType": "CustomData"
+        },
+        "chargingProfilePurpose": {
+          "description": "Charging_ Profile. Charging_ Profile_ Purpose. Charging_ Profile_ Purpose_ Code\r\nurn:x-oca:ocpp:uid:1:569231\r\nDefines the purpose of the schedule transferred by this profile\r\n",
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "ChargingStationExternalConstraints",
+            "ChargingStationMaxProfile",
+            "TxDefaultProfile",
+            "TxProfile"
+          ],
+          "x-javaType": "ChargingProfilePurposeEnum"
+        },
+        "stackLevel": {
+          "description": "Charging_ Profile. Stack_ Level. Counter\r\nurn:x-oca:ocpp:uid:1:569230\r\nValue determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0.\r\n",
+          "type": "integer"
+        },
+        "chargingProfileId": {
+          "description": "List of all the chargingProfileIds requested. Any ChargingProfile that matches one of these profiles will be reported. If omitted, the Charging Station SHALL not filter on chargingProfileId. This field SHALL NOT contain more ids than set in &lt;&lt;configkey-charging-profile-entries,ChargingProfileEntries.maxLimit&gt;&gt;\r\n\r\n",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "x-additionalItems": false
+        },
+        "chargingLimitSource": {
+          "description": "For which charging limit sources, charging profiles SHALL be reported. If omitted, the Charging Station SHALL not filter on chargingLimitSource.\r\n",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "additionalProperties": false,
+            "enum": [
+              "EMS",
+              "Other",
+              "SO",
+              "CSO"
+            ],
+            "x-javaType": "ChargingLimitSourceEnum"
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "x-additionalItems": false
+        }
+      },
+      "x-javaType": "ChargingProfileCriterion"
+    },
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "GetChargingProfilesRequestPayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "requestId": {
+          "description": "Reference identification that is to be used by the Charging Station in the &lt;&lt;reportchargingprofilesrequest, ReportChargingProfilesRequest&gt;&gt; when provided.\r\n",
+          "type": "integer"
+        },
+        "evseId": {
+          "description": "For which EVSE installed charging profiles SHALL be reported. If 0, only charging profiles installed on the Charging Station itself (the grid connection) SHALL be reported. If omitted, all installed charging profiles SHALL be reported.\r\n",
+          "type": "integer"
+        },
+        "chargingProfile": {
+          "$ref": "#/definitions/ChargingProfileCriterionType"
+        }
+      },
+      "required": [
+        "requestId",
+        "chargingProfile"
+      ]
+    }
+  }
 }

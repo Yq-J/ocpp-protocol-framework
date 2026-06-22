@@ -1,6 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ClearCacheResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ClearCacheResponsePayload",
+  "definitions": {
+    "ClearCacheResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

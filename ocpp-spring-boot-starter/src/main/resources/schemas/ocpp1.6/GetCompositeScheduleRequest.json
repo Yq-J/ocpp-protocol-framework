@@ -1,6 +1,29 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetCompositeScheduleRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetCompositeScheduleRequestPayload",
+  "definitions": {
+    "GetCompositeScheduleRequestPayload": {
+      "type": "object",
+      "properties": {
+        "connectorId": {
+          "type": "integer"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "chargingRateUnit": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "A",
+            "W"
+          ]
+        }
+      },
+      "required": [
+        "connectorId",
+        "duration"
+      ]
+    }
+  }
 }

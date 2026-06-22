@@ -4,12 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 空响应对象。
- * 作者：JYq
-  * <p>
- * 作者：JYq。该 DTO 只描述协议 payload 字段，不包含数据库实体、订单逻辑或计费逻辑。
- * 业务层可以直接在 @OcppActionMapping 方法中声明该类型，框架会自动完成 JSON 与 Java 对象之间的转换。
- * 如厂商存在私有扩展字段，建议新增扩展 DTO、继承当前 DTO，或在业务处理器中改用 JsonNode 接收原始 payload。
+ * 无业务字段的空响应协议实体类。
+ * <p>
+ * 用途：用于 OCPP 中响应 payload 为空对象的场景，例如只需要确认收到报文、无需返回业务字段的 CALLRESULT。
+ * 该类只表达协议层的空 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 如果某个 Action 后续需要返回扩展字段，应新增明确字段的响应 DTO 或继承该类后显式建模。
  * </p>
  */
 @Data

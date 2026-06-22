@@ -1,6 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "SetChargingProfileResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/SetChargingProfileResponsePayload",
+  "definitions": {
+    "SetChargingProfileResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected",
+            "NotSupported"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

@@ -1,6 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ClearCacheRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ClearCacheRequestPayload",
+  "definitions": {
+    "ClearCacheRequestPayload": {
+      "type": "object",
+      "properties": {}
+    }
+  }
 }

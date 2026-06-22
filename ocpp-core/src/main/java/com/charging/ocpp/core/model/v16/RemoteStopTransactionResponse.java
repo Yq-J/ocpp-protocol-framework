@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * OCPP 1.6 RemoteStopTransaction 响应。
- * 作者：JYq
+ * OCPP 1.6J 的 RemoteStopTransaction 响应 payload 协议实体类。
  * <p>
- * 作者：JYq。该 DTO 只描述协议 payload 字段，不包含数据库实体、订单逻辑或计费逻辑。
- * 业务层可以直接在 @OcppActionMapping 方法中声明该类型，框架会自动完成 JSON 与 Java 对象之间的转换。
- * 如厂商存在私有扩展字段，建议新增扩展 DTO、继承当前 DTO，或在业务处理器中改用 JsonNode 接收原始 payload。
+ * 用途：承载 RemoteStopTransaction 操作的响应字段，用于请求充电站远程停止交易场景下的 OCPP CALL/CALLRESULT payload 序列化与反序列化。
+ * 该类只表达 OCPP 协议 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 字段含义、必填性、枚举、长度和嵌套结构以随包官方 JSON Schema 为准。
  * </p>
  */
 @Data
@@ -22,8 +21,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RemoteStopTransactionResponse {
     /**
-     * OCPP payload 的 status 字段。
+     * 处理状态。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code status}，在 OCPP 1.6J RemoteStopTransactionResponse 协议对象中传递处理状态。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * </p>
      */
     private String status;
-
 }

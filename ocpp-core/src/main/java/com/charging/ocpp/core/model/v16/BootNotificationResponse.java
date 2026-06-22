@@ -1,18 +1,17 @@
 package com.charging.ocpp.core.model.v16;
 
-import lombok.Data;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * OCPP 1.6 BootNotification 响应。
- * 作者：JYq
-  * <p>
- * 作者：JYq。该 DTO 只描述协议 payload 字段，不包含数据库实体、订单逻辑或计费逻辑。
- * 业务层可以直接在 @OcppActionMapping 方法中声明该类型，框架会自动完成 JSON 与 Java 对象之间的转换。
- * 如厂商存在私有扩展字段，建议新增扩展 DTO、继承当前 DTO，或在业务处理器中改用 JsonNode 接收原始 payload。
+ * OCPP 1.6J 的 BootNotification 响应 payload 协议实体类。
+ * <p>
+ * 用途：承载 BootNotification 操作的响应字段，用于充电站启动或重连时向 CSMS 注册设备信息场景下的 OCPP CALL/CALLRESULT payload 序列化与反序列化。
+ * 该类只表达 OCPP 协议 payload 结构，不包含数据库实体、订单、计费或设备台账等业务持久化语义。
+ * 字段含义、必填性、枚举、长度和嵌套结构以随包官方 JSON Schema 为准。
  * </p>
  */
 @Data
@@ -21,11 +20,28 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class BootNotificationResponse {
-    /** OCPP payload 的 currentTime 字段。 */
-    private String currentTime;
-    /** OCPP payload 的 interval 字段。 */
-    private Integer interval;
-    /** OCPP payload 的 status 字段。 */
+    /**
+     * 处理状态。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code status}，在 OCPP 1.6J BootNotificationResponse 协议对象中传递处理状态。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * </p>
+     */
     private String status;
-
+    /**
+     * 当前时间。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code currentTime}，在 OCPP 1.6J BootNotificationResponse 协议对象中传递当前时间。
+     * 字段类型为 {@code String}，用于承载当前时间。该字段在官方规范中为必填字段。时间格式应符合 OCPP JSON Schema 的 date-time 约束。
+     * </p>
+     */
+    private String currentTime;
+    /**
+     * 心跳间隔。
+     * <p>
+     * 用途：对应 OCPP 字段 {@code interval}，在 OCPP 1.6J BootNotificationResponse 协议对象中传递心跳间隔。
+     * 字段类型为 {@code Integer}，用于承载心跳间隔。该字段在官方规范中为必填字段。具体合法性由官方 JSON Schema 和业务状态机共同约束。
+     * </p>
+     */
+    private Integer interval;
 }

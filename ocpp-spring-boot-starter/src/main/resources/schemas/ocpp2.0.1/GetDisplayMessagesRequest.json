@@ -1,6 +1,73 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "GetDisplayMessagesRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/GetDisplayMessagesRequestPayload",
+  "definitions": {
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    },
+    "GetDisplayMessagesRequestPayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "id": {
+          "description": "If provided the Charging Station shall return Display Messages of the given ids. This field SHALL NOT contain more ids than set in &lt;&lt;configkey-number-of-display-messages,NumberOfDisplayMessages.maxLimit&gt;&gt;\r\n\r\n",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "x-additionalItems": false
+        },
+        "requestId": {
+          "description": "The Id of this request.\r\n",
+          "type": "integer"
+        },
+        "priority": {
+          "$ref": "#/definitions/MessagePriorityEnumType"
+        },
+        "state": {
+          "$ref": "#/definitions/MessageStateEnumType"
+        }
+      },
+      "required": [
+        "requestId"
+      ]
+    },
+    "MessagePriorityEnumType": {
+      "description": "Message_ Info. Priority. Message_ Priority_ Code\r\nurn:x-enexis:ecdm:uid:1:569253\r\nWith what priority should this message be shown\r\n",
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "AlwaysFront",
+        "InFront",
+        "NormalCycle"
+      ],
+      "x-javaType": "MessagePriorityEnum"
+    },
+    "MessageStateEnumType": {
+      "description": "Message_ Info. State. Message_ State_ Code\r\nurn:x-enexis:ecdm:uid:1:569254\r\nDuring what state should this message be shown. When omitted this message should be shown in any state of the Charging Station.\r\n",
+      "type": "string",
+      "additionalProperties": false,
+      "enum": [
+        "Charging",
+        "Faulted",
+        "Idle",
+        "Unavailable"
+      ],
+      "x-javaType": "MessageStateEnum"
+    }
+  }
 }

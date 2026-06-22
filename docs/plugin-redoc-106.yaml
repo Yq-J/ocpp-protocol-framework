@@ -1,0 +1,2359 @@
+openapi: 3.1.0
+info:
+  title: OCPP 1.6 JSON Schemas
+  version: 1.6J
+paths: {}
+tags:
+  - name: authorizerequest
+    x-displayName: AuthorizeRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/AuthorizeRequest" />
+  - name: authorizeresponse
+    x-displayName: AuthorizeResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/AuthorizeResponse" />
+  - name: bootnotificationrequest
+    x-displayName: BootNotificationRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/BootNotificationRequest"
+      />
+  - name: bootnotificationresponse
+    x-displayName: BootNotificationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/BootNotificationResponse" />
+  - name: cancelreservationrequest
+    x-displayName: CancelReservationRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/CancelReservationRequest" />
+  - name: cancelreservationresponse
+    x-displayName: CancelReservationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/CancelReservationResponse" />
+  - name: changeavailabilityrequest
+    x-displayName: ChangeAvailabilityRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ChangeAvailabilityRequest" />
+  - name: changeavailabilityresponse
+    x-displayName: ChangeAvailabilityResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ChangeAvailabilityResponse" />
+  - name: changeconfigurationrequest
+    x-displayName: ChangeConfigurationRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ChangeConfigurationRequest" />
+  - name: changeconfigurationresponse
+    x-displayName: ChangeConfigurationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ChangeConfigurationResponse" />
+  - name: clearcacherequest
+    x-displayName: ClearCacheRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/ClearCacheRequest" />
+  - name: clearcacheresponse
+    x-displayName: ClearCacheResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ClearCacheResponse" />
+  - name: clearchargingprofilerequest
+    x-displayName: ClearChargingProfileRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ClearChargingProfileRequest" />
+  - name: clearchargingprofileresponse
+    x-displayName: ClearChargingProfileResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/ClearChargingProfileResponse" />
+  - name: datatransferrequest
+    x-displayName: DataTransferRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/DataTransferRequest" />
+  - name: datatransferresponse
+    x-displayName: DataTransferResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/DataTransferResponse" />
+  - name: diagnosticsstatusnotificationrequest
+    x-displayName: DiagnosticsStatusNotificationRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/DiagnosticsStatusNotificationRequest" />
+  - name: diagnosticsstatusnotificationresponse
+    x-displayName: DiagnosticsStatusNotificationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/DiagnosticsStatusNotificationResponse" />
+  - name: firmwarestatusnotificationrequest
+    x-displayName: FirmwareStatusNotificationRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/FirmwareStatusNotificationRequest" />
+  - name: firmwarestatusnotificationresponse
+    x-displayName: FirmwareStatusNotificationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/FirmwareStatusNotificationResponse" />
+  - name: getcompositeschedulerequest
+    x-displayName: GetCompositeScheduleRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/GetCompositeScheduleRequest" />
+  - name: getcompositescheduleresponse
+    x-displayName: GetCompositeScheduleResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/GetCompositeScheduleResponse" />
+  - name: getconfigurationrequest
+    x-displayName: GetConfigurationRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/GetConfigurationRequest"
+      />
+  - name: getconfigurationresponse
+    x-displayName: GetConfigurationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/GetConfigurationResponse" />
+  - name: getdiagnosticsrequest
+    x-displayName: GetDiagnosticsRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/GetDiagnosticsRequest"
+      />
+  - name: getdiagnosticsresponse
+    x-displayName: GetDiagnosticsResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/GetDiagnosticsResponse"
+      />
+  - name: getlocallistversionrequest
+    x-displayName: GetLocalListVersionRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/GetLocalListVersionRequest" />
+  - name: getlocallistversionresponse
+    x-displayName: GetLocalListVersionResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/GetLocalListVersionResponse" />
+  - name: heartbeatrequest
+    x-displayName: HeartbeatRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/HeartbeatRequest" />
+  - name: heartbeatresponse
+    x-displayName: HeartbeatResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/HeartbeatResponse" />
+  - name: metervaluesrequest
+    x-displayName: MeterValuesRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/MeterValuesRequest" />
+  - name: metervaluesresponse
+    x-displayName: MeterValuesResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/MeterValuesResponse" />
+  - name: remotestarttransactionrequest
+    x-displayName: RemoteStartTransactionRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/RemoteStartTransactionRequest" />
+  - name: remotestarttransactionresponse
+    x-displayName: RemoteStartTransactionResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/RemoteStartTransactionResponse" />
+  - name: remotestoptransactionrequest
+    x-displayName: RemoteStopTransactionRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/RemoteStopTransactionRequest" />
+  - name: remotestoptransactionresponse
+    x-displayName: RemoteStopTransactionResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/RemoteStopTransactionResponse" />
+  - name: reservenowrequest
+    x-displayName: ReserveNowRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/ReserveNowRequest" />
+  - name: reservenowresponse
+    x-displayName: ReserveNowResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ReserveNowResponse" />
+  - name: resetrequest
+    x-displayName: ResetRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/ResetRequest" />
+  - name: resetresponse
+    x-displayName: ResetResponse
+    description: <SchemaDefinition schemaRef="#/components/schemas/ResetResponse" />
+  - name: sendlocallistrequest
+    x-displayName: SendLocalListRequest
+    description: <SchemaDefinition schemaRef="#/components/schemas/SendLocalListRequest" />
+  - name: sendlocallistresponse
+    x-displayName: SendLocalListResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/SendLocalListResponse"
+      />
+  - name: setchargingprofilerequest
+    x-displayName: SetChargingProfileRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/SetChargingProfileRequest" />
+  - name: setchargingprofileresponse
+    x-displayName: SetChargingProfileResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/SetChargingProfileResponse" />
+  - name: starttransactionrequest
+    x-displayName: StartTransactionRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/StartTransactionRequest"
+      />
+  - name: starttransactionresponse
+    x-displayName: StartTransactionResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/StartTransactionResponse" />
+  - name: statusnotificationrequest
+    x-displayName: StatusNotificationRequest
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/StatusNotificationRequest" />
+  - name: statusnotificationresponse
+    x-displayName: StatusNotificationResponse
+    description: >-
+      <SchemaDefinition
+      schemaRef="#/components/schemas/StatusNotificationResponse" />
+  - name: stoptransactionrequest
+    x-displayName: StopTransactionRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/StopTransactionRequest"
+      />
+  - name: stoptransactionresponse
+    x-displayName: StopTransactionResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/StopTransactionResponse"
+      />
+  - name: triggermessagerequest
+    x-displayName: TriggerMessageRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/TriggerMessageRequest"
+      />
+  - name: triggermessageresponse
+    x-displayName: TriggerMessageResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/TriggerMessageResponse"
+      />
+  - name: unlockconnectorrequest
+    x-displayName: UnlockConnectorRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/UnlockConnectorRequest"
+      />
+  - name: unlockconnectorresponse
+    x-displayName: UnlockConnectorResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/UnlockConnectorResponse"
+      />
+  - name: updatefirmwarerequest
+    x-displayName: UpdateFirmwareRequest
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/UpdateFirmwareRequest"
+      />
+  - name: updatefirmwareresponse
+    x-displayName: UpdateFirmwareResponse
+    description: >-
+      <SchemaDefinition schemaRef="#/components/schemas/UpdateFirmwareResponse"
+      />
+x-tagGroups:
+  - name: Request Schemas
+    tags:
+      - authorizerequest
+      - bootnotificationrequest
+      - cancelreservationrequest
+      - changeavailabilityrequest
+      - changeconfigurationrequest
+      - clearcacherequest
+      - clearchargingprofilerequest
+      - datatransferrequest
+      - diagnosticsstatusnotificationrequest
+      - firmwarestatusnotificationrequest
+      - getcompositeschedulerequest
+      - getconfigurationrequest
+      - getdiagnosticsrequest
+      - getlocallistversionrequest
+      - heartbeatrequest
+      - metervaluesrequest
+      - remotestarttransactionrequest
+      - remotestoptransactionrequest
+      - reservenowrequest
+      - resetrequest
+      - sendlocallistrequest
+      - setchargingprofilerequest
+      - starttransactionrequest
+      - statusnotificationrequest
+      - stoptransactionrequest
+      - triggermessagerequest
+      - unlockconnectorrequest
+      - updatefirmwarerequest
+  - name: Response Schemas
+    tags:
+      - authorizeresponse
+      - bootnotificationresponse
+      - cancelreservationresponse
+      - changeavailabilityresponse
+      - changeconfigurationresponse
+      - clearcacheresponse
+      - clearchargingprofileresponse
+      - datatransferresponse
+      - diagnosticsstatusnotificationresponse
+      - firmwarestatusnotificationresponse
+      - getcompositescheduleresponse
+      - getconfigurationresponse
+      - getdiagnosticsresponse
+      - getlocallistversionresponse
+      - heartbeatresponse
+      - metervaluesresponse
+      - remotestarttransactionresponse
+      - remotestoptransactionresponse
+      - reservenowresponse
+      - resetresponse
+      - sendlocallistresponse
+      - setchargingprofileresponse
+      - starttransactionresponse
+      - statusnotificationresponse
+      - stoptransactionresponse
+      - triggermessageresponse
+      - unlockconnectorresponse
+      - updatefirmwareresponse
+components:
+  schemas:
+    AuthorizeRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Authorize
+          description: Action (without Request)
+        - $ref: '#/components/schemas/AuthorizeRequestPayload'
+      minItems: 4
+      maxItems: 4
+    AuthorizeRequestPayload:
+      type: object
+      properties:
+        idTag:
+          type: string
+          maxLength: 20
+      required:
+        - idTag
+    AuthorizeResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Authorize
+          description: Action (without Response)
+        - $ref: '#/components/schemas/AuthorizeResponsePayload'
+      minItems: 4
+      maxItems: 4
+    AuthorizeResponsePayload:
+      type: object
+      properties:
+        idTagInfo:
+          type: object
+          properties:
+            expiryDate:
+              type: string
+              format: date-time
+            parentIdTag:
+              type: string
+              maxLength: 20
+            status:
+              type: string
+              additionalProperties: false
+              enum:
+                - Accepted
+                - Blocked
+                - Expired
+                - Invalid
+                - ConcurrentTx
+          additionalProperties: false
+          required:
+            - status
+      required:
+        - idTagInfo
+    BootNotificationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: BootNotification
+          description: Action (without Request)
+        - $ref: '#/components/schemas/BootNotificationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    BootNotificationRequestPayload:
+      type: object
+      properties:
+        chargePointVendor:
+          type: string
+          maxLength: 20
+        chargePointModel:
+          type: string
+          maxLength: 20
+        chargePointSerialNumber:
+          type: string
+          maxLength: 25
+        chargeBoxSerialNumber:
+          type: string
+          maxLength: 25
+        firmwareVersion:
+          type: string
+          maxLength: 50
+        iccid:
+          type: string
+          maxLength: 20
+        imsi:
+          type: string
+          maxLength: 20
+        meterType:
+          type: string
+          maxLength: 25
+        meterSerialNumber:
+          type: string
+          maxLength: 25
+      required:
+        - chargePointVendor
+        - chargePointModel
+    BootNotificationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: BootNotification
+          description: Action (without Response)
+        - $ref: '#/components/schemas/BootNotificationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    BootNotificationResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Pending
+            - Rejected
+        currentTime:
+          type: string
+          format: date-time
+        interval:
+          type: integer
+      required:
+        - status
+        - currentTime
+        - interval
+    CancelReservationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: CancelReservation
+          description: Action (without Request)
+        - $ref: '#/components/schemas/CancelReservationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    CancelReservationRequestPayload:
+      type: object
+      properties:
+        reservationId:
+          type: integer
+      required:
+        - reservationId
+    CancelReservationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: CancelReservation
+          description: Action (without Response)
+        - $ref: '#/components/schemas/CancelReservationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    CancelReservationResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+      required:
+        - status
+    ChangeAvailabilityRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ChangeAvailability
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ChangeAvailabilityRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ChangeAvailabilityRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        type:
+          type: string
+          additionalProperties: false
+          enum:
+            - Inoperative
+            - Operative
+      required:
+        - connectorId
+        - type
+    ChangeAvailabilityResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ChangeAvailability
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ChangeAvailabilityResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ChangeAvailabilityResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+            - Scheduled
+      required:
+        - status
+    ChangeConfigurationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ChangeConfiguration
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ChangeConfigurationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ChangeConfigurationRequestPayload:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 50
+        value:
+          type: string
+          maxLength: 500
+      required:
+        - key
+        - value
+    ChangeConfigurationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ChangeConfiguration
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ChangeConfigurationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ChangeConfigurationResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+            - RebootRequired
+            - NotSupported
+      required:
+        - status
+    ClearCacheRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ClearCache
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ClearCacheRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ClearCacheRequestPayload:
+      type: object
+      properties: {}
+    ClearCacheResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ClearCache
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ClearCacheResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ClearCacheResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+      required:
+        - status
+    ClearChargingProfileRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ClearChargingProfile
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ClearChargingProfileRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ClearChargingProfileRequestPayload:
+      type: object
+      properties:
+        id:
+          type: integer
+        connectorId:
+          type: integer
+        chargingProfilePurpose:
+          type: string
+          additionalProperties: false
+          enum:
+            - ChargePointMaxProfile
+            - TxDefaultProfile
+            - TxProfile
+        stackLevel:
+          type: integer
+    ClearChargingProfileResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ClearChargingProfile
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ClearChargingProfileResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ClearChargingProfileResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Unknown
+      required:
+        - status
+    DataTransferRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: DataTransfer
+          description: Action (without Request)
+        - $ref: '#/components/schemas/DataTransferRequestPayload'
+      minItems: 4
+      maxItems: 4
+    DataTransferRequestPayload:
+      type: object
+      properties:
+        vendorId:
+          type: string
+          maxLength: 255
+        messageId:
+          type: string
+          maxLength: 50
+        data:
+          type: string
+      required:
+        - vendorId
+    DataTransferResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: DataTransfer
+          description: Action (without Response)
+        - $ref: '#/components/schemas/DataTransferResponsePayload'
+      minItems: 4
+      maxItems: 4
+    DataTransferResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+            - UnknownMessageId
+            - UnknownVendorId
+        data:
+          type: string
+      required:
+        - status
+    DiagnosticsStatusNotificationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: DiagnosticsStatusNotification
+          description: Action (without Request)
+        - $ref: '#/components/schemas/DiagnosticsStatusNotificationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    DiagnosticsStatusNotificationRequestPayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Idle
+            - Uploaded
+            - UploadFailed
+            - Uploading
+      required:
+        - status
+    DiagnosticsStatusNotificationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: DiagnosticsStatusNotification
+          description: Action (without Response)
+        - $ref: '#/components/schemas/DiagnosticsStatusNotificationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    DiagnosticsStatusNotificationResponsePayload:
+      type: object
+      properties: {}
+    FirmwareStatusNotificationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: FirmwareStatusNotification
+          description: Action (without Request)
+        - $ref: '#/components/schemas/FirmwareStatusNotificationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    FirmwareStatusNotificationRequestPayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Downloaded
+            - DownloadFailed
+            - Downloading
+            - Idle
+            - InstallationFailed
+            - Installing
+            - Installed
+      required:
+        - status
+    FirmwareStatusNotificationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: FirmwareStatusNotification
+          description: Action (without Response)
+        - $ref: '#/components/schemas/FirmwareStatusNotificationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    FirmwareStatusNotificationResponsePayload:
+      type: object
+      properties: {}
+    GetCompositeScheduleRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetCompositeSchedule
+          description: Action (without Request)
+        - $ref: '#/components/schemas/GetCompositeScheduleRequestPayload'
+      minItems: 4
+      maxItems: 4
+    GetCompositeScheduleRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        duration:
+          type: integer
+        chargingRateUnit:
+          type: string
+          additionalProperties: false
+          enum:
+            - A
+            - W
+      required:
+        - connectorId
+        - duration
+    GetCompositeScheduleResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetCompositeSchedule
+          description: Action (without Response)
+        - $ref: '#/components/schemas/GetCompositeScheduleResponsePayload'
+      minItems: 4
+      maxItems: 4
+    GetCompositeScheduleResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+        connectorId:
+          type: integer
+        scheduleStart:
+          type: string
+          format: date-time
+        chargingSchedule:
+          type: object
+          properties:
+            duration:
+              type: integer
+            startSchedule:
+              type: string
+              format: date-time
+            chargingRateUnit:
+              type: string
+              additionalProperties: false
+              enum:
+                - A
+                - W
+            chargingSchedulePeriod:
+              type: array
+              items:
+                type: object
+                properties:
+                  startPeriod:
+                    type: integer
+                  limit:
+                    type: number
+                    multipleOf: 0.1
+                  numberPhases:
+                    type: integer
+                additionalProperties: false
+                required:
+                  - startPeriod
+                  - limit
+            minChargingRate:
+              type: number
+              multipleOf: 0.1
+          additionalProperties: false
+          required:
+            - chargingRateUnit
+            - chargingSchedulePeriod
+      required:
+        - status
+    GetConfigurationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetConfiguration
+          description: Action (without Request)
+        - $ref: '#/components/schemas/GetConfigurationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    GetConfigurationRequestPayload:
+      type: object
+      properties:
+        key:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+    GetConfigurationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetConfiguration
+          description: Action (without Response)
+        - $ref: '#/components/schemas/GetConfigurationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    GetConfigurationResponsePayload:
+      type: object
+      properties:
+        configurationKey:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                maxLength: 50
+              readonly:
+                type: boolean
+              value:
+                type: string
+                maxLength: 500
+            additionalProperties: false
+            required:
+              - key
+              - readonly
+        unknownKey:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+    GetDiagnosticsRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetDiagnostics
+          description: Action (without Request)
+        - $ref: '#/components/schemas/GetDiagnosticsRequestPayload'
+      minItems: 4
+      maxItems: 4
+    GetDiagnosticsRequestPayload:
+      type: object
+      properties:
+        location:
+          type: string
+          format: uri
+        retries:
+          type: integer
+        retryInterval:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        stopTime:
+          type: string
+          format: date-time
+      required:
+        - location
+    GetDiagnosticsResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetDiagnostics
+          description: Action (without Response)
+        - $ref: '#/components/schemas/GetDiagnosticsResponsePayload'
+      minItems: 4
+      maxItems: 4
+    GetDiagnosticsResponsePayload:
+      type: object
+      properties:
+        fileName:
+          type: string
+          maxLength: 255
+    GetLocalListVersionRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetLocalListVersion
+          description: Action (without Request)
+        - $ref: '#/components/schemas/GetLocalListVersionRequestPayload'
+      minItems: 4
+      maxItems: 4
+    GetLocalListVersionRequestPayload:
+      type: object
+      properties: {}
+    GetLocalListVersionResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: GetLocalListVersion
+          description: Action (without Response)
+        - $ref: '#/components/schemas/GetLocalListVersionResponsePayload'
+      minItems: 4
+      maxItems: 4
+    GetLocalListVersionResponsePayload:
+      type: object
+      properties:
+        listVersion:
+          type: integer
+      required:
+        - listVersion
+    HeartbeatRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Heartbeat
+          description: Action (without Request)
+        - $ref: '#/components/schemas/HeartbeatRequestPayload'
+      minItems: 4
+      maxItems: 4
+    HeartbeatRequestPayload:
+      type: object
+      properties: {}
+    HeartbeatResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Heartbeat
+          description: Action (without Response)
+        - $ref: '#/components/schemas/HeartbeatResponsePayload'
+      minItems: 4
+      maxItems: 4
+    HeartbeatResponsePayload:
+      type: object
+      properties:
+        currentTime:
+          type: string
+          format: date-time
+      required:
+        - currentTime
+    MeterValuesRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: MeterValues
+          description: Action (without Request)
+        - $ref: '#/components/schemas/MeterValuesRequestPayload'
+      minItems: 4
+      maxItems: 4
+    MeterValuesRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        transactionId:
+          type: integer
+        meterValue:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              sampledValue:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    context:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Interruption.Begin
+                        - Interruption.End
+                        - Sample.Clock
+                        - Sample.Periodic
+                        - Transaction.Begin
+                        - Transaction.End
+                        - Trigger
+                        - Other
+                    format:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Raw
+                        - SignedData
+                    measurand:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Energy.Active.Export.Register
+                        - Energy.Active.Import.Register
+                        - Energy.Reactive.Export.Register
+                        - Energy.Reactive.Import.Register
+                        - Energy.Active.Export.Interval
+                        - Energy.Active.Import.Interval
+                        - Energy.Reactive.Export.Interval
+                        - Energy.Reactive.Import.Interval
+                        - Power.Active.Export
+                        - Power.Active.Import
+                        - Power.Offered
+                        - Power.Reactive.Export
+                        - Power.Reactive.Import
+                        - Power.Factor
+                        - Current.Import
+                        - Current.Export
+                        - Current.Offered
+                        - Voltage
+                        - Frequency
+                        - Temperature
+                        - SoC
+                        - RPM
+                    phase:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - L1
+                        - L2
+                        - L3
+                        - 'N'
+                        - L1-N
+                        - L2-N
+                        - L3-N
+                        - L1-L2
+                        - L2-L3
+                        - L3-L1
+                    location:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Cable
+                        - EV
+                        - Inlet
+                        - Outlet
+                        - Body
+                    unit:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Wh
+                        - kWh
+                        - varh
+                        - kvarh
+                        - W
+                        - kW
+                        - VA
+                        - kVA
+                        - var
+                        - kvar
+                        - A
+                        - V
+                        - K
+                        - Celcius
+                        - Celsius
+                        - Fahrenheit
+                        - Percent
+                  additionalProperties: false
+                  required:
+                    - value
+            additionalProperties: false
+            required:
+              - timestamp
+              - sampledValue
+      required:
+        - connectorId
+        - meterValue
+    MeterValuesResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: MeterValues
+          description: Action (without Response)
+        - $ref: '#/components/schemas/MeterValuesResponsePayload'
+      minItems: 4
+      maxItems: 4
+    MeterValuesResponsePayload:
+      type: object
+      properties: {}
+    RemoteStartTransactionRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: RemoteStartTransaction
+          description: Action (without Request)
+        - $ref: '#/components/schemas/RemoteStartTransactionRequestPayload'
+      minItems: 4
+      maxItems: 4
+    RemoteStartTransactionRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        idTag:
+          type: string
+          maxLength: 20
+        chargingProfile:
+          type: object
+          properties:
+            chargingProfileId:
+              type: integer
+            transactionId:
+              type: integer
+            stackLevel:
+              type: integer
+            chargingProfilePurpose:
+              type: string
+              additionalProperties: false
+              enum:
+                - ChargePointMaxProfile
+                - TxDefaultProfile
+                - TxProfile
+            chargingProfileKind:
+              type: string
+              additionalProperties: false
+              enum:
+                - Absolute
+                - Recurring
+                - Relative
+            recurrencyKind:
+              type: string
+              additionalProperties: false
+              enum:
+                - Daily
+                - Weekly
+            validFrom:
+              type: string
+              format: date-time
+            validTo:
+              type: string
+              format: date-time
+            chargingSchedule:
+              type: object
+              properties:
+                duration:
+                  type: integer
+                startSchedule:
+                  type: string
+                  format: date-time
+                chargingRateUnit:
+                  type: string
+                  additionalProperties: false
+                  enum:
+                    - A
+                    - W
+                chargingSchedulePeriod:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      startPeriod:
+                        type: integer
+                      limit:
+                        type: number
+                        multipleOf: 0.1
+                      numberPhases:
+                        type: integer
+                    additionalProperties: false
+                    required:
+                      - startPeriod
+                      - limit
+                minChargingRate:
+                  type: number
+                  multipleOf: 0.1
+              additionalProperties: false
+              required:
+                - chargingRateUnit
+                - chargingSchedulePeriod
+          additionalProperties: false
+          required:
+            - chargingProfileId
+            - stackLevel
+            - chargingProfilePurpose
+            - chargingProfileKind
+            - chargingSchedule
+      required:
+        - idTag
+    RemoteStartTransactionResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: RemoteStartTransaction
+          description: Action (without Response)
+        - $ref: '#/components/schemas/RemoteStartTransactionResponsePayload'
+      minItems: 4
+      maxItems: 4
+    RemoteStartTransactionResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+      required:
+        - status
+    RemoteStopTransactionRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: RemoteStopTransaction
+          description: Action (without Request)
+        - $ref: '#/components/schemas/RemoteStopTransactionRequestPayload'
+      minItems: 4
+      maxItems: 4
+    RemoteStopTransactionRequestPayload:
+      type: object
+      properties:
+        transactionId:
+          type: integer
+      required:
+        - transactionId
+    RemoteStopTransactionResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: RemoteStopTransaction
+          description: Action (without Response)
+        - $ref: '#/components/schemas/RemoteStopTransactionResponsePayload'
+      minItems: 4
+      maxItems: 4
+    RemoteStopTransactionResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+      required:
+        - status
+    ReserveNowRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ReserveNow
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ReserveNowRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ReserveNowRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        expiryDate:
+          type: string
+          format: date-time
+        idTag:
+          type: string
+          maxLength: 20
+        parentIdTag:
+          type: string
+          maxLength: 20
+        reservationId:
+          type: integer
+      required:
+        - connectorId
+        - expiryDate
+        - idTag
+        - reservationId
+    ReserveNowResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: ReserveNow
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ReserveNowResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ReserveNowResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Faulted
+            - Occupied
+            - Rejected
+            - Unavailable
+      required:
+        - status
+    ResetRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Reset
+          description: Action (without Request)
+        - $ref: '#/components/schemas/ResetRequestPayload'
+      minItems: 4
+      maxItems: 4
+    ResetRequestPayload:
+      type: object
+      properties:
+        type:
+          type: string
+          additionalProperties: false
+          enum:
+            - Hard
+            - Soft
+      required:
+        - type
+    ResetResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: Reset
+          description: Action (without Response)
+        - $ref: '#/components/schemas/ResetResponsePayload'
+      minItems: 4
+      maxItems: 4
+    ResetResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+      required:
+        - status
+    SendLocalListRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: SendLocalList
+          description: Action (without Request)
+        - $ref: '#/components/schemas/SendLocalListRequestPayload'
+      minItems: 4
+      maxItems: 4
+    SendLocalListRequestPayload:
+      type: object
+      properties:
+        listVersion:
+          type: integer
+        localAuthorizationList:
+          type: array
+          items:
+            type: object
+            properties:
+              idTag:
+                type: string
+                maxLength: 20
+              idTagInfo:
+                type: object
+                properties:
+                  expiryDate:
+                    type: string
+                    format: date-time
+                  parentIdTag:
+                    type: string
+                    maxLength: 20
+                  status:
+                    type: string
+                    additionalProperties: false
+                    enum:
+                      - Accepted
+                      - Blocked
+                      - Expired
+                      - Invalid
+                      - ConcurrentTx
+                additionalProperties: false
+                required:
+                  - status
+            additionalProperties: false
+            required:
+              - idTag
+        updateType:
+          type: string
+          additionalProperties: false
+          enum:
+            - Differential
+            - Full
+      required:
+        - listVersion
+        - updateType
+    SendLocalListResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: SendLocalList
+          description: Action (without Response)
+        - $ref: '#/components/schemas/SendLocalListResponsePayload'
+      minItems: 4
+      maxItems: 4
+    SendLocalListResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Failed
+            - NotSupported
+            - VersionMismatch
+      required:
+        - status
+    SetChargingProfileRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: SetChargingProfile
+          description: Action (without Request)
+        - $ref: '#/components/schemas/SetChargingProfileRequestPayload'
+      minItems: 4
+      maxItems: 4
+    SetChargingProfileRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        csChargingProfiles:
+          type: object
+          properties:
+            chargingProfileId:
+              type: integer
+            transactionId:
+              type: integer
+            stackLevel:
+              type: integer
+            chargingProfilePurpose:
+              type: string
+              additionalProperties: false
+              enum:
+                - ChargePointMaxProfile
+                - TxDefaultProfile
+                - TxProfile
+            chargingProfileKind:
+              type: string
+              additionalProperties: false
+              enum:
+                - Absolute
+                - Recurring
+                - Relative
+            recurrencyKind:
+              type: string
+              additionalProperties: false
+              enum:
+                - Daily
+                - Weekly
+            validFrom:
+              type: string
+              format: date-time
+            validTo:
+              type: string
+              format: date-time
+            chargingSchedule:
+              type: object
+              properties:
+                duration:
+                  type: integer
+                startSchedule:
+                  type: string
+                  format: date-time
+                chargingRateUnit:
+                  type: string
+                  additionalProperties: false
+                  enum:
+                    - A
+                    - W
+                chargingSchedulePeriod:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      startPeriod:
+                        type: integer
+                      limit:
+                        type: number
+                        multipleOf: 0.1
+                      numberPhases:
+                        type: integer
+                    additionalProperties: false
+                    required:
+                      - startPeriod
+                      - limit
+                minChargingRate:
+                  type: number
+                  multipleOf: 0.1
+              additionalProperties: false
+              required:
+                - chargingRateUnit
+                - chargingSchedulePeriod
+          additionalProperties: false
+          required:
+            - chargingProfileId
+            - stackLevel
+            - chargingProfilePurpose
+            - chargingProfileKind
+            - chargingSchedule
+      required:
+        - connectorId
+        - csChargingProfiles
+    SetChargingProfileResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: SetChargingProfile
+          description: Action (without Response)
+        - $ref: '#/components/schemas/SetChargingProfileResponsePayload'
+      minItems: 4
+      maxItems: 4
+    SetChargingProfileResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+            - NotSupported
+      required:
+        - status
+    StartTransactionRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StartTransaction
+          description: Action (without Request)
+        - $ref: '#/components/schemas/StartTransactionRequestPayload'
+      minItems: 4
+      maxItems: 4
+    StartTransactionRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        idTag:
+          type: string
+          maxLength: 20
+        meterStart:
+          type: integer
+        reservationId:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - connectorId
+        - idTag
+        - meterStart
+        - timestamp
+    StartTransactionResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StartTransaction
+          description: Action (without Response)
+        - $ref: '#/components/schemas/StartTransactionResponsePayload'
+      minItems: 4
+      maxItems: 4
+    StartTransactionResponsePayload:
+      type: object
+      properties:
+        idTagInfo:
+          type: object
+          properties:
+            expiryDate:
+              type: string
+              format: date-time
+            parentIdTag:
+              type: string
+              maxLength: 20
+            status:
+              type: string
+              additionalProperties: false
+              enum:
+                - Accepted
+                - Blocked
+                - Expired
+                - Invalid
+                - ConcurrentTx
+          additionalProperties: false
+          required:
+            - status
+        transactionId:
+          type: integer
+      required:
+        - idTagInfo
+        - transactionId
+    StatusNotificationRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StatusNotification
+          description: Action (without Request)
+        - $ref: '#/components/schemas/StatusNotificationRequestPayload'
+      minItems: 4
+      maxItems: 4
+    StatusNotificationRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+        errorCode:
+          type: string
+          additionalProperties: false
+          enum:
+            - ConnectorLockFailure
+            - EVCommunicationError
+            - GroundFailure
+            - HighTemperature
+            - InternalError
+            - LocalListConflict
+            - NoError
+            - OtherError
+            - OverCurrentFailure
+            - PowerMeterFailure
+            - PowerSwitchFailure
+            - ReaderFailure
+            - ResetFailure
+            - UnderVoltage
+            - OverVoltage
+            - WeakSignal
+        info:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Available
+            - Preparing
+            - Charging
+            - SuspendedEVSE
+            - SuspendedEV
+            - Finishing
+            - Reserved
+            - Unavailable
+            - Faulted
+        timestamp:
+          type: string
+          format: date-time
+        vendorId:
+          type: string
+          maxLength: 255
+        vendorErrorCode:
+          type: string
+          maxLength: 50
+      required:
+        - connectorId
+        - errorCode
+        - status
+    StatusNotificationResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StatusNotification
+          description: Action (without Response)
+        - $ref: '#/components/schemas/StatusNotificationResponsePayload'
+      minItems: 4
+      maxItems: 4
+    StatusNotificationResponsePayload:
+      type: object
+      properties: {}
+    StopTransactionRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StopTransaction
+          description: Action (without Request)
+        - $ref: '#/components/schemas/StopTransactionRequestPayload'
+      minItems: 4
+      maxItems: 4
+    StopTransactionRequestPayload:
+      type: object
+      properties:
+        idTag:
+          type: string
+          maxLength: 20
+        meterStop:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        transactionId:
+          type: integer
+        reason:
+          type: string
+          additionalProperties: false
+          enum:
+            - EmergencyStop
+            - EVDisconnected
+            - HardReset
+            - Local
+            - Other
+            - PowerLoss
+            - Reboot
+            - Remote
+            - SoftReset
+            - UnlockCommand
+            - DeAuthorized
+        transactionData:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              sampledValue:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    context:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Interruption.Begin
+                        - Interruption.End
+                        - Sample.Clock
+                        - Sample.Periodic
+                        - Transaction.Begin
+                        - Transaction.End
+                        - Trigger
+                        - Other
+                    format:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Raw
+                        - SignedData
+                    measurand:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Energy.Active.Export.Register
+                        - Energy.Active.Import.Register
+                        - Energy.Reactive.Export.Register
+                        - Energy.Reactive.Import.Register
+                        - Energy.Active.Export.Interval
+                        - Energy.Active.Import.Interval
+                        - Energy.Reactive.Export.Interval
+                        - Energy.Reactive.Import.Interval
+                        - Power.Active.Export
+                        - Power.Active.Import
+                        - Power.Offered
+                        - Power.Reactive.Export
+                        - Power.Reactive.Import
+                        - Power.Factor
+                        - Current.Import
+                        - Current.Export
+                        - Current.Offered
+                        - Voltage
+                        - Frequency
+                        - Temperature
+                        - SoC
+                        - RPM
+                    phase:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - L1
+                        - L2
+                        - L3
+                        - 'N'
+                        - L1-N
+                        - L2-N
+                        - L3-N
+                        - L1-L2
+                        - L2-L3
+                        - L3-L1
+                    location:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Cable
+                        - EV
+                        - Inlet
+                        - Outlet
+                        - Body
+                    unit:
+                      type: string
+                      additionalProperties: false
+                      enum:
+                        - Wh
+                        - kWh
+                        - varh
+                        - kvarh
+                        - W
+                        - kW
+                        - VA
+                        - kVA
+                        - var
+                        - kvar
+                        - A
+                        - V
+                        - K
+                        - Celcius
+                        - Fahrenheit
+                        - Percent
+                  additionalProperties: false
+                  required:
+                    - value
+            additionalProperties: false
+            required:
+              - timestamp
+              - sampledValue
+      required:
+        - transactionId
+        - timestamp
+        - meterStop
+    StopTransactionResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: StopTransaction
+          description: Action (without Response)
+        - $ref: '#/components/schemas/StopTransactionResponsePayload'
+      minItems: 4
+      maxItems: 4
+    StopTransactionResponsePayload:
+      type: object
+      properties:
+        idTagInfo:
+          type: object
+          properties:
+            expiryDate:
+              type: string
+              format: date-time
+            parentIdTag:
+              type: string
+              maxLength: 20
+            status:
+              type: string
+              additionalProperties: false
+              enum:
+                - Accepted
+                - Blocked
+                - Expired
+                - Invalid
+                - ConcurrentTx
+          additionalProperties: false
+          required:
+            - status
+    TriggerMessageRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: TriggerMessage
+          description: Action (without Request)
+        - $ref: '#/components/schemas/TriggerMessageRequestPayload'
+      minItems: 4
+      maxItems: 4
+    TriggerMessageRequestPayload:
+      type: object
+      properties:
+        requestedMessage:
+          type: string
+          additionalProperties: false
+          enum:
+            - BootNotification
+            - DiagnosticsStatusNotification
+            - FirmwareStatusNotification
+            - Heartbeat
+            - MeterValues
+            - StatusNotification
+        connectorId:
+          type: integer
+      required:
+        - requestedMessage
+    TriggerMessageResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: TriggerMessage
+          description: Action (without Response)
+        - $ref: '#/components/schemas/TriggerMessageResponsePayload'
+      minItems: 4
+      maxItems: 4
+    TriggerMessageResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Accepted
+            - Rejected
+            - NotImplemented
+      required:
+        - status
+    UnlockConnectorRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: UnlockConnector
+          description: Action (without Request)
+        - $ref: '#/components/schemas/UnlockConnectorRequestPayload'
+      minItems: 4
+      maxItems: 4
+    UnlockConnectorRequestPayload:
+      type: object
+      properties:
+        connectorId:
+          type: integer
+      required:
+        - connectorId
+    UnlockConnectorResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: UnlockConnector
+          description: Action (without Response)
+        - $ref: '#/components/schemas/UnlockConnectorResponsePayload'
+      minItems: 4
+      maxItems: 4
+    UnlockConnectorResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          additionalProperties: false
+          enum:
+            - Unlocked
+            - UnlockFailed
+            - NotSupported
+      required:
+        - status
+    UpdateFirmwareRequest:
+      type: array
+      items:
+        - type: integer
+          const: 2
+          description: Message Type ID (2 for "REQUEST")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: UpdateFirmware
+          description: Action (without Request)
+        - $ref: '#/components/schemas/UpdateFirmwareRequestPayload'
+      minItems: 4
+      maxItems: 4
+    UpdateFirmwareRequestPayload:
+      type: object
+      properties:
+        location:
+          type: string
+          format: uri
+        retries:
+          type: integer
+        retrieveDate:
+          type: string
+          format: date-time
+        retryInterval:
+          type: integer
+      required:
+        - location
+        - retrieveDate
+    UpdateFirmwareResponse:
+      type: array
+      items:
+        - type: integer
+          const: 3
+          description: Message Type ID (3 for "RESPONSE")
+        - type: string
+          example: '19223201'
+          description: Unique ID for this call
+        - type: string
+          const: UpdateFirmware
+          description: Action (without Response)
+        - $ref: '#/components/schemas/UpdateFirmwareResponsePayload'
+      minItems: 4
+      maxItems: 4
+    UpdateFirmwareResponsePayload:
+      type: object
+      properties: {}

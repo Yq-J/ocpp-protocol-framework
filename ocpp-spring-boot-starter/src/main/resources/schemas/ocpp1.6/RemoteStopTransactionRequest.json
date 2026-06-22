@@ -1,6 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "RemoteStopTransactionRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/RemoteStopTransactionRequestPayload",
+  "definitions": {
+    "RemoteStopTransactionRequestPayload": {
+      "type": "object",
+      "properties": {
+        "transactionId": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "transactionId"
+      ]
+    }
+  }
 }

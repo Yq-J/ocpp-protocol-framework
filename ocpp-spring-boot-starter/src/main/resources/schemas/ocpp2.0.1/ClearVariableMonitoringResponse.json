@@ -1,6 +1,114 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ClearVariableMonitoringResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ClearVariableMonitoringResponsePayload",
+  "definitions": {
+    "ClearMonitoringResultType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "customData": {
+          "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+          "type": "object",
+          "properties": {
+            "vendorId": {
+              "type": "string",
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "vendorId"
+          ],
+          "x-javaType": "CustomData"
+        },
+        "status": {
+          "description": "Result of the clear request for this monitor, identified by its Id.\r\n\r\n",
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected",
+            "NotFound"
+          ],
+          "x-javaType": "ClearMonitoringStatusEnum"
+        },
+        "id": {
+          "description": "Id of the monitor of which a clear was requested.\r\n\r\n",
+          "type": "integer"
+        },
+        "statusInfo": {
+          "description": "Element providing more information about the status.\r\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "customData": {
+              "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+              "type": "object",
+              "properties": {
+                "vendorId": {
+                  "type": "string",
+                  "maxLength": 255
+                }
+              },
+              "required": [
+                "vendorId"
+              ],
+              "x-javaType": "CustomData"
+            },
+            "reasonCode": {
+              "description": "A predefined code for the reason why the status is returned in this response. The string is case-insensitive.\r\n",
+              "type": "string",
+              "maxLength": 20
+            },
+            "additionalInfo": {
+              "description": "Additional text to provide detailed information.\r\n",
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          "required": [
+            "reasonCode"
+          ],
+          "x-javaType": "StatusInfo"
+        }
+      },
+      "required": [
+        "status",
+        "id"
+      ],
+      "x-javaType": "ClearMonitoringResult"
+    },
+    "ClearVariableMonitoringResponsePayload": {
+      "type": "object",
+      "properties": {
+        "customData": {
+          "$ref": "#/definitions/CustomDataType"
+        },
+        "clearMonitoringResult": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClearMonitoringResultType"
+          },
+          "minItems": 1,
+          "x-additionalItems": false
+        }
+      },
+      "required": [
+        "clearMonitoringResult"
+      ]
+    },
+    "CustomDataType": {
+      "description": "This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.",
+      "type": "object",
+      "properties": {
+        "vendorId": {
+          "type": "string",
+          "maxLength": 255
+        }
+      },
+      "required": [
+        "vendorId"
+      ],
+      "x-javaType": "CustomData"
+    }
+  }
 }

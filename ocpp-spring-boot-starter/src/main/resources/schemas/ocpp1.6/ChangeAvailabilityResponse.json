@@ -1,6 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ChangeAvailabilityResponse",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ChangeAvailabilityResponsePayload",
+  "definitions": {
+    "ChangeAvailabilityResponsePayload": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "additionalProperties": false,
+          "enum": [
+            "Accepted",
+            "Rejected",
+            "Scheduled"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  }
 }

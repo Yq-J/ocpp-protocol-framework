@@ -1,6 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ChangeConfigurationRequest",
-  "type": "object",
-  "additionalProperties": true
+  "$ref": "#/definitions/ChangeConfigurationRequestPayload",
+  "definitions": {
+    "ChangeConfigurationRequestPayload": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ]
+    }
+  }
 }
