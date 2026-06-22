@@ -3,14 +3,18 @@ package com.charging.ocpp.starter.service;
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
+import com.charging.ocpp.core.model.v16.RemoteStartTransactionRequest;
 import com.charging.ocpp.core.protocol.DefaultOcppCodec;
 import com.charging.ocpp.core.protocol.OcppCallError;
 import com.charging.ocpp.core.protocol.OcppCallResult;
+import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.charging.ocpp.core.schema.NoopOcppSchemaValidator;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.InMemoryOcppSessionRepository;
 import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
+import com.charging.ocpp.starter.schema.OfficialOcppSchemaValidator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -120,6 +124,29 @@ class OcppTemplateLifecycleTest {
         ExecutionException exception = assertThrows(ExecutionException.class, future::get);
         OcppException cause = (OcppException) exception.getCause();
         assertEquals(OcppErrorCode.NotImplemented, cause.getErrorCode());
+        template.shutdown();
+    }
+
+    @Test
+    void callWithRequiredOnlyDtoOmitsNullFieldsBeforeOfficialSchemaValidation() throws Exception {
+        ObjectMapper mapper = OcppObjectMapperFactory.create();
+        InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();
+        TestOcppConnection connection = openConnection();
+        repository.save(connection);
+        OcppTemplate template = new OcppTemplate(repository, new DefaultOcppCodec(mapper), mapper,
+                new OcppProperties(), new OfficialOcppSchemaValidator());
+        RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
+        request.setIdTag("TAG001");
+
+        CompletableFuture<Object> future = template.call("CP001", OcppVersion.OCPP_16,
+                "RemoteStartTransaction", request, Object.class);
+
+        assertFalse(future.isDone());
+        JsonNode frame = mapper.readTree(connection.getLastText());
+        JsonNode payload = frame.get(3);
+        assertEquals("TAG001", payload.get("idTag").asText());
+        assertFalse(payload.has("connectorId"));
+        assertFalse(payload.has("chargingProfile"));
         template.shutdown();
     }
 

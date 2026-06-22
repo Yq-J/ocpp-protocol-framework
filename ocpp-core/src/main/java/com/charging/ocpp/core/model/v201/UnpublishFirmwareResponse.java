@@ -32,7 +32,11 @@ public class UnpublishFirmwareResponse {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 UnpublishFirmwareResponse 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code DownloadOngoing}：下载仍在进行；
+     * {@code NoFirmware}：没有可取消发布的固件；
+     * {@code Unpublished}：已取消发布。
      * </p>
      */
     private String status;

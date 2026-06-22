@@ -32,7 +32,12 @@ public class VariableAttribute {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 VariableAttribute 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为可选字段，未提供时由业务语义或对端默认行为决定。
+     * 取值范围：
+     * {@code Actual}：实际值属性；
+     * {@code Target}：目标值属性；
+     * {@code MinSet}：最小设定值属性；
+     * {@code MaxSet}：最大设定值属性。
      * </p>
      */
     private String type;

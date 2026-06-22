@@ -72,7 +72,12 @@ public class VPN {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 VPN 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code IKEv2}：IKEv2 VPN 类型；
+     * {@code IPSec}：IPSec VPN 类型；
+     * {@code L2TP}：L2TP VPN 类型；
+     * {@code PPTP}：PPTP VPN 类型。
      * </p>
      */
     private String type;

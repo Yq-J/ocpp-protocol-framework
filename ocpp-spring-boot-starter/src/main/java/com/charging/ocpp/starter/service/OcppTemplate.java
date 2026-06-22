@@ -7,6 +7,7 @@ import com.charging.ocpp.core.gateway.OcppGateway;
 import com.charging.ocpp.core.protocol.OcppCallError;
 import com.charging.ocpp.core.protocol.OcppCallResult;
 import com.charging.ocpp.core.protocol.OcppCodec;
+import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.OcppConnection;
 import com.charging.ocpp.core.session.OcppSessionRepository;
@@ -53,7 +54,7 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
                         OcppProperties properties, OcppSchemaValidator schemaValidator) {
         this.sessionRepository = sessionRepository;
         this.ocppCodec = ocppCodec;
-        this.objectMapper = objectMapper;
+        this.objectMapper = OcppObjectMapperFactory.copyOf(objectMapper);
         this.properties = properties;
         this.schemaValidator = schemaValidator;
         startCleaner();

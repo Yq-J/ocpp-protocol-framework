@@ -1,11 +1,12 @@
 package com.charging.ocpp.core.model.v201;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * OCPP 2.0.1 的 IdTokenInfo 复合协议实体类。
@@ -33,7 +34,18 @@ public class IdTokenInfo {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 IdTokenInfo 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Accepted}：已接受，处理成功；
+     * {@code Blocked}：被阻止，禁止使用；
+     * {@code ConcurrentTx}：存在并发交易，当前不允许使用；
+     * {@code Expired}：已过期；
+     * {@code Invalid}：无效；
+     * {@code NoCredit}：余额不足或无可用额度；
+     * {@code NotAllowedTypeEVSE}：该令牌类型不允许用于该 EVSE；
+     * {@code NotAtThisLocation}：不允许在当前位置使用；
+     * {@code NotAtThisTime}：不允许在当前时间使用；
+     * {@code Unknown}：未知，未匹配到目标对象。
      * </p>
      */
     private String status;

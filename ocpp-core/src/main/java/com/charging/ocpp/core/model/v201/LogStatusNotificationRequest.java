@@ -32,7 +32,16 @@ public class LogStatusNotificationRequest {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 LogStatusNotificationRequest 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code BadMessage}：消息格式错误；
+     * {@code Idle}：空闲，无相关任务进行；
+     * {@code NotSupportedOperation}：不支持该操作；
+     * {@code PermissionDenied}：权限被拒绝；
+     * {@code Uploaded}：已上传；
+     * {@code UploadFailure}：上传失败；
+     * {@code Uploading}：正在上传；
+     * {@code AcceptedCanceled}：已接受但后续被取消。
      * </p>
      */
     private String status;

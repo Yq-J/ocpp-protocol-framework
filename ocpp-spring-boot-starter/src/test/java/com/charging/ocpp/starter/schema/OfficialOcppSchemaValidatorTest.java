@@ -2,7 +2,12 @@ package com.charging.ocpp.starter.schema;
 
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.exception.OcppException;
+import com.charging.ocpp.core.model.v16.AuthorizeResponse;
+import com.charging.ocpp.core.model.v16.IdTagInfo;
+import com.charging.ocpp.core.model.v16.RemoteStartTransactionRequest;
+import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -39,5 +44,29 @@ class OfficialOcppSchemaValidatorTest {
 
         assertDoesNotThrow(() -> customValidator.validate(OcppVersion.OCPP_201, "VendorAction", true,
                 objectMapper.readTree("{}")));
+    }
+
+    @Test
+    void protocolMapperOutputWithOnlyRequiredResponseFieldsPassesSchema() {
+        ObjectMapper protocolMapper = OcppObjectMapperFactory.create();
+        IdTagInfo info = new IdTagInfo();
+        info.setStatus("Accepted");
+        AuthorizeResponse response = new AuthorizeResponse();
+        response.setIdTagInfo(info);
+
+        JsonNode payload = protocolMapper.valueToTree(response);
+
+        assertDoesNotThrow(() -> validator.validate(OcppVersion.OCPP_16, "Authorize", false, payload));
+    }
+
+    @Test
+    void protocolMapperOutputWithOnlyRequiredRequestFieldsPassesSchema() {
+        ObjectMapper protocolMapper = OcppObjectMapperFactory.create();
+        RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
+        request.setIdTag("TAG001");
+
+        JsonNode payload = protocolMapper.valueToTree(request);
+
+        assertDoesNotThrow(() -> validator.validate(OcppVersion.OCPP_16, "RemoteStartTransaction", true, payload));
     }
 }

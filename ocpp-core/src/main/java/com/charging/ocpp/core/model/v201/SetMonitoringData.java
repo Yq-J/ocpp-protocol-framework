@@ -1,11 +1,12 @@
 package com.charging.ocpp.core.model.v201;
 
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.math.BigDecimal;
 
 /**
  * OCPP 2.0.1 的 SetMonitoringData 复合协议实体类。
@@ -57,7 +58,13 @@ public class SetMonitoringData {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 SetMonitoringData 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code UpperThreshold}：上阈值监控；
+     * {@code LowerThreshold}：下阈值监控；
+     * {@code Delta}：变化量监控；
+     * {@code Periodic}：周期性监控；
+     * {@code PeriodicClockAligned}：按时钟对齐的周期性监控。
      * </p>
      */
     private String type;

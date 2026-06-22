@@ -1,11 +1,12 @@
 package com.charging.ocpp.core.model.v201;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * OCPP 2.0.1 的 GetInstalledCertificateIds 响应 payload 协议实体类。
@@ -33,7 +34,10 @@ public class GetInstalledCertificateIdsResponse {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 GetInstalledCertificateIdsResponse 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Accepted}：已接受，处理成功；
+     * {@code NotFound}：未找到目标对象。
      * </p>
      */
     private String status;

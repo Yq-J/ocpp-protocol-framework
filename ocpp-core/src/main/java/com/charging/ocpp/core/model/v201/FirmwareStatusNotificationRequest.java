@@ -32,7 +32,22 @@ public class FirmwareStatusNotificationRequest {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 FirmwareStatusNotificationRequest 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Downloaded}：已下载；
+     * {@code DownloadFailed}：下载失败；
+     * {@code Downloading}：正在下载；
+     * {@code DownloadScheduled}：已安排下载；
+     * {@code DownloadPaused}：下载已暂停；
+     * {@code Idle}：空闲，无相关任务进行；
+     * {@code InstallationFailed}：安装失败；
+     * {@code Installing}：正在安装；
+     * {@code Installed}：已安装；
+     * {@code InstallRebooting}：安装后正在重启；
+     * {@code InstallScheduled}：已安排安装；
+     * {@code InstallVerificationFailed}：安装校验失败；
+     * {@code InvalidSignature}：签名无效；
+     * {@code SignatureVerified}：签名已验证。
      * </p>
      */
     private String status;

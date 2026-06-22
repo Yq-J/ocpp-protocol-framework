@@ -40,7 +40,9 @@ public class AdditionalInfo {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 AdditionalInfo 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。最大长度为 50 个字符。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * 无固定协议枚举，按业务或厂商约定传递；最大长度为 50 个字符。
      * </p>
      */
     private String type;

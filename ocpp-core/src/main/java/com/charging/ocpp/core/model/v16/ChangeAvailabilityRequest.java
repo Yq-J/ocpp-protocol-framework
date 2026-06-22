@@ -32,7 +32,10 @@ public class ChangeAvailabilityRequest {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 1.6J ChangeAvailabilityRequest 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Inoperative}：设为不可用，停止对外提供服务；
+     * {@code Operative}：设为可用，恢复对外提供服务。
      * </p>
      */
     private String type;

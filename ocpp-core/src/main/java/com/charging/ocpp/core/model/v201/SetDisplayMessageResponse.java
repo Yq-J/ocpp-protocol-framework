@@ -32,7 +32,14 @@ public class SetDisplayMessageResponse {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 SetDisplayMessageResponse 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Accepted}：已接受，处理成功；
+     * {@code NotSupportedMessageFormat}：不支持的消息格式；
+     * {@code Rejected}：已拒绝，处理失败；
+     * {@code NotSupportedPriority}：不支持的显示优先级；
+     * {@code NotSupportedState}：不支持的显示状态；
+     * {@code UnknownTransaction}：未知交易。
      * </p>
      */
     private String status;

@@ -24,7 +24,11 @@ public class TriggerMessageResponse {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 1.6J TriggerMessageResponse 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Accepted}：已接受，处理成功；
+     * {@code Rejected}：已拒绝，处理失败；
+     * {@code NotImplemented}：未实现该消息或能力。
      * </p>
      */
     private String status;

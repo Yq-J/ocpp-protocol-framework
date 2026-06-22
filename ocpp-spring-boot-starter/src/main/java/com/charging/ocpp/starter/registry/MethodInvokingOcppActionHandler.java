@@ -5,6 +5,7 @@ import com.charging.ocpp.core.exception.OcppErrorCode;
 import com.charging.ocpp.core.exception.OcppException;
 import com.charging.ocpp.core.handler.OcppActionHandler;
 import com.charging.ocpp.core.handler.OcppRequestContext;
+import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,7 +27,7 @@ public class MethodInvokingOcppActionHandler implements OcppActionHandler {
         this.method = method;
         this.version = version;
         this.action = action;
-        this.objectMapper = objectMapper;
+        this.objectMapper = OcppObjectMapperFactory.copyOf(objectMapper);
         this.method.setAccessible(true);
     }
 

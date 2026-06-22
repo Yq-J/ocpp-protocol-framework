@@ -61,7 +61,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         this.schemaValidator = schemaValidator;
         this.ocppTemplate = ocppTemplate;
         this.properties = properties;
-        this.objectMapper = objectMapper;
+        this.objectMapper = OcppObjectMapperFactory.copyOf(objectMapper);
     }
 
     @Override

@@ -1,11 +1,12 @@
 package com.charging.ocpp.core.model.v201;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * OCPP 2.0.1 的 PublishFirmwareStatusNotification 请求 payload 协议实体类。
@@ -33,7 +34,18 @@ public class PublishFirmwareStatusNotificationRequest {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 PublishFirmwareStatusNotificationRequest 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Idle}：空闲，无相关任务进行；
+     * {@code DownloadScheduled}：已安排下载；
+     * {@code Downloading}：正在下载；
+     * {@code Downloaded}：已下载；
+     * {@code Published}：已发布；
+     * {@code DownloadFailed}：下载失败；
+     * {@code DownloadPaused}：下载已暂停；
+     * {@code InvalidChecksum}：校验和无效；
+     * {@code ChecksumVerified}：校验和已验证；
+     * {@code PublishFailed}：发布失败。
      * </p>
      */
     private String status;

@@ -48,7 +48,14 @@ public class SetMonitoringResult {
      * 处理状态。
      * <p>
      * 用途：对应 OCPP 字段 {@code status}，在 OCPP 2.0.1 SetMonitoringResult 协议对象中传递处理状态。
-     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载处理状态。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Accepted}：已接受，处理成功；
+     * {@code UnknownComponent}：未知组件；
+     * {@code UnknownVariable}：未知变量；
+     * {@code UnsupportedMonitorType}：不支持的监控类型；
+     * {@code Rejected}：已拒绝，处理失败；
+     * {@code Duplicate}：重复配置。
      * </p>
      */
     private String status;
@@ -56,7 +63,13 @@ public class SetMonitoringResult {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 SetMonitoringResult 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code UpperThreshold}：上阈值监控；
+     * {@code LowerThreshold}：下阈值监控；
+     * {@code Delta}：变化量监控；
+     * {@code Periodic}：周期性监控；
+     * {@code PeriodicClockAligned}：按时钟对齐的周期性监控。
      * </p>
      */
     private String type;

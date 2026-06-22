@@ -24,7 +24,10 @@ public class ResetRequest {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 1.6J ResetRequest 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Hard}：硬重启，立即断开并重启设备；
+     * {@code Soft}：软重启，尽量平滑结束当前流程后重启。
      * </p>
      */
     private String type;

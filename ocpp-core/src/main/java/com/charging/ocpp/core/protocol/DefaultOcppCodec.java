@@ -18,8 +18,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 public class DefaultOcppCodec implements OcppCodec {
     private final ObjectMapper objectMapper;
 
+    public DefaultOcppCodec() {
+        this(OcppObjectMapperFactory.create());
+    }
+
     public DefaultOcppCodec(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+        this.objectMapper = OcppObjectMapperFactory.copyOf(objectMapper);
     }
 
     @Override

@@ -32,7 +32,17 @@ public class StatusNotificationRequest {
      * errorCode。
      * <p>
      * 用途：对应 OCPP 字段 {@code errorCode}，在 OCPP 1.6J StatusNotificationRequest 协议对象中传递errorCode。
-     * 字段类型为 {@code String}，用于承载errorCode。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载errorCode。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Available}：可用，可开始新的充电交易；
+     * {@code Preparing}：准备中，等待车辆连接、授权或开始充电；
+     * {@code Charging}：充电中；
+     * {@code SuspendedEVSE}：充电站侧暂停供电；
+     * {@code SuspendedEV}：车辆侧暂停充电；
+     * {@code Finishing}：结束中，充电流程正在收尾；
+     * {@code Reserved}：已预约；
+     * {@code Unavailable}：不可用；
+     * {@code Faulted}：存在故障。
      * </p>
      */
     private String errorCode;

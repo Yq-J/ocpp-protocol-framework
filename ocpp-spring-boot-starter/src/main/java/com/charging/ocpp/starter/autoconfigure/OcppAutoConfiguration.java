@@ -4,6 +4,7 @@ import com.charging.ocpp.core.handler.OcppActionHandler;
 import com.charging.ocpp.core.handler.OcppHandlerRegistry;
 import com.charging.ocpp.core.protocol.DefaultOcppCodec;
 import com.charging.ocpp.core.protocol.OcppCodec;
+import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.charging.ocpp.core.schema.OcppSchemaValidator;
 import com.charging.ocpp.core.session.InMemoryOcppSessionRepository;
 import com.charging.ocpp.core.session.OcppSessionRepository;
@@ -16,6 +17,7 @@ import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,9 +39,17 @@ import java.util.List;
 @EnableWebSocket
 @EnableConfigurationProperties(OcppProperties.class)
 public class OcppAutoConfiguration {
+    public static final String OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME = "ocppProtocolObjectMapper";
+
+    @Bean(name = OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME)
+    @ConditionalOnMissingBean(name = OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME)
+    public ObjectMapper ocppProtocolObjectMapper() { return OcppObjectMapperFactory.create(); }
+
     @Bean
     @ConditionalOnMissingBean
-    public OcppCodec ocppCodec(ObjectMapper objectMapper) { return new DefaultOcppCodec(objectMapper); }
+    public OcppCodec ocppCodec(@Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper) {
+        return new DefaultOcppCodec(objectMapper);
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -52,12 +62,12 @@ public class OcppAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
-    public DefaultOcpp16Handlers defaultOcpp16Handlers(ObjectMapper objectMapper) { return new DefaultOcpp16Handlers(objectMapper); }
+    public DefaultOcpp16Handlers defaultOcpp16Handlers(@Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper) { return new DefaultOcpp16Handlers(objectMapper); }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
-    public DefaultOcpp201Handlers defaultOcpp201Handlers(ObjectMapper objectMapper) { return new DefaultOcpp201Handlers(objectMapper); }
+    public DefaultOcpp201Handlers defaultOcpp201Handlers(@Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper) { return new DefaultOcpp201Handlers(objectMapper); }
 
     @Bean
     @ConditionalOnProperty(prefix = "ocpp", name = "enable-default-handlers", havingValue = "true")
@@ -111,7 +121,7 @@ public class OcppAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OcppTemplate ocppTemplate(OcppSessionRepository sessionRepository, OcppCodec ocppCodec,
-                                     ObjectMapper objectMapper, OcppProperties properties,
+                                     @Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper, OcppProperties properties,
                                      OcppSchemaValidator schemaValidator) {
         return new OcppTemplate(sessionRepository, ocppCodec, objectMapper, properties, schemaValidator);
     }
@@ -119,8 +129,9 @@ public class OcppAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public OcppWebSocketHandler ocppWebSocketHandler(OcppCodec ocppCodec, OcppHandlerRegistry handlerRegistry,
-                                                      OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
-                                                      OcppTemplate ocppTemplate, OcppProperties properties, ObjectMapper objectMapper) {
+                                                       OcppSessionRepository sessionRepository, OcppSchemaValidator schemaValidator,
+                                                       OcppTemplate ocppTemplate, OcppProperties properties,
+                                                       @Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper) {
         return new OcppWebSocketHandler(ocppCodec, handlerRegistry, sessionRepository, schemaValidator, ocppTemplate,
                 properties, objectMapper);
     }
@@ -139,7 +150,7 @@ public class OcppAutoConfiguration {
 
     @Bean
     public SmartInitializingSingleton ocppAnnotatedHandlerRegistrar(ApplicationContext applicationContext, OcppHandlerRegistry registry,
-                                                                    ObjectMapper objectMapper) {
+                                                                    @Qualifier(OCPP_PROTOCOL_OBJECT_MAPPER_BEAN_NAME) ObjectMapper objectMapper) {
         return new OcppAnnotatedHandlerRegistrar(applicationContext, registry, objectMapper);
     }
 }

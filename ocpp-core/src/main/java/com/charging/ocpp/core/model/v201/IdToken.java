@@ -1,11 +1,12 @@
 package com.charging.ocpp.core.model.v201;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * OCPP 2.0.1 的 IdToken 复合协议实体类。
@@ -49,7 +50,16 @@ public class IdToken {
      * 类型。
      * <p>
      * 用途：对应 OCPP 字段 {@code type}，在 OCPP 2.0.1 IdToken 协议对象中传递类型。
-     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。取值由官方 JSON Schema 的枚举约束校验。
+     * 字段类型为 {@code String}，用于承载类型。该字段在官方规范中为必填字段。
+     * 取值范围：
+     * {@code Central}：中央系统签发或管理的令牌；
+     * {@code eMAID}：e-Mobility Account Identifier 身份标识；
+     * {@code ISO14443}：ISO 14443 RFID/NFC 标识；
+     * {@code ISO15693}：ISO 15693 RFID 标识；
+     * {@code KeyCode}：键盘输入码或 PIN 类标识；
+     * {@code Local}：本地授权列表中的令牌；
+     * {@code MacAddress}：MAC 地址标识；
+     * {@code NoAuthorization}：无需授权的标识。
      * </p>
      */
     private String type;
