@@ -16,4 +16,14 @@ public interface OcppConnection {
     OcppVersion getVersion();
     boolean isOpen();
     void send(String text) throws IOException;
+
+    /**
+     * 主动关闭连接。
+     * <p>
+     * 默认实现保持兼容；具体传输层可覆盖该方法，在重复登录、节点下线或运维隔离时释放底层连接。
+     * </p>
+     */
+    default void close() throws IOException {
+        // 默认无操作，避免破坏已有自定义 OcppConnection 实现。
+    }
 }

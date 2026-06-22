@@ -54,6 +54,8 @@ WebSocket 子协议：
 - 平台主动下发命令时，`OcppTemplate` 会在发送前执行官方 Schema 校验，并在 Spring 容器关闭时取消等待中的 pending request，避免资源悬挂。
 - WebSocket 握手支持 `allowed-origins`、`require-auth-token`、`auth-token-header`、`auth-token-query-parameter` 和 `charge-point-tokens`，可作为基础接入鉴权能力。
 - WebSocket 文本帧支持 `max-text-message-bytes` 限制，防止异常大报文冲击内存。
+- 同一 `chargePointId` 重复建立连接时支持 `duplicate-connection-policy`，可选择拒绝新连接、关闭旧连接或仅替换会话引用，降低主动下发路由不确定性。
+- 启动阶段提供 `production-readiness-check`，可检查通配 Origin、未启用握手 Token、未知 Action 自动吞掉、启用示例 Handler、无效报文大小/超时等高风险配置；上线前可通过 `fail-on-unsafe-production-config=true` 将风险配置升级为启动失败。
 - starter 内置默认处理器默认不注册，只有显式配置 `ocpp.enable-default-handlers=true` 时才会启用；生产项目应使用 `@OcppActionMapping` 或自定义 `OcppActionHandler` 实现真实业务动作。
 
 ## 生产建议

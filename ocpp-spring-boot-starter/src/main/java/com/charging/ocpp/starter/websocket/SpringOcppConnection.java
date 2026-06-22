@@ -46,4 +46,11 @@ public class SpringOcppConnection implements OcppConnection {
     public synchronized void send(String text) throws IOException {
         session.sendMessage(new TextMessage(text));
     }
+
+    @Override
+    public synchronized void close() throws IOException {
+        if (session.isOpen()) {
+            session.close();
+        }
+    }
 }

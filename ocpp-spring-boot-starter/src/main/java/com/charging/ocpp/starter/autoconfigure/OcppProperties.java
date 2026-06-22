@@ -50,6 +50,10 @@ public class OcppProperties {
      */
     private Integer maxTextMessageBytes = 262144;
     /**
+     * 同一 chargePointId 重复建立连接时的处理策略。
+     */
+    private DuplicateConnectionPolicy duplicateConnectionPolicy = DuplicateConnectionPolicy.CLOSE_OLD;
+    /**
      * 是否启用握手 Token 校验。生产环境建议开启，并为每个 chargePointId 配置独立 Token。
      */
     private Boolean requireAuthToken = false;
@@ -65,4 +69,27 @@ public class OcppProperties {
      * 充电桩 ID 到握手 Token 的映射。仅 require-auth-token=true 时生效。
      */
     private Map<String, String> chargePointTokens = new HashMap<>();
+    /**
+     * 启动时是否执行生产安全配置检查。
+     */
+    private Boolean productionReadinessCheck = true;
+    /**
+     * 生产安全配置检查发现高风险配置时是否阻止应用启动。
+     */
+    private Boolean failOnUnsafeProductionConfig = false;
+
+    public enum DuplicateConnectionPolicy {
+        /**
+         * 保留旧连接并拒绝新连接。
+         */
+        REJECT_NEW,
+        /**
+         * 关闭旧连接并保存新连接。
+         */
+        CLOSE_OLD,
+        /**
+         * 仅替换会话仓储中的连接引用，不主动关闭旧连接。
+         */
+        REPLACE
+    }
 }
