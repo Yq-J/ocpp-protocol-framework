@@ -71,6 +71,11 @@ public class DefaultOcpp16Handlers {
             }
 
             @Override
+            public boolean frameworkDefault() {
+                return true;
+            }
+
+            @Override
             public Object handle(OcppRequestContext context, JsonNode payload) throws Exception {
                 return invoker.apply(context, payload);
             }

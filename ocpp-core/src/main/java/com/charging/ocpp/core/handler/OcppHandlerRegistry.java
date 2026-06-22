@@ -24,9 +24,19 @@ public class OcppHandlerRegistry {
         }
         HandlerKey key = new HandlerKey(handler.version(), handler.action());
         OcppActionHandler previous = handlers.putIfAbsent(key, handler);
-        if (previous != null && previous != handler) {
-            throw new IllegalStateException("重复注册 OCPP 处理器：" + handler.version() + "/" + handler.action());
+        if (previous == null || previous == handler) {
+            return;
         }
+        if (previous.frameworkDefault() && !handler.frameworkDefault()) {
+            if (!handlers.replace(key, previous, handler)) {
+                register(handler);
+            }
+            return;
+        }
+        if (!previous.frameworkDefault() && handler.frameworkDefault()) {
+            return;
+        }
+        throw new IllegalStateException("重复注册 OCPP 处理器：" + handler.version() + "/" + handler.action());
     }
 
     public void registerAll(List<OcppActionHandler> actionHandlers) {

@@ -8,6 +8,8 @@ import com.charging.ocpp.core.handler.OcppRequestContext;
 import com.charging.ocpp.core.protocol.OcppObjectMapperFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.aop.support.AopUtils;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 
@@ -24,11 +26,11 @@ public class MethodInvokingOcppActionHandler implements OcppActionHandler {
 
     public MethodInvokingOcppActionHandler(Object bean, Method method, OcppVersion version, String action, ObjectMapper objectMapper) {
         this.bean = bean;
-        this.method = method;
+        this.method = resolveInvocableMethod(bean, method);
         this.version = version;
         this.action = action;
         this.objectMapper = OcppObjectMapperFactory.copyOf(objectMapper);
-        this.method.setAccessible(true);
+        ReflectionUtils.makeAccessible(this.method);
     }
 
     @Override
@@ -62,6 +64,17 @@ public class MethodInvokingOcppActionHandler implements OcppActionHandler {
                 throw (OcppException) t;
             }
             throw new OcppException(OcppErrorCode.InternalError, "执行业务方法失败：" + method.getName(), null, t);
+        }
+    }
+
+    private Method resolveInvocableMethod(Object bean, Method method) {
+        try {
+            return AopUtils.selectInvocableMethod(method, bean.getClass());
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("OCPP 处理方法无法通过当前 Spring AOP 代理调用："
+                    + method.toGenericString()
+                    + "。如果该 Bean 使用 JDK 动态代理，请确保处理方法声明在业务接口中，"
+                    + "或启用 CGLIB/class-based proxy。", e);
         }
     }
 }
