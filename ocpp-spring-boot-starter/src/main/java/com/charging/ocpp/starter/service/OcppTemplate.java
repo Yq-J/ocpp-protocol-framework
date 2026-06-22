@@ -89,7 +89,8 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
         String uniqueId = UUID.randomUUID().toString();
         CompletableFuture<R> future = new CompletableFuture<>();
         long timeoutSeconds = properties.getConnectionTimeoutSeconds() == null ? 60L : properties.getConnectionTimeoutSeconds().longValue();
-        pendingRequests.put(uniqueId, new PendingRequest<>(responseType, future, System.currentTimeMillis() + timeoutSeconds * 1000L));
+        pendingRequests.put(uniqueId, new PendingRequest<>(responseType, future,
+                System.currentTimeMillis() + timeoutSeconds * 1000L, actualVersion, action));
 
         try {
             connection.send(ocppCodec.encodeCall(uniqueId, action, requestPayload));
@@ -104,8 +105,13 @@ public class OcppTemplate implements OcppGateway, DisposableBean {
     public void completeResult(OcppCallResult result) {
         PendingRequest<?> pending = pendingRequests.remove(result.getUniqueId());
         if (pending == null) { return; }
-        Object value = objectMapper.convertValue(result.getPayload(), pending.getResponseType());
-        ((CompletableFuture<Object>) pending.getFuture()).complete(value);
+        try {
+            schemaValidator.validate(pending.getVersion(), pending.getAction(), false, result.getPayload());
+            Object value = objectMapper.convertValue(result.getPayload(), pending.getResponseType());
+            ((CompletableFuture<Object>) pending.getFuture()).complete(value);
+        } catch (Exception e) {
+            pending.getFuture().completeExceptionally(e);
+        }
     }
 
     public void completeError(OcppCallError error) {
