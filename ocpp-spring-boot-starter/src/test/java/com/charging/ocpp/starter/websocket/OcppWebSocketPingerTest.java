@@ -5,6 +5,8 @@ import com.charging.ocpp.core.session.InMemoryOcppSessionRepository;
 import com.charging.ocpp.starter.autoconfigure.OcppProperties;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,6 +18,25 @@ class OcppWebSocketPingerTest {
         FakeWebSocketSession session = new FakeWebSocketSession("s1", "ocpp1.6", "CP001");
         session.setFailOnPing(true);
         repository.save(new SpringOcppConnection(session, "CP001", OcppVersion.OCPP_16));
+
+        OcppProperties properties = new OcppProperties();
+        properties.setPingIntervalSeconds(240);
+        OcppWebSocketPinger pinger = new OcppWebSocketPinger(repository, properties);
+        try {
+            pinger.sweep();
+            assertTrue(session.isCloseCalled());
+        } finally {
+            pinger.destroy();
+        }
+    }
+
+    @Test
+    void sweepClosesSessionWithNoInboundActivityBeyondDeadline() {
+        InMemoryOcppSessionRepository repository = new InMemoryOcppSessionRepository();
+        FakeWebSocketSession session = new FakeWebSocketSession("s1", "ocpp1.6", "CP001");
+        repository.save(new SpringOcppConnection(session, "CP001", OcppVersion.OCPP_16));
+        // 模拟长时间无入站活动（无 Pong / 无报文）。
+        ((AtomicLong) session.getAttributes().get(SpringOcppConnection.LAST_ACTIVITY_ATTRIBUTE)).set(0L);
 
         OcppProperties properties = new OcppProperties();
         properties.setPingIntervalSeconds(240);

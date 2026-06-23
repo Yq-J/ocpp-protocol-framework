@@ -54,17 +54,19 @@ public class OcppProperties {
     /**
      * WebSocket 会话空闲超时时间，单位秒。映射到容器 maxSessionIdleTimeout。
      * <p>
-     * 大于 0 时启用：在该时间内未收到任何消息（含充电桩 Heartbeat 与 Pong）即关闭会话，用于回收半开连接。
-     * 取值应大于充电桩 Heartbeat 间隔与 {@link #pingIntervalSeconds}，否则可能误断活跃连接。
-     * 默认 0（不设置，沿用容器默认行为）。注意该设置作用于整个应用的 WebSocket 容器。
+     * 独立的容器级活性兜底，主要面向不启用 {@link #pingIntervalSeconds} 的部署：在该时间内读写均空闲即关闭会话，
+     * 依赖充电桩 Heartbeat 等入站流量保活。取值应大于充电桩 Heartbeat 间隔，否则可能误断活跃连接。
+     * 注意：容器会话级空闲超时要求读、写方向同时空闲，启用 ping 后服务端发出的 Ping 会刷新写计时使其通常不触发，
+     * 此时应以 {@link #pingIntervalSeconds} 的 ping/pong 判定为准。默认 0（不设置，沿用容器默认行为），作用于整个应用的 WebSocket 容器。
      * </p>
      */
     private Integer sessionIdleTimeoutSeconds = 0;
     /**
      * 服务端主动向充电桩发送 WebSocket Ping 的间隔，单位秒。
      * <p>
-     * 大于 0 时启用：定时向所有在线 OCPP 会话发送 Ping，活跃充电桩会回 Pong（刷新空闲计时并证明存活），
-     * 发送 Ping 失败（TCP 已断）的会话会被主动关闭并清理。建议与 {@link #sessionIdleTimeoutSeconds} 配合使用。
+     * 大于 0 时启用：每个周期向在线 OCPP 会话发送 Ping，活跃充电桩回 Pong 刷新入站活动时间；
+     * 若某会话在 {@code 间隔 × 3} 时间内没有任何入站活动（报文或 Pong），或发送 Ping 时底层 TCP 已断，
+     * 则判定掉线并主动关闭。该判定基于应用层入站活动，不依赖容器空闲超时，对静默断开的 TCP 也能在确定时间内回收。
      * 默认 0（不启用）。
      * </p>
      */

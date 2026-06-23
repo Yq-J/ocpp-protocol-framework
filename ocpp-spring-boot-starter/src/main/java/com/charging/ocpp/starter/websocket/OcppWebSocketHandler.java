@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.PongMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -97,6 +98,7 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
+        SpringOcppConnection.markActivity(session);
         if (properties.getMaxTextMessageBytes() != null
                 && payloadLengthBytes(message) > properties.getMaxTextMessageBytes()) {
             sendText(session, ocppCodec.encodeCallError("", OcppErrorCode.FormationViolation.name(),
@@ -119,6 +121,12 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
         } else if (frame instanceof OcppCallError) {
             ocppTemplate.completeError(session.getId(), (OcppCallError) frame);
         }
+    }
+
+    @Override
+    protected void handlePongMessage(@NonNull WebSocketSession session, @NonNull PongMessage message) {
+        // 充电桩对服务端 Ping 的应答，刷新入站活动时间用于连接活性判定。
+        SpringOcppConnection.markActivity(session);
     }
 
     private void handleCall(WebSocketSession session, OcppCall call) throws Exception {

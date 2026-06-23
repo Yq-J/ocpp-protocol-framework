@@ -10,6 +10,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Proxy;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -30,15 +31,17 @@ public class OcppAnnotatedHandlerRegistrar implements SmartInitializingSingleton
     @Override
     public void afterSingletonsInstantiated() {
         for (String name : applicationContext.getBeanDefinitionNames()) {
-            // 先用 getType 解析类型而不实例化 Bean，仅在确实声明了 @OcppActionMapping 时才 getBean，
+            // 先解析类型（不触发 FactoryBean 初始化），仅当类型可能携带 @OcppActionMapping 时才 getBean，
             // 避免强制提前实例化 @Lazy、作用域或带副作用的业务 Bean。
             Class<?> type;
             try {
-                type = applicationContext.getType(name);
+                type = applicationContext.getType(name, false);
             } catch (Exception ignored) {
                 continue;
             }
-            if (type == null || !hasActionMapping(ClassUtils.getUserClass(type))) {
+            // 对具体类（含 CGLIB 代理）可据类型直接判定；JDK 动态代理/接口类型的注解在目标类上，
+            // 无法仅凭暴露类型判断，需放行到下方按目标类扫描，避免漏注册代理后的业务 Handler。
+            if (type != null && !mayCarryMapping(type) && !hasActionMapping(ClassUtils.getUserClass(type))) {
                 continue;
             }
             final Object bean;
@@ -55,6 +58,11 @@ public class OcppAnnotatedHandlerRegistrar implements SmartInitializingSingleton
                 }
             });
         }
+    }
+
+    private boolean mayCarryMapping(Class<?> type) {
+        // JDK 动态代理与接口暴露类型不携带实现方法上的注解，无法在不实例化的情况下排除。
+        return type.isInterface() || Proxy.isProxyClass(type);
     }
 
     private boolean hasActionMapping(Class<?> targetClass) {
