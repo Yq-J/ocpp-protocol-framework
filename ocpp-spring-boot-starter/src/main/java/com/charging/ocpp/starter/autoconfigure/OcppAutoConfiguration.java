@@ -15,6 +15,7 @@ import com.charging.ocpp.starter.schema.OfficialOcppSchemaValidator;
 import com.charging.ocpp.starter.service.OcppTemplate;
 import com.charging.ocpp.starter.websocket.OcppWebSocketConfigurer;
 import com.charging.ocpp.starter.websocket.OcppWebSocketHandler;
+import com.charging.ocpp.starter.websocket.OcppWebSocketPinger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,6 +26,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 import java.util.List;
 
@@ -140,6 +142,33 @@ public class OcppAutoConfiguration {
     @ConditionalOnMissingBean
     public OcppWebSocketConfigurer ocppWebSocketConfigurer(OcppWebSocketHandler handler, OcppProperties properties) {
         return new OcppWebSocketConfigurer(handler, properties);
+    }
+
+    /**
+     * 放大底层 WebSocket 容器的文本缓冲区（默认仅 8KB），并按需设置会话空闲超时。
+     * <p>
+     * 不放大缓冲区时，OCPP 2.0.1 证书类、大批量 MeterValues 等超过 8KB 的报文会被容器在缓冲上限强制关闭，
+     * 应用层永远收不到完整报文，{@code max-text-message-bytes} 也形同虚设。
+     * 业务系统若已自定义 {@link ServletServerContainerFactoryBean}，则保留业务配置。
+     * </p>
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public ServletServerContainerFactoryBean ocppServletServerContainer(OcppProperties properties) {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        if (properties.getMaxTextMessageBytes() != null && properties.getMaxTextMessageBytes() > 0) {
+            container.setMaxTextMessageBufferSize(properties.getMaxTextMessageBytes());
+        }
+        if (properties.getSessionIdleTimeoutSeconds() != null && properties.getSessionIdleTimeoutSeconds() > 0) {
+            container.setMaxSessionIdleTimeout(properties.getSessionIdleTimeoutSeconds().longValue() * 1000L);
+        }
+        return container;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OcppWebSocketPinger ocppWebSocketPinger(OcppSessionRepository sessionRepository, OcppProperties properties) {
+        return new OcppWebSocketPinger(sessionRepository, properties);
     }
 
     @Bean

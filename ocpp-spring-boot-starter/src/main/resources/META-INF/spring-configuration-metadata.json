@@ -53,7 +53,19 @@
       "name": "ocpp.max-text-message-bytes",
       "type": "java.lang.Integer",
       "defaultValue": 262144,
-      "description": "单条 WebSocket 文本消息最大字节数。"
+      "description": "单条 WebSocket 文本消息最大字节数，同时用于设置容器文本缓冲区大小（maxTextMessageBufferSize）。"
+    },
+    {
+      "name": "ocpp.session-idle-timeout-seconds",
+      "type": "java.lang.Integer",
+      "defaultValue": 0,
+      "description": "WebSocket 会话空闲超时时间（秒），映射到容器 maxSessionIdleTimeout，大于 0 时启用，用于回收半开连接。"
+    },
+    {
+      "name": "ocpp.ping-interval-seconds",
+      "type": "java.lang.Integer",
+      "defaultValue": 0,
+      "description": "服务端向充电桩主动发送 WebSocket Ping 的间隔（秒），大于 0 时启用，发送失败的会话会被主动关闭。"
     },
     {
       "name": "ocpp.duplicate-connection-policy",

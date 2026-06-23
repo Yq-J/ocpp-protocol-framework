@@ -24,6 +24,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 
 /**
  * OCPP WebSocket 协议入口，基于 Spring Framework 的 spring-websocket 实现。
@@ -133,14 +136,60 @@ public class OcppWebSocketHandler extends TextWebSocketHandler {
                 throw new OcppException(OcppErrorCode.NotImplemented, "未找到 OCPP 处理器：" + version + "/" + call.getAction());
             }
             Object response = handler.handle(context, call.getPayload());
-            JsonNode responsePayload = toResponsePayload(response);
-            schemaValidator.validate(version, call.getAction(), false, responsePayload);
-            sendText(session, ocppCodec.encodeCallResult(call.getUniqueId(), responsePayload));
+            if (response instanceof CompletionStage) {
+                // 业务处理器选择异步返回时，不阻塞容器 IO 线程，在 Future 完成后再回 CALLRESULT/CALLERROR。
+                ((CompletionStage<?>) response).whenComplete((value, error) ->
+                        completeAsync(session, version, call.getAction(), call.getUniqueId(), value, error));
+                return;
+            }
+            sendResult(session, version, call.getAction(), call.getUniqueId(), response);
         } catch (OcppException e) {
             sendText(session, ocppCodec.encodeCallError(call.getUniqueId(), e.getErrorCode().name(), e.getMessage(), e.getDetails()));
         } catch (Exception e) {
             sendText(session, ocppCodec.encodeCallError(call.getUniqueId(), OcppErrorCode.InternalError.name(), e.getMessage(), null));
         }
+    }
+
+    private void sendResult(WebSocketSession session, OcppVersion version, String action, String uniqueId, Object response) throws Exception {
+        JsonNode responsePayload = toResponsePayload(response);
+        schemaValidator.validate(version, action, false, responsePayload);
+        sendText(session, ocppCodec.encodeCallResult(uniqueId, responsePayload));
+    }
+
+    private void completeAsync(WebSocketSession session, OcppVersion version, String action, String uniqueId,
+                              Object value, Throwable error) {
+        if (error != null) {
+            Throwable cause = unwrap(error);
+            if (cause instanceof OcppException) {
+                OcppException e = (OcppException) cause;
+                sendErrorSafely(session, uniqueId, e.getErrorCode().name(), e.getMessage(), e.getDetails());
+            } else {
+                sendErrorSafely(session, uniqueId, OcppErrorCode.InternalError.name(), cause.getMessage(), null);
+            }
+            return;
+        }
+        try {
+            sendResult(session, version, action, uniqueId, value);
+        } catch (OcppException e) {
+            sendErrorSafely(session, uniqueId, e.getErrorCode().name(), e.getMessage(), e.getDetails());
+        } catch (Exception e) {
+            sendErrorSafely(session, uniqueId, OcppErrorCode.InternalError.name(), e.getMessage(), null);
+        }
+    }
+
+    private void sendErrorSafely(WebSocketSession session, String uniqueId, String errorCode, String description, Object details) {
+        try {
+            sendText(session, ocppCodec.encodeCallError(uniqueId, errorCode, description, details));
+        } catch (Exception e) {
+            log.warn("发送 OCPP CALLERROR 失败：sessionId={}, uniqueId={}", session.getId(), uniqueId, e);
+        }
+    }
+
+    private Throwable unwrap(Throwable error) {
+        if ((error instanceof CompletionException || error instanceof ExecutionException) && error.getCause() != null) {
+            return error.getCause();
+        }
+        return error;
     }
 
     @Override

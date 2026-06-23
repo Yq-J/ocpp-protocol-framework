@@ -57,6 +57,8 @@ ocpp:
   charge-point-tokens:
     CP001: "replace-with-strong-random-token"
   fail-on-unsafe-production-config: true
+  session-idle-timeout-seconds: 600
+  ping-interval-seconds: 240
 ```
 
 详细说明见 `docs/开发使用手册.md`、`docs/示例与联调指南.md` 和 `docs/生产化使用指南.md`。
@@ -67,7 +69,9 @@ ocpp:
 - starter 默认启用 `OfficialOcppSchemaValidator`，在业务 Handler 执行前校验协议版本、Action 合法性、Payload 对象形态以及对应 JSON Schema 约束。
 - 平台主动下发命令时，`OcppTemplate` 会在发送前执行官方 Schema 校验，并在连接关闭、重复连接替换旧会话、Spring 容器关闭时取消等待中的 pending request，避免资源悬挂。
 - WebSocket 握手支持 `allowed-origins`、`require-auth-token`、`auth-token-header`、`auth-token-query-parameter` 和 `charge-point-tokens`，可作为基础接入鉴权能力。
-- WebSocket 文本帧支持 `max-text-message-bytes` 限制，防止异常大报文冲击内存。
+- WebSocket 文本帧支持 `max-text-message-bytes` 限制，防止异常大报文冲击内存；该值会同步放大底层 WebSocket 容器的文本缓冲区（容器默认仅 8KB），避免 OCPP 2.0.1 证书类等大报文在 8KB 处被容器强制断链。
+- 连接活性检测：`ping-interval-seconds` 定时向充电桩发送 WebSocket Ping 并主动关闭发送失败的半开连接，`session-idle-timeout-seconds` 设置容器会话空闲超时回收无响应连接。
+- 业务 Handler 可返回 `CompletableFuture`/`CompletionStage` 进行异步处理，框架在 Future 完成后再回包，不阻塞 WebSocket 容器 IO 线程。
 - 同一 `chargePointId` 重复建立连接时支持 `duplicate-connection-policy`，可选择拒绝新连接、关闭旧连接或仅替换会话引用，降低主动下发路由不确定性。
 - 启动阶段提供 `production-readiness-check`，可检查通配 Origin、未启用握手 Token、未知 Action 自动吞掉、启用示例 Handler、无效报文大小/超时等高风险配置；上线前可通过 `fail-on-unsafe-production-config=true` 将风险配置升级为启动失败。
 - starter 内置默认处理器默认不注册，只有显式配置 `ocpp.enable-default-handlers=true` 时才会启用；生产项目应使用 `@OcppActionMapping` 或自定义 `OcppActionHandler` 实现真实业务动作。

@@ -26,7 +26,19 @@ class OcppProductionReadinessCheckerTest {
         properties.setDuplicateConnectionPolicy(OcppProperties.DuplicateConnectionPolicy.CLOSE_OLD);
         properties.setMaxTextMessageBytes(262144);
         properties.setConnectionTimeoutSeconds(60);
+        properties.setPingIntervalSeconds(240);
+        properties.setSessionIdleTimeoutSeconds(600);
 
         assertEquals(Collections.emptyList(), new OcppProductionReadinessChecker(properties).inspect());
+    }
+
+    @Test
+    void inspectWarnsWhenLivenessDetectionDisabled() {
+        OcppProperties properties = new OcppProperties();
+        properties.setSessionIdleTimeoutSeconds(0);
+        properties.setPingIntervalSeconds(0);
+
+        assertTrue(new OcppProductionReadinessChecker(properties).inspect().stream()
+                .anyMatch(w -> w.contains("session-idle-timeout-seconds")));
     }
 }

@@ -2,12 +2,9 @@ package com.charging.ocpp.starter.autoconfigure;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.*;
 
 /**
  * OCPP Starter 配置属性。
@@ -47,8 +44,31 @@ public class OcppProperties {
     private List<String> allowedOrigins = Collections.singletonList("*");
     /**
      * 单条 WebSocket 文本消息最大字节数，超过后直接返回 CALLERROR，防止异常大报文冲击内存。
+     * <p>
+     * 该值同时用于设置底层 WebSocket 容器的文本缓冲区大小（maxTextMessageBufferSize）。
+     * 容器默认文本缓冲仅 8KB，若不放大，OCPP 2.0.1 证书类等大报文会在缓冲区上限被容器强制关闭，
+     * 应用层根本收不到完整报文。设为 null 或非正数时不修改容器默认值。
+     * </p>
      */
     private Integer maxTextMessageBytes = 262144;
+    /**
+     * WebSocket 会话空闲超时时间，单位秒。映射到容器 maxSessionIdleTimeout。
+     * <p>
+     * 大于 0 时启用：在该时间内未收到任何消息（含充电桩 Heartbeat 与 Pong）即关闭会话，用于回收半开连接。
+     * 取值应大于充电桩 Heartbeat 间隔与 {@link #pingIntervalSeconds}，否则可能误断活跃连接。
+     * 默认 0（不设置，沿用容器默认行为）。注意该设置作用于整个应用的 WebSocket 容器。
+     * </p>
+     */
+    private Integer sessionIdleTimeoutSeconds = 0;
+    /**
+     * 服务端主动向充电桩发送 WebSocket Ping 的间隔，单位秒。
+     * <p>
+     * 大于 0 时启用：定时向所有在线 OCPP 会话发送 Ping，活跃充电桩会回 Pong（刷新空闲计时并证明存活），
+     * 发送 Ping 失败（TCP 已断）的会话会被主动关闭并清理。建议与 {@link #sessionIdleTimeoutSeconds} 配合使用。
+     * 默认 0（不启用）。
+     * </p>
+     */
+    private Integer pingIntervalSeconds = 0;
     /**
      * 同一 chargePointId 重复建立连接时的处理策略。
      */

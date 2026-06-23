@@ -62,6 +62,11 @@ public class OcppProductionReadinessChecker implements SmartInitializingSingleto
         if (properties.getConnectionTimeoutSeconds() == null || properties.getConnectionTimeoutSeconds() <= 0) {
             warnings.add("connection-timeout-seconds 未设置有效正数，主动命令可能无法按预期超时");
         }
+        boolean idleTimeoutDisabled = properties.getSessionIdleTimeoutSeconds() == null || properties.getSessionIdleTimeoutSeconds() <= 0;
+        boolean pingDisabled = properties.getPingIntervalSeconds() == null || properties.getPingIntervalSeconds() <= 0;
+        if (idleTimeoutDisabled && pingDisabled) {
+            warnings.add("session-idle-timeout-seconds 与 ping-interval-seconds 均未启用，半开/掉线连接无法及时回收，建议至少启用其一");
+        }
         if (properties.getDuplicateConnectionPolicy() == OcppProperties.DuplicateConnectionPolicy.REPLACE) {
             warnings.add("duplicate-connection-policy=REPLACE 不会主动关闭旧连接，生产环境建议使用 CLOSE_OLD 或 REJECT_NEW");
         }

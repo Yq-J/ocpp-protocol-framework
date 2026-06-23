@@ -2,10 +2,12 @@ package com.charging.ocpp.starter.websocket;
 
 import com.charging.ocpp.core.enums.OcppVersion;
 import com.charging.ocpp.core.session.OcppConnection;
+import org.springframework.web.socket.PingMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Spring WebSocketSession 到 OcppConnection 的适配器。
@@ -63,6 +65,18 @@ public class SpringOcppConnection implements OcppConnection {
     public void send(String text) throws IOException {
         synchronized (sendLock(session)) {
             session.sendMessage(new TextMessage(text));
+        }
+    }
+
+    /**
+     * 发送 WebSocket Ping 帧用于连接活性探测。
+     * <p>
+     * 复用与文本帧相同的发送锁，避免与业务下发帧并发写导致的帧交错。
+     * </p>
+     */
+    public void sendPing() throws IOException {
+        synchronized (sendLock(session)) {
+            session.sendMessage(new PingMessage(ByteBuffer.allocate(0)));
         }
     }
 
